@@ -898,23 +898,30 @@
     }
 
     function renderResetPassword() {
+      const tokens = getRecoveryTokensFromUrl();
+
       renderAuthShell(`
-        <h2>Nova senha</h2>
-        <p>Informe sua nova senha para concluir a redefinição.</p>
+        <h2>Redefinir senha</h2>
+        <p>Informe sua nova senha para concluir a recuperação de acesso.</p>
 
         <form id="resetForm" class="stack">
-          <label>
-            Token ou código recebido
-            <input name="token" required />
-          </label>
-
           <label>
             Nova senha
             <input name="senha" type="password" autocomplete="new-password" required minlength="6" />
           </label>
 
-          <button class="btn full" type="submit">Redefinir senha</button>
+          <label>
+            Confirmar nova senha
+            <input name="confirmar_senha" type="password" autocomplete="new-password" required minlength="6" />
+          </label>
+
+          <input type="hidden" name="access_token" value="${tokens.access_token || ''}" />
+          <input type="hidden" name="refresh_token" value="${tokens.refresh_token || ''}" />
+
+          <button class="btn full" type="submit">Salvar nova senha</button>
+
           <a href="#/login">Voltar para o login</a>
+
           <div id="resetMessage" class="message"></div>
         </form>
       `);
@@ -963,18 +970,40 @@
 
     async function handleResetPassword(event) {
       event.preventDefault();
+
       const message = document.getElementById('resetMessage');
       const data = Object.fromEntries(new FormData(event.target));
+
+      if (data.senha !== data.confirmar_senha) {
+        message.textContent = 'As senhas não conferem.';
+        message.className = 'message show error';
+        return;
+      }
+
+      if (!data.access_token || !data.refresh_token) {
+        message.textContent = 'Link de recuperação inválido ou expirado. Solicite uma nova recuperação de senha.';
+        message.className = 'message show error';
+        return;
+      }
 
       try {
         await api('/auth/reset-password', {
           method: 'POST',
-          body: JSON.stringify(data)
+          body: JSON.stringify({
+            access_token: data.access_token,
+            refresh_token: data.refresh_token,
+            senha: data.senha
+          })
         });
-        message.textContent = 'Senha redefinida com sucesso. Você já pode voltar para o login.';
+
+        message.textContent = 'Senha redefinida com sucesso. Você já pode fazer login.';
         message.className = 'message show success';
+
+        setTimeout(() => {
+          window.location.href = window.location.pathname + '#/login';
+        }, 1800);
       } catch (error) {
-        message.textContent = 'O frontend está pronto, mas o backend precisa da rota POST /auth/reset-password para concluir este fluxo.';
+        message.textContent = error.message;
         message.className = 'message show error';
       }
     }
@@ -1708,16 +1737,46 @@
       }
     }
 
+    function isResetPasswordUrl() {
+      const query = new URLSearchParams(window.location.search);
+      const hash = window.location.hash || '';
+
+      return (
+        query.get('resetar_senha') === 'true' ||
+        hash.includes('type=recovery') ||
+        hash.includes('/resetar-senha')
+      );
+    }
+
+    function getRecoveryTokensFromUrl() {
+      const hash = window.location.hash.startsWith('#')
+        ? window.location.hash.substring(1)
+        : window.location.hash;
+
+      const params = new URLSearchParams(hash);
+
+      return {
+        access_token: params.get('access_token'),
+        refresh_token: params.get('refresh_token'),
+        type: params.get('type')
+      };
+    }
+    
     function boot() {
       const route = location.hash.replace('#/', '') || 'dashboard';
+
+      if (isResetPasswordUrl()) {
+        renderResetPassword();
+        return;
+      }
 
       if (route === 'esqueci-senha') {
         renderForgotPassword();
         return;
       }
 
-      if (route === 'resetar-senha') {
-        renderResetPassword();
+      if (route === 'login') {
+        renderLogin();
         return;
       }
 
