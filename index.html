@@ -2,60 +2,258 @@
 <html lang="pt-BR" data-bs-theme="light">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Sistema de almoxarifado corporativo." />
   <title>Almoxarifado | Sistema Corporativo</title>
+
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+  <link rel="preconnect" href="https://almoxarifado-backend-tan.vercel.app" crossorigin>
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" rel="stylesheet">
 
   <style>
     :root{
-      --side:280px;--radius:22px;--bg:#f5f7fb;--surface:rgba(255,255,255,.88);
-      --border:rgba(15,23,42,.08);--muted:#64748b;--dark:#0f172a;--primary:#2563eb;
-      --shadow:0 18px 55px rgba(15,23,42,.09);--shadow2:0 10px 30px rgba(15,23,42,.07)
+      --sidebar:280px;
+      --bg:#f5f7fb;
+      --surface:rgba(255,255,255,.92);
+      --border:rgba(15,23,42,.08);
+      --text:#0f172a;
+      --muted:#64748b;
+      --primary:#2563eb;
+      --shadow:0 14px 38px rgba(15,23,42,.08);
+      --radius:22px;
     }
-    [data-bs-theme=dark]{--bg:#0b1220;--surface:rgba(15,23,42,.9);--border:rgba(148,163,184,.18);--muted:#94a3b8;--dark:#e2e8f0;--shadow:0 20px 70px rgba(0,0,0,.32);--shadow2:0 14px 45px rgba(0,0,0,.22)}
-    *{box-sizing:border-box} body{margin:0;min-height:100vh;color:var(--dark);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Arial,sans-serif;background:radial-gradient(circle at 10% 0,rgba(37,99,235,.13),transparent 28rem),radial-gradient(circle at 100% 100%,rgba(14,165,233,.12),transparent 30rem),var(--bg);overflow-x:hidden}
-    a{text-decoration:none}.fw-black{font-weight:850}.text-muted2{color:var(--muted)!important}.app-shell{display:flex;min-height:100vh}
-    .sidebar{position:fixed;inset:0 auto 0 0;width:var(--side);z-index:1020;padding:16px;background:rgba(15,23,42,.97);color:#fff;box-shadow:16px 0 45px rgba(15,23,42,.18)}
-    .brand{display:flex;align-items:center;gap:12px;padding:10px 8px 20px;border-bottom:1px solid rgba(255,255,255,.08);margin-bottom:14px}
-    .brand-icon{width:46px;height:46px;border-radius:16px;display:grid;place-items:center;background:linear-gradient(135deg,#2563eb,#0ea5e9);box-shadow:0 14px 28px rgba(37,99,235,.35);font-size:22px}
-    .brand small{color:rgba(255,255,255,.55)}.nav-label{margin:18px 12px 7px;color:rgba(255,255,255,.42);font-size:11px;text-transform:uppercase;letter-spacing:.1em;font-weight:800}
-    .app-nav .nav-link{display:flex;align-items:center;gap:13px;color:rgba(255,255,255,.72);padding:13px 14px;margin-bottom:5px;border-radius:16px;font-weight:750;transition:.18s ease}
-    .app-nav .nav-link:hover,.app-nav .nav-link.active{background:#2563eb;color:#fff;transform:translateX(3px)}.app-nav i{width:20px;text-align:center}
-    .main{margin-left:var(--side);flex:1;min-width:0;padding:22px}.topbar{position:sticky;top:16px;z-index:1000;background:var(--surface);backdrop-filter:blur(18px);border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;box-shadow:var(--shadow)}
-    .surface{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow2)}.page-title{font-weight:850;letter-spacing:-.04em;margin:0;font-size:clamp(1.35rem,3vw,2.05rem)}.page-subtitle{margin:2px 0 0;color:var(--muted);font-size:.92rem}
-    .stat-card{min-height:138px;padding:20px;transition:.22s ease;overflow:hidden}.stat-card:hover{transform:translateY(-3px);box-shadow:var(--shadow)}.stat-icon{width:50px;height:50px;border-radius:16px;display:grid;place-items:center;background:rgba(37,99,235,.12);color:#1d4ed8;font-size:1.35rem}.stat-value{font-weight:850;font-size:2.1rem;letter-spacing:-.05em}.stat-label{font-size:.85rem;color:var(--muted);font-weight:750}
-    .soft-badge{border-radius:999px;padding:.42rem .7rem;font-size:.75rem;font-weight:800;display:inline-flex;align-items:center;gap:.35rem}.badge-soft-primary{background:rgba(37,99,235,.12);color:#1d4ed8}.badge-soft-success{background:rgba(22,163,74,.12);color:#15803d}.badge-soft-danger{background:rgba(220,38,38,.12);color:#b91c1c}.badge-soft-warning{background:rgba(245,158,11,.15);color:#b45309}.badge-soft-secondary{background:rgba(100,116,139,.14);color:#475569}
-    .table{--bs-table-bg:transparent;vertical-align:middle}.table thead th{font-size:.72rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);background:rgba(148,163,184,.08);border-bottom:1px solid var(--border)}.table td{border-color:var(--border);padding:.9rem .75rem}.table-hover tbody tr{transition:.15s}.table-hover tbody tr:hover{background:rgba(37,99,235,.045)}
-    .form-control,.form-select{border-radius:14px;border-color:rgba(100,116,139,.25);min-height:45px}.form-control:focus,.form-select:focus{border-color:rgba(37,99,235,.45);box-shadow:0 0 0 .22rem rgba(37,99,235,.12)}
-    .btn{border-radius:14px;font-weight:780;min-height:43px}.btn-primary{background:linear-gradient(135deg,#2563eb,#1d4ed8);border-color:transparent;box-shadow:0 10px 24px rgba(37,99,235,.22)}.btn-icon{width:43px;padding:0;display:inline-grid;place-items:center}
-    .search-box{position:relative}.search-box i{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--muted)}.search-box input{padding-left:42px}.empty-state{text-align:center;padding:48px 16px;color:var(--muted)}.empty-state i{font-size:42px;color:rgba(37,99,235,.38);display:block;margin-bottom:10px}
-    .skeleton{min-height:130px;border-radius:20px;background:linear-gradient(90deg,rgba(148,163,184,.14),rgba(148,163,184,.28),rgba(148,163,184,.14));background-size:240% 100%;animation:shimmer 1.15s linear infinite}@keyframes shimmer{to{background-position:-200% 0}}.fade-page{animation:pageIn .28s ease both}@keyframes pageIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-    .modal-content,.offcanvas{border-radius:22px;border:1px solid var(--border)}.mobile-nav-btn{display:none}.auth-shell{min-height:100vh;display:grid;grid-template-columns:1.1fr .9fr;background:linear-gradient(135deg,rgba(15,23,42,.97),rgba(30,64,175,.92)),url("data:image/svg+xml,%3Csvg width='160' height='160' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23fff' stroke-opacity='.08'%3E%3Cpath d='M0 80h160M80 0v160'/%3E%3Ccircle cx='80' cy='80' r='42'/%3E%3C/g%3E%3C/svg%3E")}
-    .auth-brand{color:#fff;display:flex;flex-direction:column;justify-content:space-between;min-height:100vh;padding:clamp(2rem,6vw,5rem)}.auth-brand h1{font-size:clamp(2.4rem,4vw,4.5rem);line-height:1.05;font-weight:850;letter-spacing:-.06em;max-width:720px}.auth-brand p{color:rgba(255,255,255,.78);max-width:620px;font-size:1.08rem}.auth-wrap{min-height:100vh;display:grid;place-items:center;padding:1.5rem;background:rgba(255,255,255,.04);backdrop-filter:blur(18px)}
-    .auth-card{width:min(100%,460px);background:rgba(255,255,255,.94);border:1px solid rgba(255,255,255,.55);border-radius:24px;box-shadow:0 30px 100px rgba(0,0,0,.28);padding:clamp(1.35rem,4vw,2.3rem);animation:rise .55s ease both}@keyframes rise{from{opacity:0;transform:translateY(18px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}[data-bs-theme=dark] .auth-card{background:rgba(15,23,42,.94);border-color:rgba(148,163,184,.24)}
-    @media(max-width:991.98px){.sidebar{display:none}.main{margin-left:0;padding:12px}.topbar{top:10px;border-radius:18px}.mobile-nav-btn{display:inline-grid}.stat-card{min-height:120px}.auth-shell{grid-template-columns:1fr}.auth-brand{min-height:auto;padding:2rem 1.2rem 0}.auth-brand .bottom-note{display:none}.auth-wrap{min-height:auto;padding:1.1rem}}
-    @media(max-width:575.98px){.topbar{padding:13px}.surface{border-radius:18px}.table-responsive{border-radius:16px}.stat-value{font-size:1.65rem}.auth-card{margin-bottom:1rem}}
+    [data-bs-theme="dark"]{
+      --bg:#0b1220;
+      --surface:rgba(15,23,42,.88);
+      --border:rgba(148,163,184,.18);
+      --text:#e2e8f0;
+      --muted:#94a3b8;
+      --shadow:0 18px 50px rgba(0,0,0,.28);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      background:
+        radial-gradient(circle at top left,rgba(37,99,235,.13),transparent 34rem),
+        radial-gradient(circle at bottom right,rgba(14,165,233,.10),transparent 32rem),
+        var(--bg);
+      color:var(--text);
+      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      min-height:100vh;
+      overflow-x:hidden;
+    }
+    .auth-page{
+      min-height:100vh;
+      display:grid;
+      grid-template-columns:1.05fr .95fr;
+      background:linear-gradient(135deg,#0f172a,#1e40af);
+    }
+    .auth-hero{
+      color:#fff;
+      padding:clamp(2rem,6vw,5rem);
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+    }
+    .auth-hero h1{
+      font-size:clamp(2.1rem,4.2vw,4.4rem);
+      font-weight:850;
+      letter-spacing:-.055em;
+      line-height:1.05;
+      max-width:760px;
+    }
+    .auth-hero p{max-width:620px;color:rgba(255,255,255,.76);font-size:1.05rem}
+    .auth-box{
+      min-height:100vh;
+      display:grid;
+      place-items:center;
+      padding:1.2rem;
+      backdrop-filter:blur(18px);
+      background:rgba(255,255,255,.035);
+    }
+    .auth-card{
+      width:min(100%,455px);
+      padding:clamp(1.3rem,4vw,2.2rem);
+      border-radius:26px;
+      background:rgba(255,255,255,.95);
+      box-shadow:0 28px 90px rgba(0,0,0,.25);
+      animation:rise .35s ease both;
+    }
+    [data-bs-theme="dark"] .auth-card{background:rgba(15,23,42,.94)}
+    @keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+    .app{display:flex;min-height:100vh}
+    .sidebar{
+      position:fixed;
+      inset:0 auto 0 0;
+      width:var(--sidebar);
+      background:rgba(15,23,42,.97);
+      color:#fff;
+      padding:1rem;
+      z-index:1040;
+      box-shadow:12px 0 45px rgba(15,23,42,.16);
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:.8rem;
+      padding:.8rem .7rem 1.1rem;
+      border-bottom:1px solid rgba(255,255,255,.09);
+      margin-bottom:1rem;
+    }
+    .brand-icon{
+      width:44px;height:44px;display:grid;place-items:center;border-radius:15px;
+      background:linear-gradient(135deg,#2563eb,#0ea5e9);
+      box-shadow:0 12px 24px rgba(37,99,235,.32);
+    }
+    .brand strong{display:block;line-height:1}
+    .brand small{color:rgba(255,255,255,.58)}
+    .nav-label{
+      margin:1rem .8rem .45rem;
+      color:rgba(255,255,255,.42);
+      font-size:.72rem;
+      font-weight:800;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+    .side-link{
+      display:flex;align-items:center;gap:.8rem;
+      padding:.82rem .9rem;
+      color:rgba(255,255,255,.72);
+      border-radius:16px;
+      margin-bottom:.25rem;
+      font-weight:720;
+      text-decoration:none;
+      transition:.16s ease;
+    }
+    .side-link:hover,.side-link.active{background:#2563eb;color:#fff;transform:translateX(3px)}
+    .side-link i{width:1.2rem;text-align:center}
+    .main{
+      margin-left:var(--sidebar);
+      width:calc(100% - var(--sidebar));
+      padding:1.25rem;
+      min-width:0;
+    }
+    .topbar{
+      position:sticky;
+      top:1rem;
+      z-index:1020;
+      padding:1rem;
+      border:1px solid var(--border);
+      background:var(--surface);
+      border-radius:var(--radius);
+      backdrop-filter:blur(18px);
+      box-shadow:var(--shadow);
+      margin-bottom:1.25rem;
+    }
+    .surface{
+      border:1px solid var(--border);
+      background:var(--surface);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+    }
+    .page-title{font-size:clamp(1.35rem,2.5vw,2rem);font-weight:850;letter-spacing:-.04em;margin:0}
+    .page-sub{color:var(--muted);font-size:.92rem;margin:.15rem 0 0}
+    .btn{border-radius:14px;font-weight:760;min-height:2.65rem}
+    .btn-primary{background:linear-gradient(135deg,#2563eb,#1d4ed8);border-color:transparent;box-shadow:0 10px 24px rgba(37,99,235,.22)}
+    .btn-icon{width:2.65rem;display:inline-grid;place-items:center;padding:0}
+    .form-control,.form-select{border-radius:14px;min-height:2.75rem;border-color:rgba(100,116,139,.25)}
+    .form-control:focus,.form-select:focus{box-shadow:0 0 0 .22rem rgba(37,99,235,.13);border-color:rgba(37,99,235,.45)}
+    .stat{
+      position:relative;overflow:hidden;
+      padding:1.2rem;min-height:132px;
+      transition:.16s ease;
+    }
+    .stat:hover{transform:translateY(-2px)}
+    .stat small{display:block;color:var(--muted);font-weight:760}
+    .stat strong{font-size:2rem;letter-spacing:-.05em}
+    .stat .icon{
+      width:48px;height:48px;display:grid;place-items:center;border-radius:16px;
+      background:rgba(37,99,235,.12);color:#1d4ed8;font-size:1.3rem;
+    }
+    .soft{border-radius:999px;padding:.38rem .65rem;font-weight:760;font-size:.76rem;display:inline-flex;gap:.35rem;align-items:center}
+    .soft-primary{background:rgba(37,99,235,.12);color:#1d4ed8}
+    .soft-success{background:rgba(22,163,74,.12);color:#15803d}
+    .soft-danger{background:rgba(220,38,38,.12);color:#b91c1c}
+    .soft-warning{background:rgba(245,158,11,.16);color:#b45309}
+    .soft-secondary{background:rgba(100,116,139,.14);color:#475569}
+    [data-bs-theme="dark"] .soft-secondary{color:#cbd5e1}
+    .table{--bs-table-bg:transparent;vertical-align:middle}
+    .table thead th{
+      color:var(--muted);
+      font-size:.73rem;
+      text-transform:uppercase;
+      letter-spacing:.06em;
+      background:rgba(148,163,184,.08);
+      border-bottom:1px solid var(--border);
+    }
+    .table td{border-color:var(--border);padding-top:.88rem;padding-bottom:.88rem}
+    .table-hover tbody tr:hover{background:rgba(37,99,235,.045)}
+    .search{position:relative}
+    .search i{position:absolute;left:.9rem;top:50%;transform:translateY(-50%);color:var(--muted)}
+    .search input{padding-left:2.55rem}
+    .empty{text-align:center;color:var(--muted);padding:3rem 1rem}
+    .empty i{font-size:2.6rem;color:rgba(37,99,235,.38);display:block;margin-bottom:.65rem}
+    .skeleton{
+      border-radius:var(--radius);
+      min-height:130px;
+      background:linear-gradient(90deg,rgba(148,163,184,.13),rgba(148,163,184,.28),rgba(148,163,184,.13));
+      background-size:240% 100%;
+      animation:shimmer 1.15s linear infinite;
+    }
+    @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+    .fade-in{animation:fade .22s ease both}
+    @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+    .modal-content,.offcanvas{border-radius:22px;border:1px solid var(--border)}
+    .mobile-menu-btn{display:none}
+
+    @media(max-width:991.98px){
+      .sidebar{display:none}
+      .main{margin-left:0;width:100%;padding:.8rem}
+      .mobile-menu-btn{display:inline-grid}
+      .topbar{top:.65rem;border-radius:18px}
+      .stat{min-height:118px}
+    }
+    @media(max-width:575.98px){
+      .auth-page{grid-template-columns:1fr}
+      .auth-hero{min-height:auto;padding:2rem 1.1rem .5rem}
+      .auth-hero .small{display:none}
+      .auth-box{min-height:auto;padding:1rem}
+      .topbar{padding:.85rem}
+      .surface{border-radius:18px}
+      .stat strong{font-size:1.6rem}
+      .table-responsive{border-radius:16px}
+    }
+    @media(prefers-reduced-motion:reduce){
+      *{animation-duration:.001ms!important;transition-duration:.001ms!important}
+    }
   </style>
 </head>
-
 <body>
   <div id="root"></div>
-  <div class="toast-container position-fixed top-0 end-0 p-3" id="toastArea" style="z-index:2000"></div>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+  <div id="toastArea" class="toast-container position-fixed top-0 end-0 p-3" style="z-index:2000"></div>
+
+  <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 
   <script>
     const API_URL = 'https://almoxarifado-backend-tan.vercel.app';
+    const CACHE_TTL = 45_000;
 
-    const ROUTES = [
-      {id:'dashboard',label:'Dashboard',icon:'bi-speedometer2'},
-      {id:'produtos',label:'Produtos',icon:'bi-box-seam'},
-      {id:'estoque',label:'Estoque',icon:'bi-boxes'},
-      {id:'solicitacoes',label:'Solicitações',icon:'bi-clipboard2-check'},
-      {id:'cadastros',label:'Cadastros',icon:'bi-folder2-open'},
-      {id:'usuarios',label:'Usuários',icon:'bi-people'}
+    const pages = [
+      ['dashboard','Dashboard','bi-speedometer2','Visão geral do almoxarifado'],
+      ['produtos','Produtos','bi-box-seam','Cadastro e consulta de materiais'],
+      ['estoque','Estoque','bi-boxes','Movimentações e saldo por local'],
+      ['solicitacoes','Solicitações','bi-clipboard2-check','Solicitações internas e autorizações'],
+      ['cadastros','Cadastros','bi-folder2-open','Setores, locais, fornecedores e centros de custo'],
+      ['usuarios','Usuários','bi-people','Perfis e permissões do sistema']
     ];
+
+    const root = document.getElementById('root');
+    const cache = new Map();
+    const state = { page:'dashboard' };
 
     const auth = {
       token: localStorage.getItem('almox_token'),
@@ -63,118 +261,761 @@
       usuario: JSON.parse(localStorage.getItem('almox_usuario') || 'null')
     };
 
-    const state = {categorias:[],unidades:[],produtos:[],saldo:[],solicitacoes:[],locais:[],fornecedores:[],setores:[],centrosCusto:[],usuarios:[],currentPage:'dashboard'};
-    const root = document.getElementById('root');
-    const byId = id => document.getElementById(id);
+    const $ = (id) => document.getElementById(id);
 
-    function esc(v){return String(v??'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'","&#039;")}
-    function n(v){return Number(v||0).toLocaleString('pt-BR',{maximumFractionDigits:3})}
-    function d(v){if(!v)return'-';const dt=new Date(v);return Number.isNaN(dt.getTime())?'-':dt.toLocaleDateString('pt-BR')}
-    function options(items,key='nome'){return items.map(i=>`<option value="${esc(i.id)}">${esc(i[key]||i.nome||i.codigo||i.id)}</option>`).join('')}
-    function saveSession(data){auth.token=data.access_token;auth.refreshToken=data.refresh_token;auth.usuario=data.usuario;localStorage.setItem('almox_token',data.access_token);localStorage.setItem('almox_refresh_token',data.refresh_token||'');localStorage.setItem('almox_usuario',JSON.stringify(data.usuario))}
-    function clearSession(){auth.token=null;auth.refreshToken=null;auth.usuario=null;localStorage.removeItem('almox_token');localStorage.removeItem('almox_refresh_token');localStorage.removeItem('almox_usuario')}
+    const esc = (v) => String(v ?? '')
+      .replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;')
+      .replaceAll('"','&quot;').replaceAll("'",'&#039;');
 
-    function toast(msg,type='success'){
-      const area=byId('toastArea'), id='t'+Date.now();
-      const bg=type==='success'?'text-bg-success':type==='warning'?'text-bg-warning':'text-bg-danger';
-      const icon=type==='success'?'bi-check-circle':type==='warning'?'bi-exclamation-triangle':'bi-x-circle';
-      area.insertAdjacentHTML('beforeend',`<div id="${id}" class="toast ${bg} border-0 shadow"><div class="d-flex"><div class="toast-body"><i class="bi ${icon} me-2"></i>${esc(msg)}</div><button class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button></div></div>`);
-      const el=byId(id); new bootstrap.Toast(el,{delay:4200}).show(); el.addEventListener('hidden.bs.toast',()=>el.remove());
+    const fmt = (v) => Number(v || 0).toLocaleString('pt-BR', { maximumFractionDigits: 3 });
+    const dateBR = (v) => v ? new Date(v).toLocaleDateString('pt-BR') : '-';
+
+    function debounce(fn, wait=220){
+      let timer;
+      return (...args) => {
+        clearTimeout(timer);
+        timer = setTimeout(() => fn(...args), wait);
+      };
+    }
+
+    function saveSession(data){
+      auth.token = data.access_token;
+      auth.refreshToken = data.refresh_token;
+      auth.usuario = data.usuario;
+      localStorage.setItem('almox_token', data.access_token);
+      localStorage.setItem('almox_refresh_token', data.refresh_token || '');
+      localStorage.setItem('almox_usuario', JSON.stringify(data.usuario));
+    }
+
+    function clearSession(){
+      auth.token = null;
+      auth.refreshToken = null;
+      auth.usuario = null;
+      cache.clear();
+      localStorage.removeItem('almox_token');
+      localStorage.removeItem('almox_refresh_token');
+      localStorage.removeItem('almox_usuario');
     }
 
     async function api(endpoint, options={}){
-      const headers={'Content-Type':'application/json',...(options.headers||{})};
-      if(auth.token) headers.Authorization=`Bearer ${auth.token}`;
-      const res=await fetch(`${API_URL}${endpoint}`,{...options,headers});
-      const ct=res.headers.get('content-type')||'';
-      const payload=ct.includes('application/json')?await res.json():await res.text();
-      if(!res.ok){
-        const msg=typeof payload==='string'?payload:(payload.erro||payload.mensagem||'Erro na requisição');
-        if(res.status===401||res.status===403){clearSession();renderAuth('login',msg)}
-        throw new Error(msg);
+      const headers = { 'Content-Type':'application/json', ...(options.headers || {}) };
+      if(auth.token) headers.Authorization = `Bearer ${auth.token}`;
+
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 18_000);
+
+      try{
+        const response = await fetch(`${API_URL}${endpoint}`, { ...options, headers, signal: controller.signal });
+        const type = response.headers.get('content-type') || '';
+        const payload = type.includes('application/json') ? await response.json() : await response.text();
+
+        if(!response.ok){
+          const msg = typeof payload === 'string' ? payload : payload.erro || payload.mensagem || 'Erro na requisição';
+          if(response.status === 401 || response.status === 403){
+            clearSession();
+            renderAuth('login', msg);
+          }
+          throw new Error(msg);
+        }
+        return payload;
+      }catch(err){
+        if(err.name === 'AbortError') throw new Error('Tempo de resposta excedido. Tente novamente.');
+        throw err;
+      }finally{
+        clearTimeout(timeout);
       }
-      return payload;
     }
 
-    async function loadAll(){
-      const map=[['/categorias','categorias'],['/produtos','produtos'],['/saldo-estoque','saldo'],['/solicitacoes','solicitacoes'],['/cadastros/unidades-medida','unidades'],['/cadastros/locais-estoque','locais'],['/cadastros/fornecedores','fornecedores'],['/cadastros/setores','setores'],['/cadastros/centros-custo','centrosCusto'],['/usuarios','usuarios']];
-      const results=await Promise.allSettled(map.map(([url])=>api(url)));
-      results.forEach((r,i)=>state[map[i][1]]=r.status==='fulfilled'&&Array.isArray(r.value)?r.value:[]);
+    async function get(endpoint, key, { fresh=false } = {}){
+      const now = Date.now();
+      const current = cache.get(key);
+      if(!fresh && current && (now - current.time) < CACHE_TTL) return current.data;
+
+      const data = await api(endpoint);
+      cache.set(key, { data: Array.isArray(data) ? data : [], time: now });
+      return cache.get(key).data;
+    }
+
+    function invalidate(...keys){ keys.forEach(k => cache.delete(k)); }
+
+    async function load(keys, fresh=false){
+      const map = {
+        categorias: ['/categorias','categorias'],
+        produtos: ['/produtos','produtos'],
+        saldo: ['/saldo-estoque','saldo'],
+        solicitacoes: ['/solicitacoes','solicitacoes'],
+        unidades: ['/cadastros/unidades-medida','unidades'],
+        locais: ['/cadastros/locais-estoque','locais'],
+        fornecedores: ['/cadastros/fornecedores','fornecedores'],
+        setores: ['/cadastros/setores','setores'],
+        centros: ['/cadastros/centros-custo','centros'],
+        usuarios: ['/usuarios','usuarios']
+      };
+      const results = await Promise.all(keys.map(k => get(map[k][0], map[k][1], { fresh })));
+      return Object.fromEntries(keys.map((k,i) => [k, results[i]]));
+    }
+
+    function toast(message, type='success'){
+      const id = `t${Date.now()}`;
+      const cls = type === 'success' ? 'text-bg-success' : type === 'warning' ? 'text-bg-warning' : 'text-bg-danger';
+      $('toastArea').insertAdjacentHTML('beforeend', `
+        <div id="${id}" class="toast ${cls} border-0 shadow" role="alert">
+          <div class="d-flex">
+            <div class="toast-body">${esc(message)}</div>
+            <button class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+          </div>
+        </div>
+      `);
+      const el = $(id);
+      const t = new bootstrap.Toast(el, { delay: 3800 });
+      t.show();
+      el.addEventListener('hidden.bs.toast', () => el.remove());
+    }
+
+    function routeFromUrl(){
+      const search = new URLSearchParams(location.search);
+      if(search.get('resetar_senha') === 'true') return 'resetar-senha';
+      if(location.hash.includes('type=recovery')) return 'resetar-senha';
+      return location.hash.replace('#/','').split('?')[0] || (auth.token ? 'dashboard' : 'login');
+    }
+
+    function recoveryTokens(){
+      const hash = location.hash.startsWith('#') ? location.hash.slice(1) : location.hash;
+      const params = new URLSearchParams(hash);
+      return {
+        access_token: params.get('access_token'),
+        refresh_token: params.get('refresh_token')
+      };
+    }
+
+    function renderAuth(mode='login', error=''){
+      const forgot = mode === 'esqueci-senha';
+      const reset = mode === 'resetar-senha';
+      root.innerHTML = `
+        <main class="auth-page">
+          <section class="auth-hero">
+            <div>
+              <div class="d-flex align-items-center gap-2 mb-4">
+                <div class="brand-icon"><i class="bi bi-box-seam"></i></div>
+                <strong class="fs-5">Almoxarifado</strong>
+              </div>
+              <h1>Controle profissional de materiais, estoque e solicitações.</h1>
+              <p class="mt-4">Interface rápida, responsiva e integrada ao processo de autorização por WhatsApp.</p>
+            </div>
+            <div class="small text-white-50"><i class="bi bi-shield-check me-2"></i>Sessão segura via Supabase Auth.</div>
+          </section>
+          <section class="auth-box">
+            <div class="auth-card">
+              <span class="soft soft-primary mb-3"><i class="bi bi-building-lock"></i>Sistema interno</span>
+              <h2 class="fw-bold">${forgot ? 'Recuperar senha' : reset ? 'Nova senha' : 'Entrar no sistema'}</h2>
+              <p class="text-secondary">${forgot ? 'Informe seu email para receber as instruções.' : reset ? 'Crie uma nova senha para acessar o sistema.' : 'Acesse com seu usuário autorizado.'}</p>
+              ${forgot ? forgotForm(error) : reset ? resetForm(error) : loginForm(error)}
+            </div>
+          </section>
+        </main>`;
+      if(forgot) $('forgotForm').addEventListener('submit', handleForgot);
+      else if(reset) $('resetForm').addEventListener('submit', handleReset);
+      else $('loginForm').addEventListener('submit', handleLogin);
+    }
+
+    function loginForm(error){
+      return `<form id="loginForm" class="vstack gap-3">
+        <label class="form-label">Email<input class="form-control mt-1" name="email" type="email" autocomplete="email" required></label>
+        <label class="form-label">Senha<input class="form-control mt-1" name="senha" type="password" autocomplete="current-password" required></label>
+        ${error ? `<div class="alert alert-danger mb-0">${esc(error)}</div>` : ''}
+        <button class="btn btn-primary w-100" type="submit"><i class="bi bi-box-arrow-in-right me-2"></i>Entrar</button>
+        <a class="text-center small fw-semibold" href="#/esqueci-senha">Esqueci minha senha</a>
+      </form>`;
+    }
+
+    function forgotForm(error){
+      return `<form id="forgotForm" class="vstack gap-3">
+        <label class="form-label">Email<input class="form-control mt-1" name="email" type="email" autocomplete="email" required></label>
+        ${error ? `<div class="alert alert-danger mb-0">${esc(error)}</div>` : ''}
+        <div id="forgotMessage"></div>
+        <button class="btn btn-primary w-100" type="submit"><i class="bi bi-envelope-arrow-up me-2"></i>Enviar instruções</button>
+        <a class="text-center small fw-semibold" href="#/login">Voltar ao login</a>
+      </form>`;
+    }
+
+    function resetForm(error){
+      const t = recoveryTokens();
+      return `<form id="resetForm" class="vstack gap-3">
+        <label class="form-label">Nova senha<input class="form-control mt-1" name="senha" type="password" minlength="6" required></label>
+        <label class="form-label">Confirmar senha<input class="form-control mt-1" name="confirmar_senha" type="password" minlength="6" required></label>
+        <input type="hidden" name="access_token" value="${esc(t.access_token || '')}">
+        <input type="hidden" name="refresh_token" value="${esc(t.refresh_token || '')}">
+        ${error ? `<div class="alert alert-danger mb-0">${esc(error)}</div>` : ''}
+        <div id="resetMessage"></div>
+        <button class="btn btn-primary w-100" type="submit"><i class="bi bi-key me-2"></i>Salvar nova senha</button>
+        <a class="text-center small fw-semibold" href="#/login">Voltar ao login</a>
+      </form>`;
+    }
+
+    async function handleLogin(e){
+      e.preventDefault();
+      const form = e.currentTarget;
+      const btn = form.querySelector('button');
+      const data = Object.fromEntries(new FormData(form));
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Entrando...';
+      try{
+        const res = await fetch(`${API_URL}/auth/login`, {
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify(data)
+        });
+        const body = await res.json();
+        if(!res.ok) throw new Error(body.erro || body.mensagem || 'Erro ao fazer login');
+        saveSession(body);
+        location.hash = '#/dashboard';
+        renderShell();
+        await navigate('dashboard', true);
+      }catch(err){
+        renderAuth('login', err.message);
+      }
+    }
+
+    async function handleForgot(e){
+      e.preventDefault();
+      const box = $('forgotMessage');
+      try{
+        await api('/auth/forgot-password', { method:'POST', body:JSON.stringify(Object.fromEntries(new FormData(e.currentTarget))) });
+        box.innerHTML = '<div class="alert alert-success mb-0">Se o email estiver cadastrado, as instruções serão enviadas.</div>';
+      }catch(err){
+        box.innerHTML = `<div class="alert alert-danger mb-0">${esc(err.message)}</div>`;
+      }
+    }
+
+    async function handleReset(e){
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(e.currentTarget));
+      const box = $('resetMessage');
+      if(data.senha !== data.confirmar_senha){
+        box.innerHTML = '<div class="alert alert-danger mb-0">As senhas não conferem.</div>';
+        return;
+      }
+      if(!data.access_token || !data.refresh_token){
+        box.innerHTML = '<div class="alert alert-danger mb-0">Link inválido ou expirado.</div>';
+        return;
+      }
+      try{
+        await api('/auth/reset-password', { method:'POST', body:JSON.stringify({access_token:data.access_token, refresh_token:data.refresh_token, senha:data.senha}) });
+        box.innerHTML = '<div class="alert alert-success mb-0">Senha alterada com sucesso. Faça login novamente.</div>';
+        clearSession();
+        setTimeout(() => { location.hash = '#/login'; renderAuth('login'); }, 1400);
+      }catch(err){
+        box.innerHTML = `<div class="alert alert-danger mb-0">${esc(err.message)}</div>`;
+      }
+    }
+
+    function sidebar(){
+      const links = pages.map(([id,label,icon]) => `
+        <a class="side-link ${state.page === id ? 'active' : ''}" href="#/${id}" data-route="${id}">
+          <i class="bi ${icon}"></i><span>${label}</span>
+        </a>`).join('');
+      return `<div class="brand">
+          <div class="brand-icon"><i class="bi bi-box-seam"></i></div>
+          <div><strong>Almoxarifado</strong><small>Controle corporativo</small></div>
+        </div>
+        <div class="nav-label">Menu</div>
+        <nav>${links}</nav>
+        <div class="position-absolute bottom-0 start-0 end-0 p-3 small text-white-50">
+          <i class="bi bi-whatsapp me-2"></i>Autorizações integradas
+        </div>`;
+    }
+
+    function renderShell(){
+      root.innerHTML = `<div class="app">
+        <aside class="sidebar">${sidebar()}</aside>
+        <div class="offcanvas offcanvas-start text-bg-dark" id="mobileMenu" tabindex="-1"><div class="offcanvas-body p-3">${sidebar()}</div></div>
+        <main class="main">
+          <header class="topbar">
+            <div class="d-flex justify-content-between align-items-center gap-3">
+              <div class="d-flex align-items-center gap-2">
+                <button class="btn btn-light btn-icon mobile-menu-btn" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu" aria-label="Abrir menu"><i class="bi bi-list"></i></button>
+                <div><h1 id="pageTitle" class="page-title">Dashboard</h1><p id="pageSub" class="page-sub">Visão geral</p></div>
+              </div>
+              <div class="d-flex align-items-center gap-2">
+                <button id="themeBtn" class="btn btn-light btn-icon" aria-label="Tema"><i class="bi bi-moon-stars"></i></button>
+                <div class="dropdown">
+                  <button class="btn btn-light d-flex align-items-center gap-2" data-bs-toggle="dropdown">
+                    <span class="rounded-circle bg-primary text-white d-grid place-items-center" style="width:34px;height:34px;display:grid">${esc((auth.usuario?.nome || 'U').slice(0,1).toUpperCase())}</span>
+                    <span class="d-none d-md-inline small fw-bold">${esc(auth.usuario?.nome || 'Usuário')}</span>
+                  </button>
+                  <ul class="dropdown-menu dropdown-menu-end shadow border-0">
+                    <li><h6 class="dropdown-header">${esc(auth.usuario?.email || '')}</h6></li>
+                    <li><span class="dropdown-item-text small text-secondary">Perfil: ${esc(auth.usuario?.perfil || '-')}</span></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><button id="logoutBtn" class="dropdown-item text-danger"><i class="bi bi-box-arrow-right me-2"></i>Sair</button></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </header>
+          <section id="app" class="fade-in"></section>
+        </main>
+      </div>`;
+      document.querySelectorAll('[data-route]').forEach(a => a.addEventListener('click', (e) => {
+        e.preventDefault();
+        const r = a.dataset.route;
+        history.pushState(null, '', '#/' + r);
+        navigate(r);
+        const menu = bootstrap.Offcanvas.getInstance($('mobileMenu'));
+        if(menu) menu.hide();
+      }));
+      $('logoutBtn').addEventListener('click', () => { clearSession(); location.hash = '#/login'; renderAuth('login'); });
+      $('themeBtn').addEventListener('click', () => {
+        const next = document.documentElement.getAttribute('data-bs-theme') === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-bs-theme', next);
+        localStorage.setItem('almox_theme', next);
+      });
+    }
+
+    function setMeta(page){
+      const p = pages.find(x => x[0] === page) || pages[0];
+      $('pageTitle').textContent = p[1];
+      $('pageSub').textContent = p[3];
+      document.querySelectorAll('[data-route]').forEach(x => x.classList.toggle('active', x.dataset.route === page));
+    }
+
+    function loading(){
+      $('app').innerHTML = `<div class="row g-3">
+        <div class="col-md-3"><div class="skeleton"></div></div><div class="col-md-3"><div class="skeleton"></div></div>
+        <div class="col-md-3"><div class="skeleton"></div></div><div class="col-md-3"><div class="skeleton"></div></div>
+        <div class="col-12"><div class="skeleton" style="min-height:320px"></div></div>
+      </div>`;
+    }
+
+    async function navigate(page, fresh=false){
+      state.page = page;
+      setMeta(page);
+      loading();
+      try{
+        const render = {
+          dashboard: renderDashboard,
+          produtos: renderProdutos,
+          estoque: renderEstoque,
+          solicitacoes: renderSolicitacoes,
+          cadastros: renderCadastros,
+          usuarios: renderUsuarios
+        }[page] || renderDashboard;
+        await render(fresh);
+        setMeta(page);
+      }catch(err){
+        $('app').innerHTML = `<div class="surface p-4"><div class="empty"><i class="bi bi-cloud-slash"></i><h5>Falha ao carregar</h5><p>${esc(err.message)}</p><button class="btn btn-primary" onclick="navigate('${page}', true)">Tentar novamente</button></div></div>`;
+      }
+    }
+
+    function card(label,value,icon,type='primary'){
+      return `<div class="col-6 col-lg-3"><div class="surface stat"><div class="d-flex justify-content-between align-items-start"><div><small>${esc(label)}</small><strong class="d-block mt-2">${value}</strong></div><div class="icon"><i class="bi ${icon}"></i></div></div></div></div>`;
+    }
+
+    function empty(title, icon='bi-inbox', sub='Nada para exibir no momento.'){
+      return `<div class="empty"><i class="bi ${icon}"></i><h6 class="fw-bold">${esc(title)}</h6><p class="small mb-0">${esc(sub)}</p></div>`;
     }
 
     function badge(status){
-      const m={rascunho:['secondary','Rascunho'],enviada:['warning','Enviada'],aprovada:['success','Aprovada'],recusada:['danger','Recusada'],atendida_parcial:['warning','Atendida parcial'],atendida:['success','Atendida'],cancelada:['secondary','Cancelada']};
-      const [type,label]=m[status]||['secondary',status||'-'];
-      return `<span class="soft-badge badge-soft-${type}">${esc(label)}</span>`;
+      const m = {
+        rascunho:['secondary','Rascunho'], enviada:['warning','Enviada'], aprovada:['success','Aprovada'],
+        recusada:['danger','Recusada'], atendida_parcial:['warning','Atendida parcial'], atendida:['success','Atendida'], cancelada:['secondary','Cancelada']
+      };
+      const [t,l] = m[status] || ['secondary', status || '-'];
+      return `<span class="soft soft-${t}">${esc(l)}</span>`;
     }
 
-    function route(){const h=location.hash.replace('#/','');const q=new URLSearchParams(location.search);if(q.get('resetar_senha')==='true'||location.hash.includes('type=recovery'))return'resetar-senha';return h?h.split('?')[0]:(auth.token?'dashboard':'login')}
-    function tokens(){const h=location.hash.startsWith('#')?location.hash.slice(1):location.hash;const p=new URLSearchParams(h);return{access_token:p.get('access_token'),refresh_token:p.get('refresh_token')}}
-
-    function renderAuth(mode='login',error=''){
-      const forgot=mode==='esqueci-senha', reset=mode==='resetar-senha';
-      const title=forgot?'Recuperar senha':reset?'Definir nova senha':'Entrar no sistema';
-      const sub=forgot?'Informe seu email para receber as instruções de recuperação.':reset?'Crie uma nova senha segura para acessar o sistema.':'Acesse com seu usuário autorizado.';
-      root.innerHTML=`<section class="auth-shell"><div class="auth-brand"><div><div class="d-inline-flex align-items-center gap-2 mb-4"><span class="brand-icon"><i class="bi bi-box-seam"></i></span><span class="fw-bold fs-5">Almoxarifado</span></div><h1>Gestão de materiais com controle, rastreabilidade e autorização.</h1><p class="mt-4">Controle produtos, movimentações, solicitações internas e liberações por WhatsApp em uma interface corporativa simples e rápida.</p></div><div class="bottom-note small text-white-50"><i class="bi bi-shield-check me-2"></i>Sessão protegida por autenticação.</div></div><div class="auth-wrap"><div class="auth-card"><div class="mb-4"><span class="soft-badge badge-soft-primary mb-3"><i class="bi bi-building-lock"></i>Sistema interno</span><h2 class="fw-black mb-1">${title}</h2><p class="text-muted2 mb-0">${sub}</p></div>${forgot?forgotForm(error):reset?resetForm(error):loginForm(error)}</div></div></section>`;
-      if(forgot) byId('forgotForm').addEventListener('submit',handleForgot); else if(reset) byId('resetForm').addEventListener('submit',handleReset); else byId('loginForm').addEventListener('submit',handleLogin);
+    function options(items, key='nome'){
+      return items.map(i => `<option value="${esc(i.id)}">${esc(i[key] || i.nome || i.codigo || i.id)}</option>`).join('');
     }
-    function loginForm(e){return`<form id="loginForm" class="vstack gap-3"><label class="form-label">Email<input class="form-control mt-1" name="email" type="email" autocomplete="email" required></label><label class="form-label">Senha<input class="form-control mt-1" name="senha" type="password" autocomplete="current-password" required></label>${e?`<div class="alert alert-danger mb-0">${esc(e)}</div>`:''}<button class="btn btn-primary w-100" type="submit"><i class="bi bi-box-arrow-in-right me-2"></i>Entrar</button><a class="text-center small fw-semibold" href="#/esqueci-senha">Esqueci minha senha</a></form>`}
-    function forgotForm(e){return`<form id="forgotForm" class="vstack gap-3"><label class="form-label">Email<input class="form-control mt-1" name="email" type="email" required></label>${e?`<div class="alert alert-danger mb-0">${esc(e)}</div>`:''}<div id="forgotMessage"></div><button class="btn btn-primary w-100" type="submit"><i class="bi bi-envelope-arrow-up me-2"></i>Enviar instruções</button><a class="text-center small fw-semibold" href="#/login">Voltar para login</a></form>`}
-    function resetForm(e){const t=tokens();return`<form id="resetForm" class="vstack gap-3"><label class="form-label">Nova senha<input class="form-control mt-1" name="senha" type="password" minlength="6" required></label><label class="form-label">Confirmar nova senha<input class="form-control mt-1" name="confirmar_senha" type="password" minlength="6" required></label><input type="hidden" name="access_token" value="${esc(t.access_token||'')}"><input type="hidden" name="refresh_token" value="${esc(t.refresh_token||'')}">${e?`<div class="alert alert-danger mb-0">${esc(e)}</div>`:''}<div id="resetMessage"></div><button class="btn btn-primary w-100" type="submit"><i class="bi bi-key me-2"></i>Salvar nova senha</button><a class="text-center small fw-semibold" href="#/login">Voltar para login</a></form>`}
 
-    async function handleLogin(ev){ev.preventDefault();const form=ev.currentTarget,btn=form.querySelector('button');btn.disabled=true;btn.innerHTML='<span class="spinner-border spinner-border-sm me-2"></span>Entrando...';try{const payload=Object.fromEntries(new FormData(form));const res=await fetch(`${API_URL}/auth/login`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});const body=await res.json();if(!res.ok)throw new Error(body.erro||body.mensagem||'Erro ao fazer login');saveSession(body);history.replaceState(null,'','#/dashboard');renderShell();await navigate('dashboard')}catch(err){renderAuth('login',err.message)}}
-    async function handleForgot(ev){ev.preventDefault();const box=byId('forgotMessage');try{await api('/auth/forgot-password',{method:'POST',body:JSON.stringify(Object.fromEntries(new FormData(ev.currentTarget)))});box.innerHTML='<div class="alert alert-success mb-0">Se o email estiver cadastrado, as instruções serão enviadas.</div>'}catch(err){box.innerHTML=`<div class="alert alert-danger mb-0">${esc(err.message)}</div>`}}
-    async function handleReset(ev){ev.preventDefault();const data=Object.fromEntries(new FormData(ev.currentTarget));const box=byId('resetMessage');if(data.senha!==data.confirmar_senha){box.innerHTML='<div class="alert alert-danger mb-0">As senhas não conferem.</div>';return}if(!data.access_token||!data.refresh_token){box.innerHTML='<div class="alert alert-danger mb-0">Link de recuperação inválido ou expirado.</div>';return}try{await api('/auth/reset-password',{method:'POST',body:JSON.stringify({access_token:data.access_token,refresh_token:data.refresh_token,senha:data.senha})});box.innerHTML='<div class="alert alert-success mb-0">Senha redefinida. Faça login novamente.</div>';clearSession();setTimeout(()=>{history.replaceState(null,'','#/login');renderAuth('login')},1700)}catch(err){box.innerHTML=`<div class="alert alert-danger mb-0">${esc(err.message)}</div>`}}
+    async function renderDashboard(fresh=false){
+      const d = await load(['produtos','categorias','saldo','solicitacoes'], fresh);
+      const baixo = d.saldo.filter(x => x.abaixo_estoque_minimo);
+      const pend = d.solicitacoes.filter(x => ['enviada','aprovada','atendida_parcial'].includes(x.status));
+      const total = d.saldo.reduce((s,x) => s + Number(x.saldo_atual || 0), 0);
+      $('app').innerHTML = `<div class="row g-3 mb-4">
+        ${card('Produtos', d.produtos.length, 'bi-box-seam')}
+        ${card('Itens em estoque', fmt(total), 'bi-boxes')}
+        ${card('Baixo estoque', baixo.length, 'bi-exclamation-triangle')}
+        ${card('Solicitações pendentes', pend.length, 'bi-hourglass-split')}
+      </div>
+      <div class="row g-3">
+        <div class="col-lg-7"><div class="surface p-3 p-md-4 h-100"><div class="d-flex justify-content-between mb-3"><div><h5 class="fw-bold mb-1">Solicitações recentes</h5><p class="text-secondary small mb-0">Últimas movimentações do fluxo interno.</p></div><button class="btn btn-sm btn-primary" onclick="navigate('solicitacoes')">Ver</button></div>${tableSolicitacoes(d.solicitacoes.slice(0,6), true)}</div></div>
+        <div class="col-lg-5"><div class="surface p-3 p-md-4 h-100"><div class="d-flex justify-content-between mb-3"><div><h5 class="fw-bold mb-1">Itens críticos</h5><p class="text-secondary small mb-0">Produtos abaixo do mínimo.</p></div><span class="soft ${baixo.length ? 'soft-danger':'soft-success'}">${baixo.length} itens</span></div>${tableSaldo(baixo.slice(0,6), true)}</div></div>
+      </div>`;
+    }
 
-    function logout(){clearSession();history.replaceState(null,'','#/login');renderAuth('login')}
-    function sidebar(){const nav=ROUTES.map(r=>`<a href="#/${r.id}" class="nav-link ${state.currentPage===r.id?'active':''}" data-route="${r.id}"><i class="bi ${r.icon}"></i><span>${r.label}</span></a>`).join('');return`<div class="brand"><div class="brand-icon"><i class="bi bi-box-seam"></i></div><div><strong>Almoxarifado</strong><br><small>Controle corporativo</small></div></div><div class="nav-label">Menu</div><nav class="app-nav">${nav}</nav><div class="small text-white-50 px-2 mt-4"><i class="bi bi-whatsapp me-2"></i>Autorizações integradas</div>`}
-    function renderShell(){root.innerHTML=`<div class="app-shell"><aside class="sidebar">${sidebar()}</aside><div class="offcanvas offcanvas-start text-bg-dark" tabindex="-1" id="mobileMenu"><div class="offcanvas-body p-3">${sidebar()}</div></div><main class="main"><header class="topbar mb-4"><div class="d-flex align-items-center justify-content-between gap-3"><div class="d-flex align-items-center gap-2"><button class="btn btn-light btn-icon mobile-nav-btn" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu"><i class="bi bi-list"></i></button><div><h1 class="page-title" id="pageTitle">Dashboard</h1><p class="page-subtitle" id="pageSubtitle">Visão geral</p></div></div><div class="d-flex align-items-center gap-2"><button class="btn btn-light btn-icon" id="themeBtn"><i class="bi bi-moon-stars"></i></button><div class="dropdown"><button class="btn btn-light d-flex align-items-center gap-2" data-bs-toggle="dropdown"><span class="rounded-circle bg-primary text-white" style="width:32px;height:32px;display:grid;place-items:center">${esc((auth.usuario?.nome||'U').slice(0,1).toUpperCase())}</span><span class="d-none d-md-inline small fw-bold">${esc(auth.usuario?.nome||'Usuário')}</span></button><ul class="dropdown-menu dropdown-menu-end shadow border-0"><li><h6 class="dropdown-header">${esc(auth.usuario?.email||'')}</h6></li><li><span class="dropdown-item-text small text-secondary">Perfil: ${esc(auth.usuario?.perfil||'-')}</span></li><li><hr class="dropdown-divider"></li><li><button class="dropdown-item text-danger" id="logoutBtn"><i class="bi bi-box-arrow-right me-2"></i>Sair</button></li></ul></div></div></div></header><section id="app" class="fade-page"></section></main></div>`;byId('logoutBtn').addEventListener('click',logout);byId('themeBtn').addEventListener('click',()=>{const next=document.documentElement.getAttribute('data-bs-theme')==='dark'?'light':'dark';document.documentElement.setAttribute('data-bs-theme',next);localStorage.setItem('almox_theme',next)});document.querySelectorAll('[data-route]').forEach(a=>a.addEventListener('click',ev=>{ev.preventDefault();history.pushState(null,'',`#/${a.dataset.route}`);navigate(a.dataset.route);const off=bootstrap.Offcanvas.getInstance(byId('mobileMenu'));if(off)off.hide()}))}
-    function meta(title,sub){byId('pageTitle').textContent=title;byId('pageSubtitle').textContent=sub;document.querySelectorAll('[data-route]').forEach(a=>a.classList.toggle('active',a.dataset.route===state.currentPage))}
-    function loading(){byId('app').innerHTML=`<div class="row g-3"><div class="col-md-3"><div class="skeleton"></div></div><div class="col-md-3"><div class="skeleton"></div></div><div class="col-md-3"><div class="skeleton"></div></div><div class="col-md-3"><div class="skeleton"></div></div><div class="col-12"><div class="skeleton" style="min-height:320px"></div></div></div>`}
-    async function navigate(r){state.currentPage=r;loading();try{await loadAll();({dashboard:renderDashboard,produtos:renderProdutos,estoque:renderEstoque,solicitacoes:renderSolicitacoes,cadastros:renderCadastros,usuarios:renderUsuarios}[r]||renderDashboard)();meta(byId('pageTitle').textContent,byId('pageSubtitle').textContent)}catch(err){byId('app').innerHTML=`<div class="surface p-4"><div class="empty-state"><i class="bi bi-cloud-slash"></i><h5>Não foi possível carregar</h5><p>${esc(err.message)}</p><button class="btn btn-primary" onclick="navigate('${r}')">Tentar novamente</button></div></div>`}}
-    function empty(title,icon='bi-inbox',sub='Nada para exibir no momento.'){return`<div class="empty-state"><i class="bi ${icon}"></i><h6 class="fw-bold">${esc(title)}</h6><p class="small mb-0">${esc(sub)}</p></div>`}
-    function stat(label,value,icon,type='primary'){return`<div class="col-6 col-lg-3"><div class="surface stat-card"><div class="d-flex justify-content-between align-items-start"><div><div class="stat-label">${esc(label)}</div><div class="stat-value mt-2">${value}</div></div><div class="stat-icon badge-soft-${type}"><i class="bi ${icon}"></i></div></div></div></div>`}
+    async function renderProdutos(fresh=false){
+      const d = await load(['produtos','categorias','unidades'], fresh);
+      $('app').innerHTML = `<div class="surface p-3 p-md-4">
+        <div class="d-flex flex-column flex-md-row justify-content-between gap-3 mb-3">
+          <div><h5 class="fw-bold mb-1">Produtos cadastrados</h5><p class="text-secondary small mb-0">Busca rápida e cadastro otimizado.</p></div>
+          <div class="d-flex gap-2"><div class="search"><i class="bi bi-search"></i><input id="produtoSearch" class="form-control" placeholder="Buscar..."></div><button class="btn btn-primary" onclick="showModal('produtoModal')"><i class="bi bi-plus-lg me-1"></i>Novo</button></div>
+        </div>
+        <div id="produtosTable">${tableProdutos(d.produtos)}</div>
+      </div>${produtoModal(d)}`;
+      $('produtoSearch').addEventListener('input', debounce(e => {
+        const q = e.target.value.toLowerCase();
+        const list = d.produtos.filter(p => [p.nome,p.codigo_interno,p.categorias?.nome].join(' ').toLowerCase().includes(q));
+        $('produtosTable').innerHTML = tableProdutos(list);
+      }));
+      $('produtoForm').addEventListener('submit', saveProduto);
+    }
 
-    function renderDashboard(){meta('Dashboard','Visão geral do almoxarifado');const low=state.saldo.filter(i=>i.abaixo_estoque_minimo), pend=state.solicitacoes.filter(i=>['enviada','aprovada','atendida_parcial'].includes(i.status)), total=state.saldo.reduce((s,i)=>s+Number(i.saldo_atual||0),0);byId('app').innerHTML=`<div class="row g-3 mb-4">${stat('Produtos',state.produtos.length,'bi-box-seam')}${stat('Itens em estoque',n(total),'bi-boxes','success')}${stat('Baixo estoque',low.length,'bi-exclamation-triangle',low.length?'danger':'success')}${stat('Pendentes',pend.length,'bi-hourglass-split','warning')}</div><div class="row g-3"><div class="col-lg-7"><div class="surface p-3 p-md-4 h-100"><div class="d-flex justify-content-between align-items-center mb-3"><div><h5 class="fw-bold mb-1">Solicitações recentes</h5><p class="text-muted2 small mb-0">Últimas movimentações do fluxo interno.</p></div><button class="btn btn-sm btn-primary" onclick="openSolicitacaoModal()"><i class="bi bi-plus-lg me-1"></i>Nova</button></div>${state.solicitacoes.length?tableSolicitacoes(state.solicitacoes.slice(0,6),true):empty('Nenhuma solicitação','bi-clipboard2')}</div></div><div class="col-lg-5"><div class="surface p-3 p-md-4 h-100"><div class="d-flex justify-content-between align-items-center mb-3"><div><h5 class="fw-bold mb-1">Atenção ao estoque</h5><p class="text-muted2 small mb-0">Itens abaixo do mínimo.</p></div><span class="soft-badge ${low.length?'badge-soft-danger':'badge-soft-success'}">${low.length} itens</span></div>${low.length?tableSaldo(low.slice(0,6),true):empty('Nenhum item crítico','bi-check-circle')}</div></div></div>${solicitacaoModal()}${atenderModal()}`;attachSolicitacaoForms()}
+    function tableProdutos(items){
+      if(!items.length) return empty('Nenhum produto cadastrado','bi-box-seam');
+      return `<div class="table-responsive"><table class="table table-hover mb-0"><thead><tr><th>Código</th><th>Produto</th><th>Categoria</th><th>Unidade</th><th>Mínimo</th><th>Status</th></tr></thead><tbody>${items.map(p=>`<tr>
+        <td class="fw-bold">${esc(p.codigo_interno || '-')}</td><td><div class="fw-bold">${esc(p.nome)}</div><div class="small text-secondary">${esc(p.descricao || '')}</div></td>
+        <td>${esc(p.categorias?.nome || '-')}</td><td>${esc(p.unidades_medida?.sigla || '-')}</td><td>${fmt(p.estoque_minimo)}</td>
+        <td>${p.ativo ? '<span class="soft soft-success">Ativo</span>' : '<span class="soft soft-danger">Inativo</span>'}</td>
+      </tr>`).join('')}</tbody></table></div>`;
+    }
 
-    function renderProdutos(){meta('Produtos','Cadastro e consulta de materiais');byId('app').innerHTML=`<div class="surface p-3 p-md-4"><div class="d-flex flex-column flex-md-row justify-content-between gap-3 mb-3"><div><h5 class="fw-bold mb-1">Produtos cadastrados</h5><p class="text-muted2 small mb-0">Materiais, categorias e estoque mínimo.</p></div><div class="d-flex gap-2"><div class="search-box"><i class="bi bi-search"></i><input class="form-control" id="produtoSearch" placeholder="Buscar produto..."></div><button class="btn btn-primary" onclick="openProdutoModal()"><i class="bi bi-plus-lg me-1"></i>Novo</button></div></div><div id="produtosTable">${tableProdutos(state.produtos)}</div></div>${produtoModal()}`;byId('produtoSearch').addEventListener('input',e=>{const q=e.target.value.toLowerCase();byId('produtosTable').innerHTML=tableProdutos(state.produtos.filter(p=>[p.nome,p.codigo_interno,p.categorias?.nome].join(' ').toLowerCase().includes(q)))});byId('produtoForm').addEventListener('submit',saveProduto)}
-    function tableProdutos(items){if(!items.length)return empty('Nenhum produto cadastrado','bi-box-seam');return`<div class="table-responsive"><table class="table table-hover mb-0"><thead><tr><th>Código</th><th>Produto</th><th>Categoria</th><th>Unidade</th><th>Mín.</th><th>Máx.</th><th>Status</th></tr></thead><tbody>${items.map(p=>`<tr><td class="fw-bold">${esc(p.codigo_interno||'-')}</td><td><div class="fw-bold">${esc(p.nome)}</div><div class="small text-muted2">${esc(p.descricao||'')}</div></td><td>${esc(p.categorias?.nome||'-')}</td><td>${esc(p.unidades_medida?.sigla||'-')}</td><td>${n(p.estoque_minimo)}</td><td>${p.estoque_maximo==null?'-':n(p.estoque_maximo)}</td><td>${p.ativo?'<span class="soft-badge badge-soft-success">Ativo</span>':'<span class="soft-badge badge-soft-danger">Inativo</span>'}</td></tr>`).join('')}</tbody></table></div>`}
-    function produtoModal(){return`<div class="modal fade" id="produtoModal" tabindex="-1"><div class="modal-dialog modal-lg modal-dialog-centered"><div class="modal-content"><form id="produtoForm"><div class="modal-header"><div><h5 class="fw-bold mb-0">Novo produto</h5><p class="text-muted2 small mb-0">Preencha os dados do material.</p></div><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="row g-3"><div class="col-md-8"><label class="form-label">Nome<input class="form-control mt-1" name="nome" required></label></div><div class="col-md-4"><label class="form-label">Código interno<input class="form-control mt-1" name="codigo_interno"></label></div><div class="col-md-6"><label class="form-label">Categoria<select class="form-select mt-1" name="categoria_id"><option value="">Selecione</option>${options(state.categorias)}</select></label></div><div class="col-md-6"><label class="form-label">Unidade<select class="form-select mt-1" name="unidade_medida_id"><option value="">Selecione</option>${options(state.unidades,'sigla')}</select></label></div><div class="col-md-4"><label class="form-label">Estoque mínimo<input class="form-control mt-1" name="estoque_minimo" type="number" min="0" step="0.001" value="0"></label></div><div class="col-md-4"><label class="form-label">Estoque máximo<input class="form-control mt-1" name="estoque_maximo" type="number" min="0" step="0.001"></label></div><div class="col-md-4"><label class="form-label">Código de barras<input class="form-control mt-1" name="codigo_barras"></label></div><div class="col-12"><label class="form-label">Descrição<textarea class="form-control mt-1" name="descricao" rows="3"></textarea></label></div></div></div><div class="modal-footer"><button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button><button class="btn btn-primary" type="submit">Salvar</button></div></form></div></div></div>`}
-    function openProdutoModal(){bootstrap.Modal.getOrCreateInstance(byId('produtoModal')).show()}
-    async function saveProduto(ev){ev.preventDefault();const data=Object.fromEntries(new FormData(ev.currentTarget));try{await api('/produtos',{method:'POST',body:JSON.stringify({...data,categoria_id:data.categoria_id||null,unidade_medida_id:data.unidade_medida_id||null,codigo_barras:data.codigo_barras||null,estoque_minimo:Number(data.estoque_minimo||0),estoque_maximo:data.estoque_maximo?Number(data.estoque_maximo):null,controla_validade:false,controla_lote:false})});bootstrap.Modal.getInstance(byId('produtoModal')).hide();toast('Produto cadastrado com sucesso.');await navigate('produtos')}catch(err){toast(err.message,'danger')}}
+    function produtoModal(d){
+      return `<div class="modal fade" id="produtoModal" tabindex="-1"><div class="modal-dialog modal-lg modal-dialog-centered"><div class="modal-content"><form id="produtoForm">
+        <div class="modal-header"><div><h5 class="modal-title fw-bold">Novo produto</h5><p class="small text-secondary mb-0">Cadastre um material.</p></div><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+        <div class="modal-body"><div class="row g-3">
+          <div class="col-md-8"><label class="form-label">Nome<input class="form-control mt-1" name="nome" required></label></div>
+          <div class="col-md-4"><label class="form-label">Código interno<input class="form-control mt-1" name="codigo_interno"></label></div>
+          <div class="col-md-6"><label class="form-label">Categoria<select class="form-select mt-1" name="categoria_id"><option value="">Selecione</option>${options(d.categorias)}</select></label></div>
+          <div class="col-md-6"><label class="form-label">Unidade<select class="form-select mt-1" name="unidade_medida_id"><option value="">Selecione</option>${options(d.unidades,'sigla')}</select></label></div>
+          <div class="col-md-4"><label class="form-label">Estoque mínimo<input class="form-control mt-1" name="estoque_minimo" type="number" min="0" step="0.001" value="0"></label></div>
+          <div class="col-md-4"><label class="form-label">Estoque máximo<input class="form-control mt-1" name="estoque_maximo" type="number" min="0" step="0.001"></label></div>
+          <div class="col-md-4"><label class="form-label">Código de barras<input class="form-control mt-1" name="codigo_barras"></label></div>
+          <div class="col-12"><label class="form-label">Descrição<textarea class="form-control mt-1" name="descricao" rows="3"></textarea></label></div>
+        </div></div>
+        <div class="modal-footer"><button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button><button class="btn btn-primary" type="submit">Salvar</button></div>
+      </form></div></div></div>`;
+    }
 
-    function renderEstoque(){meta('Estoque','Movimentações e saldo por local');byId('app').innerHTML=`<div class="surface p-3 p-md-4"><div class="d-flex flex-column flex-md-row justify-content-between gap-3 mb-3"><div><h5 class="fw-bold mb-1">Saldo de estoque</h5><p class="text-muted2 small mb-0">Consulte saldos e registre entradas, saídas e ajustes.</p></div><div class="d-flex gap-2"><div class="search-box"><i class="bi bi-search"></i><input class="form-control" id="saldoSearch" placeholder="Buscar saldo..."></div><button class="btn btn-primary" onclick="openMovimentacaoModal()"><i class="bi bi-arrow-left-right me-1"></i>Movimentar</button></div></div><div id="saldoTable">${tableSaldo(state.saldo)}</div></div>${movimentacaoModal()}`;byId('saldoSearch').addEventListener('input',e=>{const q=e.target.value.toLowerCase();byId('saldoTable').innerHTML=tableSaldo(state.saldo.filter(s=>[s.produto,s.local_estoque,s.categoria].join(' ').toLowerCase().includes(q)))});byId('movimentacaoForm').addEventListener('submit',saveMovimentacao)}
-    function tableSaldo(items,compact=false){if(!items.length)return empty('Nenhum saldo encontrado','bi-boxes');return`<div class="table-responsive"><table class="table table-hover mb-0"><thead><tr><th>Produto</th>${compact?'':'<th>Categoria</th>'}<th>Local</th><th>Saldo</th><th>Mínimo</th><th>Status</th></tr></thead><tbody>${items.map(s=>`<tr><td><div class="fw-bold">${esc(s.produto||'-')}</div><div class="small text-muted2">${esc(s.codigo_interno||'')}</div></td>${compact?'':`<td>${esc(s.categoria||'-')}</td>`}<td>${esc(s.local_estoque||'-')}</td><td class="fw-bold">${n(s.saldo_atual)}</td><td>${n(s.estoque_minimo)}</td><td>${s.abaixo_estoque_minimo?'<span class="soft-badge badge-soft-danger">Baixo</span>':'<span class="soft-badge badge-soft-success">OK</span>'}</td></tr>`).join('')}</tbody></table></div>`}
-    function movimentacaoModal(){return`<div class="modal fade" id="movimentacaoModal" tabindex="-1"><div class="modal-dialog modal-lg modal-dialog-centered"><div class="modal-content"><form id="movimentacaoForm"><div class="modal-header"><div><h5 class="fw-bold mb-0">Nova movimentação</h5><p class="text-muted2 small mb-0">Entrada, saída ou ajuste.</p></div><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="row g-3"><div class="col-md-6"><label class="form-label">Produto<select class="form-select mt-1" name="produto_id" required><option value="">Selecione</option>${options(state.produtos)}</select></label></div><div class="col-md-6"><label class="form-label">Local<select class="form-select mt-1" name="local_estoque_id" required><option value="">Selecione</option>${options(state.locais)}</select></label></div><div class="col-md-4"><label class="form-label">Tipo<select class="form-select mt-1" name="tipo" required><option value="entrada">Entrada</option><option value="saida">Saída</option><option value="ajuste_entrada">Ajuste entrada</option><option value="ajuste_saida">Ajuste saída</option></select></label></div><div class="col-md-4"><label class="form-label">Origem<select class="form-select mt-1" name="origem"><option value="manual">Manual</option><option value="compra">Compra</option><option value="solicitacao">Solicitação</option><option value="inventario">Inventário</option><option value="devolucao">Devolução</option></select></label></div><div class="col-md-4"><label class="form-label">Quantidade<input class="form-control mt-1" name="quantidade" type="number" step="0.001" min="0.001" required></label></div><div class="col-md-4"><label class="form-label">Documento<input class="form-control mt-1" name="documento"></label></div><div class="col-md-4"><label class="form-label">Lote<input class="form-control mt-1" name="lote"></label></div><div class="col-md-4"><label class="form-label">Validade<input class="form-control mt-1" name="data_validade" type="date"></label></div><div class="col-12"><label class="form-label">Observação<textarea class="form-control mt-1" name="observacao" rows="3"></textarea></label></div></div></div><div class="modal-footer"><button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button><button class="btn btn-primary" type="submit">Registrar</button></div></form></div></div></div>`}
-    function openMovimentacaoModal(){bootstrap.Modal.getOrCreateInstance(byId('movimentacaoModal')).show()}
-    async function saveMovimentacao(ev){ev.preventDefault();const data=Object.fromEntries(new FormData(ev.currentTarget));try{await api('/movimentacoes',{method:'POST',body:JSON.stringify({...data,quantidade:Number(data.quantidade),documento:data.documento||null,lote:data.lote||null,data_validade:data.data_validade||null,observacao:data.observacao||null})});bootstrap.Modal.getInstance(byId('movimentacaoModal')).hide();toast('Movimentação registrada.');await navigate('estoque')}catch(err){toast(err.message,'danger')}}
+    async function saveProduto(e){
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(e.currentTarget));
+      const payload = {...data, categoria_id:data.categoria_id||null, unidade_medida_id:data.unidade_medida_id||null, codigo_barras:data.codigo_barras||null, estoque_minimo:Number(data.estoque_minimo||0), estoque_maximo:data.estoque_maximo?Number(data.estoque_maximo):null, controla_validade:false, controla_lote:false};
+      try{
+        await api('/produtos',{method:'POST',body:JSON.stringify(payload)});
+        invalidate('produtos','saldo');
+        hideModal('produtoModal');
+        toast('Produto cadastrado com sucesso.');
+        await navigate('produtos', true);
+      }catch(err){toast(err.message,'danger')}
+    }
 
-    function renderSolicitacoes(){meta('Solicitações','Solicitações internas e liberações por WhatsApp');byId('app').innerHTML=`<div class="surface p-3 p-md-4"><div class="d-flex flex-column flex-md-row justify-content-between gap-3 mb-3"><div><h5 class="fw-bold mb-1">Solicitações de material</h5><p class="text-muted2 small mb-0">Ao criar, o almoxarife recebe a autorização pelo WhatsApp.</p></div><button class="btn btn-primary" onclick="openSolicitacaoModal()"><i class="bi bi-plus-lg me-1"></i>Nova solicitação</button></div>${tableSolicitacoes(state.solicitacoes)}</div>${solicitacaoModal()}${atenderModal()}`;attachSolicitacaoForms()}
-    function tableSolicitacoes(items,compact=false){if(!items.length)return empty('Nenhuma solicitação encontrada','bi-clipboard2');return`<div class="table-responsive"><table class="table table-hover mb-0"><thead><tr><th>Data</th><th>Status</th><th>Justificativa</th>${compact?'':'<th>Solicitante</th><th>Itens</th><th>Ações</th>'}</tr></thead><tbody>${items.map(s=>`<tr><td>${d(s.data_solicitacao)}</td><td>${badge(s.status)}</td><td><div class="fw-bold">${esc(s.justificativa||'-')}</div><div class="small text-muted2">${esc(s.observacao||'')}</div></td>${compact?'':`<td>${esc(s.usuarios?.nome||'-')}</td><td>${(s.solicitacao_itens||[]).length}</td><td>${s.status==='aprovada'?`<button class="btn btn-sm btn-primary" onclick="openAtenderModal('${s.id}')"><i class="bi bi-check2-square me-1"></i>Atender</button>`:'<span class="text-muted2 small">-</span>'}</td>`}</tr>`).join('')}</tbody></table></div>`}
-    function solicitacaoModal(){return`<div class="modal fade" id="solicitacaoModal" tabindex="-1"><div class="modal-dialog modal-xl modal-dialog-centered"><div class="modal-content"><form id="solicitacaoForm"><div class="modal-header"><div><h5 class="fw-bold mb-0">Nova solicitação</h5><p class="text-muted2 small mb-0">A autorização será enviada ao almoxarife.</p></div><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="row g-3"><div class="col-md-6"><label class="form-label">Setor<select class="form-select mt-1" name="setor_id"><option value="">Selecione</option>${options(state.setores)}</select></label></div><div class="col-md-6"><label class="form-label">Centro de custo<select class="form-select mt-1" name="centro_custo_id"><option value="">Selecione</option>${state.centrosCusto.map(c=>`<option value="${esc(c.id)}">${esc(c.codigo||'')} ${esc(c.nome||'')}</option>`).join('')}</select></label></div><div class="col-12"><label class="form-label">Justificativa<textarea class="form-control mt-1" name="justificativa" rows="3" required></textarea></label></div><div class="col-12"><div class="d-flex justify-content-between align-items-center mb-2"><h6 class="fw-bold mb-0">Itens solicitados</h6><button class="btn btn-sm btn-light" type="button" id="addItemBtn"><i class="bi bi-plus-lg me-1"></i>Adicionar item</button></div><div id="solicitacaoItens" class="vstack gap-2"></div></div></div></div><div class="modal-footer"><button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button><button class="btn btn-primary" type="submit">Enviar solicitação</button></div></form></div></div></div>`}
-    function attachSolicitacaoForms(){if(byId('solicitacaoForm')){byId('solicitacaoForm').addEventListener('submit',saveSolicitacao);byId('addItemBtn').addEventListener('click',addSolicitacaoItem);addSolicitacaoItem()}if(byId('atenderForm'))byId('atenderForm').addEventListener('submit',atenderSolicitacao)}
-    function addSolicitacaoItem(){const box=byId('solicitacaoItens');if(!box)return;const index=box.children.length+1;const row=document.createElement('div');row.className='row g-2 align-items-end';row.innerHTML=`<div class="col-md-7"><label class="form-label">Produto ${index}<select class="form-select mt-1 item-produto" required><option value="">Selecione</option>${options(state.produtos)}</select></label></div><div class="col-md-3"><label class="form-label">Quantidade<input class="form-control mt-1 item-quantidade" type="number" min="0.001" step="0.001" required></label></div><div class="col-md-2"><button class="btn btn-light w-100" type="button"><i class="bi bi-trash"></i></button></div>`;row.querySelector('button').addEventListener('click',()=>row.remove());box.appendChild(row)}
-    function openSolicitacaoModal(){bootstrap.Modal.getOrCreateInstance(byId('solicitacaoModal')).show()}
-    async function saveSolicitacao(ev){ev.preventDefault();const data=Object.fromEntries(new FormData(ev.currentTarget));const rows=[...document.querySelectorAll('#solicitacaoItens .row')];const itens=rows.map(row=>({produto_id:row.querySelector('.item-produto').value,quantidade_solicitada:Number(row.querySelector('.item-quantidade').value),observacao:null})).filter(i=>i.produto_id&&i.quantidade_solicitada>0);if(!itens.length){toast('Adicione pelo menos um item válido.','warning');return}try{await api('/solicitacoes',{method:'POST',body:JSON.stringify({solicitante_id:auth.usuario?.id||null,setor_id:data.setor_id||auth.usuario?.setor_id||null,centro_custo_id:data.centro_custo_id||auth.usuario?.centro_custo_id||null,justificativa:data.justificativa,observacao:null,itens})});bootstrap.Modal.getInstance(byId('solicitacaoModal')).hide();toast('Solicitação criada e enviada ao almoxarife.');await navigate('solicitacoes')}catch(err){toast(err.message,'danger')}}
-    function atenderModal(){return`<div class="modal fade" id="atenderModal" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content"><form id="atenderForm"><div class="modal-header"><h5 class="fw-bold mb-0">Atender solicitação</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><input type="hidden" name="solicitacao_id"><label class="form-label">Local de estoque<select class="form-select mt-1" name="local_estoque_id" required><option value="">Selecione</option>${options(state.locais)}</select></label></div><div class="modal-footer"><button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button><button class="btn btn-primary" type="submit">Confirmar</button></div></form></div></div></div>`}
-    function openAtenderModal(id){byId('atenderForm').solicitacao_id.value=id;bootstrap.Modal.getOrCreateInstance(byId('atenderModal')).show()}
-    async function atenderSolicitacao(ev){ev.preventDefault();const data=Object.fromEntries(new FormData(ev.currentTarget));try{await api(`/solicitacoes/${data.solicitacao_id}/atender`,{method:'POST',body:JSON.stringify({local_estoque_id:data.local_estoque_id,usuario_id:auth.usuario?.id||null})});bootstrap.Modal.getInstance(byId('atenderModal')).hide();toast('Solicitação atendida com sucesso.');await navigate('solicitacoes')}catch(err){toast(err.message,'danger')}}
+    async function renderEstoque(fresh=false){
+      const d = await load(['saldo','produtos','locais'], fresh);
+      $('app').innerHTML = `<div class="surface p-3 p-md-4">
+        <div class="d-flex flex-column flex-md-row justify-content-between gap-3 mb-3">
+          <div><h5 class="fw-bold mb-1">Saldo de estoque</h5><p class="text-secondary small mb-0">Consulta rápida por produto, local ou categoria.</p></div>
+          <div class="d-flex gap-2"><div class="search"><i class="bi bi-search"></i><input id="saldoSearch" class="form-control" placeholder="Buscar..."></div><button class="btn btn-primary" onclick="showModal('movModal')"><i class="bi bi-arrow-left-right me-1"></i>Movimentar</button></div>
+        </div>
+        <div id="saldoTable">${tableSaldo(d.saldo)}</div>
+      </div>${movModal(d)}`;
+      $('saldoSearch').addEventListener('input', debounce(e => {
+        const q = e.target.value.toLowerCase();
+        $('saldoTable').innerHTML = tableSaldo(d.saldo.filter(s => [s.produto,s.local_estoque,s.categoria].join(' ').toLowerCase().includes(q)));
+      }));
+      $('movForm').addEventListener('submit', saveMov);
+    }
 
-    function renderCadastros(){meta('Cadastros','Setores, locais, fornecedores e centros de custo');byId('app').innerHTML=`<div class="row g-3">${cadCard('Setores','/cadastros/setores',state.setores,'bi-diagram-3')}${cadCard('Locais de estoque','/cadastros/locais-estoque',state.locais,'bi-geo-alt')}${cadCard('Fornecedores','/cadastros/fornecedores',state.fornecedores,'bi-truck')}${ccCard()}</div>`;document.querySelectorAll('[data-cad]').forEach(f=>f.addEventListener('submit',saveCad));byId('centroCustoForm').addEventListener('submit',saveCC)}
-    function cadCard(title,endpoint,items,icon){return`<div class="col-lg-6"><div class="surface p-3 p-md-4 h-100"><h5 class="fw-bold mb-1"><i class="bi ${icon} me-2 text-primary"></i>${title}</h5><p class="small text-muted2">${items.length} registros</p><form data-cad data-endpoint="${endpoint}" class="d-flex gap-2 mb-3"><input class="form-control" name="nome" placeholder="Novo registro" required><button class="btn btn-primary">Salvar</button></form><div class="vstack gap-2">${items.slice(0,8).map(i=>`<div class="d-flex justify-content-between p-2 rounded-3 bg-body-tertiary"><span class="fw-semibold">${esc(i.nome)}</span><span class="soft-badge ${i.ativo===false?'badge-soft-danger':'badge-soft-success'}">${i.ativo===false?'Inativo':'Ativo'}</span></div>`).join('')||'<p class="small text-muted2 mb-0">Nenhum registro.</p>'}</div></div></div>`}
-    function ccCard(){return`<div class="col-lg-6"><div class="surface p-3 p-md-4 h-100"><h5 class="fw-bold mb-1"><i class="bi bi-cash-coin me-2 text-primary"></i>Centros de custo</h5><p class="small text-muted2">${state.centrosCusto.length} registros</p><form id="centroCustoForm" class="row g-2 mb-3"><div class="col-sm-4"><input class="form-control" name="codigo" placeholder="Código" required></div><div class="col-sm-6"><input class="form-control" name="nome" placeholder="Nome" required></div><div class="col-sm-2"><button class="btn btn-primary w-100"><i class="bi bi-check-lg"></i></button></div></form><div class="vstack gap-2">${state.centrosCusto.slice(0,8).map(c=>`<div class="p-2 rounded-3 bg-body-tertiary"><span class="fw-bold">${esc(c.codigo||'-')}</span><span class="text-muted2"> — ${esc(c.nome||'')}</span></div>`).join('')||'<p class="small text-muted2 mb-0">Nenhum registro.</p>'}</div></div></div>`}
-    async function saveCad(ev){ev.preventDefault();try{await api(ev.currentTarget.dataset.endpoint,{method:'POST',body:JSON.stringify(Object.fromEntries(new FormData(ev.currentTarget)))});toast('Cadastro salvo.');await navigate('cadastros')}catch(err){toast(err.message,'danger')}}
-    async function saveCC(ev){ev.preventDefault();try{await api('/cadastros/centros-custo',{method:'POST',body:JSON.stringify(Object.fromEntries(new FormData(ev.currentTarget)))});toast('Centro de custo salvo.');await navigate('cadastros')}catch(err){toast(err.message,'danger')}}
+    function tableSaldo(items, compact=false){
+      if(!items.length) return empty('Nenhum saldo encontrado','bi-boxes');
+      return `<div class="table-responsive"><table class="table table-hover mb-0"><thead><tr><th>Produto</th>${compact?'':'<th>Categoria</th>'}<th>Local</th><th>Saldo</th><th>Mínimo</th><th>Status</th></tr></thead><tbody>${items.map(s=>`<tr>
+        <td><div class="fw-bold">${esc(s.produto || '-')}</div><div class="small text-secondary">${esc(s.codigo_interno || '')}</div></td>
+        ${compact?'':`<td>${esc(s.categoria || '-')}</td>`}<td>${esc(s.local_estoque || '-')}</td><td class="fw-bold">${fmt(s.saldo_atual)}</td><td>${fmt(s.estoque_minimo)}</td>
+        <td>${s.abaixo_estoque_minimo?'<span class="soft soft-danger">Baixo</span>':'<span class="soft soft-success">OK</span>'}</td>
+      </tr>`).join('')}</tbody></table></div>`;
+    }
 
-    function renderUsuarios(){meta('Usuários','Perfis e permissões do sistema');byId('app').innerHTML=`<div class="surface p-3 p-md-4"><div class="d-flex flex-column flex-md-row justify-content-between gap-3 mb-3"><div><h5 class="fw-bold mb-1">Usuários</h5><p class="text-muted2 small mb-0">Vincule usuários já criados no Supabase Auth.</p></div><button class="btn btn-primary" onclick="openUsuarioModal()"><i class="bi bi-person-plus me-1"></i>Novo usuário</button></div>${tableUsers()}</div>${userModal()}`;byId('usuarioForm').addEventListener('submit',saveUsuario)}
-    function tableUsers(){if(!state.usuarios.length)return empty('Nenhum usuário cadastrado','bi-people');return`<div class="table-responsive"><table class="table table-hover mb-0"><thead><tr><th>Nome</th><th>Email</th><th>Perfil</th><th>Cargo</th><th>Status</th></tr></thead><tbody>${state.usuarios.map(u=>`<tr><td class="fw-bold">${esc(u.nome||'-')}</td><td>${esc(u.email||'-')}</td><td><span class="soft-badge badge-soft-primary">${esc(u.perfil||'-')}</span></td><td>${esc(u.cargo||'-')}</td><td>${u.ativo?'<span class="soft-badge badge-soft-success">Ativo</span>':'<span class="soft-badge badge-soft-danger">Inativo</span>'}</td></tr>`).join('')}</tbody></table></div>`}
-    function userModal(){return`<div class="modal fade" id="usuarioModal" tabindex="-1"><div class="modal-dialog modal-lg modal-dialog-centered"><div class="modal-content"><form id="usuarioForm"><div class="modal-header"><div><h5 class="fw-bold mb-0">Vincular usuário</h5><p class="text-muted2 small mb-0">O usuário precisa existir no Supabase Auth.</p></div><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="row g-3"><div class="col-12"><label class="form-label">ID do usuário no Auth<input class="form-control mt-1" name="id" placeholder="UUID do Supabase Auth" required></label></div><div class="col-md-6"><label class="form-label">Nome<input class="form-control mt-1" name="nome" required></label></div><div class="col-md-6"><label class="form-label">Email<input class="form-control mt-1" name="email" type="email" required></label></div><div class="col-md-4"><label class="form-label">Perfil<select class="form-select mt-1" name="perfil" required><option value="admin">Admin</option><option value="gestor">Gestor</option><option value="almoxarife">Almoxarife</option><option value="solicitante">Solicitante</option><option value="consulta">Consulta</option></select></label></div><div class="col-md-4"><label class="form-label">Cargo<input class="form-control mt-1" name="cargo"></label></div><div class="col-md-4"><label class="form-label">Telefone<input class="form-control mt-1" name="telefone"></label></div><div class="col-md-6"><label class="form-label">Setor<select class="form-select mt-1" name="setor_id"><option value="">Selecione</option>${options(state.setores)}</select></label></div><div class="col-md-6"><label class="form-label">Centro de custo<select class="form-select mt-1" name="centro_custo_id"><option value="">Selecione</option>${state.centrosCusto.map(c=>`<option value="${esc(c.id)}">${esc(c.codigo||'')} ${esc(c.nome||'')}</option>`).join('')}</select></label></div></div></div><div class="modal-footer"><button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button><button class="btn btn-primary" type="submit">Salvar</button></div></form></div></div></div>`}
-    function openUsuarioModal(){bootstrap.Modal.getOrCreateInstance(byId('usuarioModal')).show()}
-    async function saveUsuario(ev){ev.preventDefault();const data=Object.fromEntries(new FormData(ev.currentTarget));try{await api('/usuarios',{method:'POST',body:JSON.stringify({...data,setor_id:data.setor_id||null,centro_custo_id:data.centro_custo_id||null,ativo:true})});bootstrap.Modal.getInstance(byId('usuarioModal')).hide();toast('Usuário vinculado.');await navigate('usuarios')}catch(err){toast(err.message,'danger')}}
+    function movModal(d){
+      return `<div class="modal fade" id="movModal" tabindex="-1"><div class="modal-dialog modal-lg modal-dialog-centered"><div class="modal-content"><form id="movForm">
+        <div class="modal-header"><div><h5 class="modal-title fw-bold">Nova movimentação</h5><p class="small text-secondary mb-0">Entrada, saída ou ajuste.</p></div><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+        <div class="modal-body"><div class="row g-3">
+          <div class="col-md-6"><label class="form-label">Produto<select class="form-select mt-1" name="produto_id" required><option value="">Selecione</option>${options(d.produtos)}</select></label></div>
+          <div class="col-md-6"><label class="form-label">Local<select class="form-select mt-1" name="local_estoque_id" required><option value="">Selecione</option>${options(d.locais)}</select></label></div>
+          <div class="col-md-4"><label class="form-label">Tipo<select class="form-select mt-1" name="tipo"><option value="entrada">Entrada</option><option value="saida">Saída</option><option value="ajuste_entrada">Ajuste entrada</option><option value="ajuste_saida">Ajuste saída</option></select></label></div>
+          <div class="col-md-4"><label class="form-label">Origem<select class="form-select mt-1" name="origem"><option value="manual">Manual</option><option value="compra">Compra</option><option value="solicitacao">Solicitação</option><option value="inventario">Inventário</option><option value="devolucao">Devolução</option></select></label></div>
+          <div class="col-md-4"><label class="form-label">Quantidade<input class="form-control mt-1" name="quantidade" type="number" min="0.001" step="0.001" required></label></div>
+          <div class="col-md-4"><label class="form-label">Documento<input class="form-control mt-1" name="documento"></label></div>
+          <div class="col-md-4"><label class="form-label">Lote<input class="form-control mt-1" name="lote"></label></div>
+          <div class="col-md-4"><label class="form-label">Validade<input class="form-control mt-1" name="data_validade" type="date"></label></div>
+          <div class="col-12"><label class="form-label">Observação<textarea class="form-control mt-1" name="observacao" rows="3"></textarea></label></div>
+        </div></div>
+        <div class="modal-footer"><button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button><button class="btn btn-primary">Registrar</button></div>
+      </form></div></div></div>`;
+    }
 
-    function open(){const r=route();if(r==='login')return renderAuth('login');if(r==='esqueci-senha')return renderAuth('esqueci-senha');if(r==='resetar-senha')return renderAuth('resetar-senha');if(!auth.token)return renderAuth('login');renderShell();navigate(ROUTES.some(x=>x.id===r)?r:'dashboard')}
-    window.addEventListener('popstate',open);window.addEventListener('hashchange',open);document.documentElement.setAttribute('data-bs-theme',localStorage.getItem('almox_theme')||'light');open();
-    window.navigate=navigate;window.openProdutoModal=openProdutoModal;window.openMovimentacaoModal=openMovimentacaoModal;window.openSolicitacaoModal=openSolicitacaoModal;window.openAtenderModal=openAtenderModal;window.openUsuarioModal=openUsuarioModal;
+    async function saveMov(e){
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(e.currentTarget));
+      const payload = {...data, quantidade:Number(data.quantidade), documento:data.documento||null, lote:data.lote||null, data_validade:data.data_validade||null, observacao:data.observacao||null};
+      try{
+        await api('/movimentacoes',{method:'POST',body:JSON.stringify(payload)});
+        invalidate('saldo');
+        hideModal('movModal');
+        toast('Movimentação registrada.');
+        await navigate('estoque', true);
+      }catch(err){toast(err.message,'danger')}
+    }
+
+    async function renderSolicitacoes(fresh=false){
+      const d = await load(['solicitacoes','produtos','setores','centros','locais'], fresh);
+      $('app').innerHTML = `<div class="surface p-3 p-md-4">
+        <div class="d-flex flex-column flex-md-row justify-content-between gap-3 mb-3">
+          <div><h5 class="fw-bold mb-1">Solicitações</h5><p class="text-secondary small mb-0">O almoxarife recebe a autorização por WhatsApp.</p></div>
+          <button class="btn btn-primary" onclick="showModal('solModal')"><i class="bi bi-plus-lg me-1"></i>Nova solicitação</button>
+        </div>${tableSolicitacoes(d.solicitacoes)}
+      </div>${solModal(d)}${atenderModal(d)}`;
+      $('solForm').addEventListener('submit', saveSol);
+      $('addItemBtn').addEventListener('click', () => addItem(d.produtos));
+      $('atenderForm').addEventListener('submit', atenderSol);
+      addItem(d.produtos);
+    }
+
+    function tableSolicitacoes(items, compact=false){
+      if(!items.length) return empty('Nenhuma solicitação encontrada','bi-clipboard2');
+      return `<div class="table-responsive"><table class="table table-hover mb-0"><thead><tr><th>Data</th><th>Status</th><th>Justificativa</th>${compact?'':'<th>Solicitante</th><th>Itens</th><th>Ações</th>'}</tr></thead><tbody>${items.map(s=>`<tr>
+        <td>${dateBR(s.data_solicitacao)}</td><td>${badge(s.status)}</td><td><div class="fw-bold">${esc(s.justificativa||'-')}</div><div class="small text-secondary">${esc(s.observacao||'')}</div></td>
+        ${compact?'':`<td>${esc(s.usuarios?.nome || '-')}</td><td>${(s.solicitacao_itens||[]).length}</td><td>${s.status==='aprovada'?`<button class="btn btn-sm btn-primary" onclick="openAtender('${s.id}')">Atender</button>`:'<span class="text-secondary small">-</span>'}</td>`}
+      </tr>`).join('')}</tbody></table></div>`;
+    }
+
+    function solModal(d){
+      return `<div class="modal fade" id="solModal" tabindex="-1"><div class="modal-dialog modal-xl modal-dialog-centered"><div class="modal-content"><form id="solForm">
+        <div class="modal-header"><div><h5 class="modal-title fw-bold">Nova solicitação</h5><p class="small text-secondary mb-0">Será enviada para autorização.</p></div><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+        <div class="modal-body"><div class="row g-3">
+          <div class="col-md-6"><label class="form-label">Setor<select class="form-select mt-1" name="setor_id"><option value="">Selecione</option>${options(d.setores)}</select></label></div>
+          <div class="col-md-6"><label class="form-label">Centro de custo<select class="form-select mt-1" name="centro_custo_id"><option value="">Selecione</option>${d.centros.map(c=>`<option value="${esc(c.id)}">${esc(c.codigo||'')} ${esc(c.nome||'')}</option>`).join('')}</select></label></div>
+          <div class="col-12"><label class="form-label">Justificativa<textarea class="form-control mt-1" name="justificativa" required rows="3"></textarea></label></div>
+          <div class="col-12"><div class="d-flex justify-content-between align-items-center mb-2"><h6 class="fw-bold mb-0">Itens</h6><button id="addItemBtn" type="button" class="btn btn-sm btn-light"><i class="bi bi-plus-lg me-1"></i>Adicionar</button></div><div id="itensSol" class="vstack gap-2"></div></div>
+        </div></div>
+        <div class="modal-footer"><button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button><button class="btn btn-primary">Enviar</button></div>
+      </form></div></div></div>`;
+    }
+
+    function addItem(produtos){
+      const row = document.createElement('div');
+      row.className = 'row g-2 align-items-end';
+      row.innerHTML = `<div class="col-md-7"><label class="form-label">Produto<select class="form-select mt-1 item-prod" required><option value="">Selecione</option>${options(produtos)}</select></label></div>
+        <div class="col-md-3"><label class="form-label">Quantidade<input class="form-control mt-1 item-qtd" type="number" min="0.001" step="0.001" required></label></div>
+        <div class="col-md-2"><button class="btn btn-light w-100" type="button"><i class="bi bi-trash"></i></button></div>`;
+      row.querySelector('button').addEventListener('click', () => row.remove());
+      $('itensSol').appendChild(row);
+    }
+
+    async function saveSol(e){
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(e.currentTarget));
+      const itens = [...document.querySelectorAll('#itensSol .row')].map(r => ({ produto_id:r.querySelector('.item-prod').value, quantidade_solicitada:Number(r.querySelector('.item-qtd').value), observacao:null })).filter(i => i.produto_id && i.quantidade_solicitada > 0);
+      if(!itens.length){ toast('Adicione pelo menos um item.', 'warning'); return; }
+      try{
+        await api('/solicitacoes',{method:'POST',body:JSON.stringify({solicitante_id:auth.usuario?.id||null,setor_id:data.setor_id||null,centro_custo_id:data.centro_custo_id||null,justificativa:data.justificativa,observacao:null,itens})});
+        invalidate('solicitacoes');
+        hideModal('solModal');
+        toast('Solicitação criada e enviada ao almoxarife.');
+        await navigate('solicitacoes', true);
+      }catch(err){toast(err.message,'danger')}
+    }
+
+    function atenderModal(d){
+      return `<div class="modal fade" id="atenderModal" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content"><form id="atenderForm">
+        <div class="modal-header"><h5 class="modal-title fw-bold">Atender solicitação</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+        <div class="modal-body"><input type="hidden" name="solicitacao_id"><label class="form-label">Local<select class="form-select mt-1" name="local_estoque_id" required><option value="">Selecione</option>${options(d.locais)}</select></label></div>
+        <div class="modal-footer"><button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button><button class="btn btn-primary" type="submit">Confirmar</button></div>
+      </form></div></div></div>`;
+    }
+
+    function openAtender(id){
+      const form = $('atenderForm');
+      if(!form){
+        toast('Formulário de atendimento não encontrado. Atualize a página e tente novamente.', 'danger');
+        return;
+      }
+
+      form.reset();
+
+      const inputSolicitacao = form.querySelector('[name="solicitacao_id"]');
+      if(!inputSolicitacao){
+        toast('Campo da solicitação não encontrado.', 'danger');
+        return;
+      }
+
+      inputSolicitacao.value = id;
+      showModal('atenderModal');
+    }
+
+    async function atenderSol(e){
+      e.preventDefault();
+
+      const form = e.currentTarget;
+      const data = Object.fromEntries(new FormData(form));
+
+      if(!data.solicitacao_id){
+        toast('Solicitação não identificada para atendimento.', 'danger');
+        return;
+      }
+
+      if(!data.local_estoque_id){
+        toast('Selecione o local de estoque para atender a solicitação.', 'warning');
+        return;
+      }
+
+      const submitBtn = form.querySelector('button[type="submit"], .btn-primary');
+      const originalText = submitBtn ? submitBtn.innerHTML : '';
+
+      if(submitBtn){
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Atendendo...';
+      }
+
+      try{
+        await api(`/solicitacoes/${data.solicitacao_id}/atender`, {
+          method:'POST',
+          body:JSON.stringify({
+            local_estoque_id:data.local_estoque_id,
+            usuario_id:auth.usuario?.id||null
+          })
+        });
+
+        invalidate('solicitacoes','saldo');
+        hideModal('atenderModal');
+        toast('Solicitação atendida com sucesso.');
+        await navigate('solicitacoes', true);
+        cleanupBootstrapArtifacts();
+      }catch(err){
+        toast(err.message,'danger');
+      }finally{
+        if(submitBtn){
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = originalText;
+        }
+      }
+    }
+
+    async function renderCadastros(fresh=false){
+      const d = await load(['setores','locais','fornecedores','centros'], fresh);
+      $('app').innerHTML = `<div class="row g-3">
+        ${cadCard('Setores','/cadastros/setores',d.setores,'bi-diagram-3')}
+        ${cadCard('Locais de estoque','/cadastros/locais-estoque',d.locais,'bi-geo-alt')}
+        ${cadCard('Fornecedores','/cadastros/fornecedores',d.fornecedores,'bi-truck')}
+        ${centroCard(d.centros)}
+      </div>`;
+      document.querySelectorAll('[data-cad]').forEach(f => f.addEventListener('submit', saveCad));
+      $('centroForm').addEventListener('submit', saveCentro);
+    }
+
+    function cadCard(title, endpoint, items, icon){
+      return `<div class="col-lg-6"><div class="surface p-3 p-md-4 h-100"><h5 class="fw-bold mb-1"><i class="bi ${icon} text-primary me-2"></i>${title}</h5><p class="small text-secondary">${items.length} registros</p>
+        <form data-cad data-endpoint="${endpoint}" class="d-flex gap-2 mb-3"><input class="form-control" name="nome" placeholder="Novo registro" required><button class="btn btn-primary">Salvar</button></form>
+        <div class="vstack gap-2">${items.slice(0,10).map(i=>`<div class="d-flex justify-content-between p-2 rounded-3 bg-body-tertiary"><strong>${esc(i.nome)}</strong><span class="soft ${i.ativo===false?'soft-danger':'soft-success'}">${i.ativo===false?'Inativo':'Ativo'}</span></div>`).join('') || '<p class="text-secondary small">Nenhum registro.</p>'}</div></div></div>`;
+    }
+
+    function centroCard(items){
+      return `<div class="col-lg-6"><div class="surface p-3 p-md-4 h-100"><h5 class="fw-bold mb-1"><i class="bi bi-cash-coin text-primary me-2"></i>Centros de custo</h5><p class="small text-secondary">${items.length} registros</p>
+        <form id="centroForm" class="row g-2 mb-3"><div class="col-sm-4"><input class="form-control" name="codigo" placeholder="Código" required></div><div class="col-sm-6"><input class="form-control" name="nome" placeholder="Nome" required></div><div class="col-sm-2"><button class="btn btn-primary w-100"><i class="bi bi-check-lg"></i></button></div></form>
+        <div class="vstack gap-2">${items.slice(0,10).map(i=>`<div class="p-2 rounded-3 bg-body-tertiary"><strong>${esc(i.codigo||'-')}</strong><span class="text-secondary"> — ${esc(i.nome||'')}</span></div>`).join('') || '<p class="text-secondary small">Nenhum registro.</p>'}</div></div></div>`;
+    }
+
+    async function saveCad(e){
+      e.preventDefault();
+      try{
+        await api(e.currentTarget.dataset.endpoint,{method:'POST',body:JSON.stringify(Object.fromEntries(new FormData(e.currentTarget)))});
+        invalidate('setores','locais','fornecedores');
+        toast('Cadastro salvo.');
+        await navigate('cadastros', true);
+      }catch(err){toast(err.message,'danger')}
+    }
+
+    async function saveCentro(e){
+      e.preventDefault();
+      try{
+        await api('/cadastros/centros-custo',{method:'POST',body:JSON.stringify(Object.fromEntries(new FormData(e.currentTarget)))});
+        invalidate('centros');
+        toast('Centro de custo salvo.');
+        await navigate('cadastros', true);
+      }catch(err){toast(err.message,'danger')}
+    }
+
+    async function renderUsuarios(fresh=false){
+      const d = await load(['usuarios','setores','centros'], fresh);
+      $('app').innerHTML = `<div class="surface p-3 p-md-4"><div class="d-flex flex-column flex-md-row justify-content-between gap-3 mb-3"><div><h5 class="fw-bold mb-1">Usuários</h5><p class="small text-secondary mb-0">Perfis e permissões.</p></div><button class="btn btn-primary" onclick="showModal('userModal')"><i class="bi bi-person-plus me-1"></i>Novo</button></div>${tableUsuarios(d.usuarios)}</div>${userModal(d)}`;
+      $('userForm').addEventListener('submit', saveUser);
+    }
+
+    function tableUsuarios(items){
+      if(!items.length) return empty('Nenhum usuário cadastrado','bi-people');
+      return `<div class="table-responsive"><table class="table table-hover mb-0"><thead><tr><th>Nome</th><th>Email</th><th>Perfil</th><th>Cargo</th><th>Status</th></tr></thead><tbody>${items.map(u=>`<tr><td class="fw-bold">${esc(u.nome||'-')}</td><td>${esc(u.email||'-')}</td><td><span class="soft soft-primary">${esc(u.perfil||'-')}</span></td><td>${esc(u.cargo||'-')}</td><td>${u.ativo?'<span class="soft soft-success">Ativo</span>':'<span class="soft soft-danger">Inativo</span>'}</td></tr>`).join('')}</tbody></table></div>`;
+    }
+
+    function userModal(d){
+      return `<div class="modal fade" id="userModal" tabindex="-1"><div class="modal-dialog modal-lg modal-dialog-centered"><div class="modal-content"><form id="userForm">
+        <div class="modal-header"><div><h5 class="modal-title fw-bold">Vincular usuário</h5><p class="small text-secondary mb-0">O usuário precisa existir no Supabase Auth.</p></div><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+        <div class="modal-body"><div class="row g-3">
+          <div class="col-12"><label class="form-label">ID do Auth<input class="form-control mt-1" name="id" required></label></div>
+          <div class="col-md-6"><label class="form-label">Nome<input class="form-control mt-1" name="nome" required></label></div>
+          <div class="col-md-6"><label class="form-label">Email<input class="form-control mt-1" name="email" type="email" required></label></div>
+          <div class="col-md-4"><label class="form-label">Perfil<select class="form-select mt-1" name="perfil"><option value="admin">Admin</option><option value="gestor">Gestor</option><option value="almoxarife">Almoxarife</option><option value="solicitante">Solicitante</option><option value="consulta">Consulta</option></select></label></div>
+          <div class="col-md-4"><label class="form-label">Cargo<input class="form-control mt-1" name="cargo"></label></div>
+          <div class="col-md-4"><label class="form-label">Telefone<input class="form-control mt-1" name="telefone"></label></div>
+          <div class="col-md-6"><label class="form-label">Setor<select class="form-select mt-1" name="setor_id"><option value="">Selecione</option>${options(d.setores)}</select></label></div>
+          <div class="col-md-6"><label class="form-label">Centro<select class="form-select mt-1" name="centro_custo_id"><option value="">Selecione</option>${d.centros.map(c=>`<option value="${esc(c.id)}">${esc(c.codigo||'')} ${esc(c.nome||'')}</option>`).join('')}</select></label></div>
+        </div></div>
+        <div class="modal-footer"><button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button><button class="btn btn-primary">Salvar</button></div>
+      </form></div></div></div>`;
+    }
+
+    async function saveUser(e){
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(e.currentTarget));
+      try{
+        await api('/usuarios',{method:'POST',body:JSON.stringify({...data,setor_id:data.setor_id||null,centro_custo_id:data.centro_custo_id||null,ativo:true})});
+        invalidate('usuarios');
+        hideModal('userModal');
+        toast('Usuário vinculado.');
+        await navigate('usuarios', true);
+      }catch(err){toast(err.message,'danger')}
+    }
+
+    function cleanupBootstrapArtifacts(){
+      document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+      document.body.classList.remove('modal-open');
+      document.body.style.removeProperty('overflow');
+      document.body.style.removeProperty('padding-right');
+    }
+
+    function showModal(id){
+      const el = $(id);
+      if(!el){
+        toast('Janela não encontrada. Atualize a página e tente novamente.', 'danger');
+        return;
+      }
+      bootstrap.Modal.getOrCreateInstance(el).show();
+    }
+
+    function hideModal(id){
+      const el = $(id);
+      if(!el) return;
+      const m = bootstrap.Modal.getInstance(el) || bootstrap.Modal.getOrCreateInstance(el);
+      if(m) m.hide();
+      setTimeout(cleanupBootstrapArtifacts, 180);
+    }
+
+    function boot(){
+      document.documentElement.setAttribute('data-bs-theme', localStorage.getItem('almox_theme') || 'light');
+      const route = routeFromUrl();
+      if(['login','esqueci-senha','resetar-senha'].includes(route)) return renderAuth(route);
+      if(!auth.token) return renderAuth('login');
+      renderShell();
+      navigate(pages.some(p=>p[0]===route) ? route : 'dashboard');
+    }
+
+    window.addEventListener('hashchange', boot);
+    window.addEventListener('popstate', boot);
+    window.navigate = navigate;
+    window.showModal = showModal;
+    window.openAtender = openAtender;
+
+    if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+    else boot();
   </script>
 </body>
 </html>
