@@ -6,32 +6,43 @@
   <title>Almoxarifado</title>
   <style>
     :root {
-      --bg: #f5f7fb;
+      --bg: #f4f7fb;
       --surface: #ffffff;
-      --surface-soft: #f8fafc;
-      --border: #e2e8f0;
+      --surface-2: #f8fafc;
+      --line: #e2e8f0;
       --text: #0f172a;
       --muted: #64748b;
-      --primary: #2563eb;
-      --primary-dark: #1d4ed8;
-      --success: #16a34a;
-      --danger: #dc2626;
-      --warning: #ca8a04;
-      --sidebar: #0f172a;
-      --radius: 8px;
-      --shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+      --primary: #1d4ed8;
+      --primary-2: #2563eb;
+      --primary-soft: #dbeafe;
+      --success: #15803d;
+      --success-soft: #dcfce7;
+      --danger: #b91c1c;
+      --danger-soft: #fee2e2;
+      --warning: #a16207;
+      --warning-soft: #fef3c7;
+      --dark: #0b1220;
+      --dark-2: #111827;
+      --radius: 10px;
+      --shadow: 0 14px 35px rgba(15, 23, 42, 0.08);
+      --sidebar: 270px;
     }
 
     * {
       box-sizing: border-box;
     }
 
+    html {
+      min-height: 100%;
+      background: var(--bg);
+    }
+
     body {
       margin: 0;
       min-height: 100vh;
       font-family: Arial, Helvetica, sans-serif;
-      background: var(--bg);
       color: var(--text);
+      background: var(--bg);
     }
 
     button,
@@ -45,33 +56,118 @@
       cursor: pointer;
     }
 
-    .login-page {
+    a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 700;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .auth-page {
       min-height: 100vh;
       display: grid;
-      place-items: center;
-      padding: 24px;
+      grid-template-columns: 1fr 480px;
       background:
-        radial-gradient(circle at top left, rgba(37, 99, 235, 0.16), transparent 34%),
-        var(--bg);
+        linear-gradient(135deg, rgba(29, 78, 216, 0.92), rgba(15, 23, 42, 0.96)),
+        var(--dark);
     }
 
-    .login-card {
+    .auth-hero {
+      color: #fff;
+      padding: 56px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 100vh;
+    }
+
+    .auth-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 800;
+      font-size: 20px;
+    }
+
+    .brand-mark {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      background: rgba(255, 255, 255, 0.14);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      font-weight: 900;
+    }
+
+    .auth-hero-copy {
+      max-width: 620px;
+    }
+
+    .auth-hero-copy h1 {
+      margin: 0 0 18px;
+      font-size: clamp(34px, 4vw, 56px);
+      line-height: 1.05;
+      letter-spacing: 0;
+    }
+
+    .auth-hero-copy p {
+      margin: 0;
+      max-width: 560px;
+      color: #dbeafe;
+      font-size: 18px;
+      line-height: 1.55;
+    }
+
+    .auth-metrics {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(120px, 1fr));
+      gap: 14px;
+      max-width: 620px;
+    }
+
+    .auth-metric {
+      padding: 16px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.11);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+    }
+
+    .auth-metric strong {
+      display: block;
+      font-size: 22px;
+      margin-bottom: 4px;
+    }
+
+    .auth-metric span {
+      color: #bfdbfe;
+      font-size: 13px;
+    }
+
+    .auth-panel {
+      background: #fff;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 32px;
+    }
+
+    .auth-card {
       width: 100%;
       max-width: 420px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 28px;
-      box-shadow: var(--shadow);
+      margin: 0 auto;
     }
 
-    .login-card h1 {
+    .auth-card h2 {
       margin: 0 0 8px;
       font-size: 28px;
     }
 
-    .login-card p {
-      margin: 0 0 22px;
+    .auth-card > p {
+      margin: 0 0 24px;
       color: var(--muted);
       line-height: 1.45;
     }
@@ -82,35 +178,40 @@
     }
 
     .sidebar {
-      width: 260px;
-      background: var(--sidebar);
-      color: white;
-      padding: 20px 14px;
+      width: var(--sidebar);
       position: fixed;
       inset: 0 auto 0 0;
+      background: var(--dark);
+      color: #fff;
+      padding: 18px 14px;
       overflow-y: auto;
+      z-index: 20;
     }
 
-    .brand {
-      padding: 8px 10px 20px;
+    .sidebar-top {
+      padding: 8px 10px 18px;
+      margin-bottom: 12px;
       border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      margin-bottom: 16px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
     }
 
-    .brand-title {
-      font-size: 22px;
-      font-weight: 800;
-      margin-bottom: 4px;
+    .sidebar-title {
+      font-size: 19px;
+      font-weight: 900;
+      line-height: 1.1;
     }
 
-    .brand-subtitle {
+    .sidebar-subtitle {
       color: #94a3b8;
-      font-size: 13px;
+      font-size: 12px;
+      margin-top: 3px;
     }
 
     .nav {
       display: grid;
-      gap: 6px;
+      gap: 5px;
     }
 
     .nav button {
@@ -118,35 +219,50 @@
       border: 0;
       background: transparent;
       color: #cbd5e1;
-      text-align: left;
       padding: 11px 12px;
       border-radius: var(--radius);
-      transition: 0.15s ease;
+      text-align: left;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: 0.16s ease;
     }
 
     .nav button:hover,
     .nav button.active {
       background: var(--primary);
-      color: white;
+      color: #fff;
     }
 
     .main {
-      width: calc(100% - 260px);
-      margin-left: 260px;
+      width: calc(100% - var(--sidebar));
+      margin-left: var(--sidebar);
       padding: 22px;
+    }
+
+    .mobile-header {
+      display: none;
+      background: var(--dark);
+      color: #fff;
+      padding: 12px 14px;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 30;
     }
 
     .topbar {
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      gap: 18px;
+      justify-content: space-between;
+      gap: 16px;
       background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 10px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
       padding: 18px;
-      margin-bottom: 18px;
-      box-shadow: 0 8px 18px rgba(15, 23, 42, 0.04);
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.04);
+      margin-bottom: 16px;
     }
 
     .topbar h1 {
@@ -160,14 +276,23 @@
       font-size: 14px;
     }
 
-    .user-chip {
+    .user-area {
       display: flex;
       align-items: center;
+      justify-content: flex-end;
       gap: 10px;
       flex-wrap: wrap;
-      justify-content: flex-end;
-      color: var(--muted);
+    }
+
+    .user-badge {
+      background: var(--surface-2);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 8px 11px;
+      color: #334155;
       font-size: 13px;
+      font-weight: 700;
+      white-space: nowrap;
     }
 
     .grid {
@@ -179,19 +304,20 @@
 
     .grid-2 {
       display: grid;
-      grid-template-columns: repeat(2, minmax(220px, 1fr));
+      grid-template-columns: repeat(2, minmax(240px, 1fr));
       gap: 14px;
     }
 
     .card,
     .panel {
       background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 10px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
     }
 
     .card {
       padding: 18px;
+      box-shadow: 0 8px 18px rgba(15, 23, 42, 0.04);
     }
 
     .card span {
@@ -199,10 +325,13 @@
       color: var(--muted);
       font-size: 13px;
       margin-bottom: 8px;
+      font-weight: 700;
     }
 
     .card strong {
+      display: block;
       font-size: 30px;
+      line-height: 1;
     }
 
     .panel {
@@ -213,8 +342,8 @@
     .panel-header {
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      gap: 12px;
+      align-items: flex-start;
+      gap: 14px;
       margin-bottom: 14px;
     }
 
@@ -227,6 +356,7 @@
       margin: 4px 0 0;
       color: var(--muted);
       font-size: 13px;
+      line-height: 1.4;
     }
 
     .form-grid {
@@ -244,12 +374,17 @@
       grid-template-columns: repeat(2, minmax(220px, 1fr));
     }
 
+    .stack {
+      display: grid;
+      gap: 12px;
+    }
+
     label {
       display: grid;
       gap: 6px;
       color: #334155;
       font-size: 13px;
-      font-weight: 700;
+      font-weight: 800;
     }
 
     input,
@@ -258,11 +393,12 @@
       width: 100%;
       border: 1px solid #cbd5e1;
       border-radius: var(--radius);
-      background: white;
       padding: 10px 11px;
+      background: #fff;
       color: var(--text);
       outline: none;
       font-weight: 400;
+      min-height: 42px;
     }
 
     input:focus,
@@ -273,23 +409,27 @@
     }
 
     textarea {
-      min-height: 74px;
       resize: vertical;
+      min-height: 82px;
     }
 
     .btn {
       border: 0;
       border-radius: var(--radius);
+      padding: 10px 14px;
+      min-height: 42px;
       background: var(--primary);
-      color: white;
-      padding: 10px 13px;
-      font-weight: 800;
-      min-height: 40px;
-      transition: 0.15s ease;
+      color: #fff;
+      font-weight: 900;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: 0.16s ease;
     }
 
     .btn:hover {
-      background: var(--primary-dark);
+      background: var(--primary-2);
     }
 
     .btn.secondary {
@@ -301,9 +441,9 @@
     }
 
     .btn.ghost {
-      background: var(--surface-soft);
       color: var(--text);
-      border: 1px solid var(--border);
+      background: var(--surface-2);
+      border: 1px solid var(--line);
     }
 
     .btn.ghost:hover {
@@ -314,44 +454,44 @@
       background: var(--danger);
     }
 
-    .btn.danger:hover {
-      background: #b91c1c;
+    .btn.full {
+      width: 100%;
     }
 
     .actions {
       display: flex;
-      align-items: end;
       gap: 8px;
+      align-items: end;
       flex-wrap: wrap;
     }
 
     .table-wrap {
-      overflow: auto;
-      border: 1px solid var(--border);
+      border: 1px solid var(--line);
       border-radius: var(--radius);
+      overflow: auto;
+      background: #fff;
     }
 
     table {
       width: 100%;
       min-width: 760px;
       border-collapse: collapse;
-      background: white;
     }
 
     th,
     td {
       padding: 11px 12px;
-      border-bottom: 1px solid var(--border);
+      border-bottom: 1px solid var(--line);
       text-align: left;
       font-size: 14px;
       vertical-align: middle;
     }
 
     th {
-      background: var(--surface-soft);
+      background: var(--surface-2);
       color: #334155;
       font-size: 13px;
-      font-weight: 800;
+      font-weight: 900;
     }
 
     tr:last-child td {
@@ -364,50 +504,51 @@
       border-radius: 999px;
       padding: 5px 9px;
       font-size: 12px;
-      font-weight: 800;
+      font-weight: 900;
       background: #e2e8f0;
       color: #334155;
       white-space: nowrap;
     }
 
     .badge.success {
-      background: #dcfce7;
-      color: #166534;
+      background: var(--success-soft);
+      color: var(--success);
     }
 
     .badge.danger {
-      background: #fee2e2;
-      color: #991b1b;
+      background: var(--danger-soft);
+      color: var(--danger);
     }
 
     .badge.warning {
-      background: #fef3c7;
-      color: #92400e;
+      background: var(--warning-soft);
+      color: var(--warning);
     }
 
     .badge.info {
-      background: #dbeafe;
-      color: #1e40af;
+      background: var(--primary-soft);
+      color: var(--primary);
+    }
+
+    .empty {
+      border: 1px dashed #cbd5e1;
+      border-radius: var(--radius);
+      background: var(--surface-2);
+      color: var(--muted);
+      padding: 18px;
+      line-height: 1.45;
     }
 
     .muted {
       color: var(--muted);
     }
 
-    .empty {
-      color: var(--muted);
-      background: var(--surface-soft);
-      border: 1px dashed #cbd5e1;
-      border-radius: var(--radius);
-      padding: 18px;
-    }
-
     .message {
       display: none;
-      margin-bottom: 14px;
-      padding: 12px 14px;
       border-radius: var(--radius);
-      font-weight: 700;
+      padding: 12px 14px;
+      margin-bottom: 14px;
+      font-weight: 800;
       font-size: 14px;
     }
 
@@ -416,41 +557,97 @@
     }
 
     .message.success {
-      background: #dcfce7;
-      color: #166534;
+      color: var(--success);
+      background: var(--success-soft);
       border: 1px solid #bbf7d0;
     }
 
     .message.error {
-      background: #fee2e2;
-      color: #991b1b;
+      color: var(--danger);
+      background: var(--danger-soft);
       border: 1px solid #fecaca;
-    }
-
-    .stack {
-      display: grid;
-      gap: 12px;
     }
 
     .divider {
       height: 1px;
-      background: var(--border);
+      background: var(--line);
       margin: 16px 0;
     }
 
-    @media (max-width: 980px) {
+    .drawer-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.45);
+      z-index: 15;
+    }
+
+    @media (max-width: 1080px) {
+      .grid {
+        grid-template-columns: repeat(2, minmax(150px, 1fr));
+      }
+
+      .form-grid,
+      .form-grid.cols-3 {
+        grid-template-columns: repeat(2, minmax(180px, 1fr));
+      }
+    }
+
+    @media (max-width: 860px) {
+      .auth-page {
+        grid-template-columns: 1fr;
+      }
+
+      .auth-hero {
+        min-height: auto;
+        padding: 28px;
+        gap: 42px;
+      }
+
+      .auth-panel {
+        min-height: auto;
+        padding: 28px;
+      }
+
+      .auth-metrics {
+        grid-template-columns: 1fr;
+      }
+
+      .mobile-header {
+        display: flex;
+      }
+
       .app-shell {
         display: block;
       }
 
       .sidebar {
-        position: static;
-        width: 100%;
+        transform: translateX(-100%);
+        transition: transform 0.2s ease;
+        width: min(82vw, 310px);
+      }
+
+      body.menu-open .sidebar {
+        transform: translateX(0);
+      }
+
+      body.menu-open .drawer-backdrop {
+        display: block;
       }
 
       .main {
         width: 100%;
         margin-left: 0;
+        padding: 14px;
+      }
+
+      .topbar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .user-area {
+        justify-content: flex-start;
       }
 
       .grid,
@@ -461,13 +658,8 @@
         grid-template-columns: 1fr;
       }
 
-      .topbar {
-        align-items: flex-start;
+      .panel-header {
         flex-direction: column;
-      }
-
-      .user-chip {
-        justify-content: flex-start;
       }
     }
   </style>
@@ -482,8 +674,7 @@
 
     const auth = {
       token: localStorage.getItem('almox_token'),
-      usuario: JSON.parse(localStorage.getItem('almox_usuario') || 'null'),
-      devMode: localStorage.getItem('almox_dev_mode') === 'true'
+      usuario: JSON.parse(localStorage.getItem('almox_usuario') || 'null')
     };
 
     const state = {
@@ -501,12 +692,12 @@
     };
 
     const pages = [
-      { id: 'dashboard', label: 'Dashboard' },
-      { id: 'produtos', label: 'Produtos' },
-      { id: 'estoque', label: 'Estoque' },
-      { id: 'solicitacoes', label: 'Solicitações' },
-      { id: 'cadastros', label: 'Cadastros' },
-      { id: 'usuarios', label: 'Usuários' }
+      { id: 'dashboard', label: 'Dashboard', icon: '□' },
+      { id: 'produtos', label: 'Produtos', icon: '▣' },
+      { id: 'estoque', label: 'Estoque', icon: '↔' },
+      { id: 'solicitacoes', label: 'Solicitações', icon: '✓' },
+      { id: 'cadastros', label: 'Cadastros', icon: '+' },
+      { id: 'usuarios', label: 'Usuários', icon: '◉' }
     ];
 
     function escapeHtml(value) {
@@ -530,31 +721,15 @@
     function saveSession(data) {
       auth.token = data.access_token;
       auth.usuario = data.usuario;
-      auth.devMode = false;
       localStorage.setItem('almox_token', data.access_token);
       localStorage.setItem('almox_usuario', JSON.stringify(data.usuario));
-      localStorage.removeItem('almox_dev_mode');
     }
 
-    function startDevMode() {
-      auth.token = null;
-      auth.usuario = { nome: 'Desenvolvimento', perfil: 'admin' };
-      auth.devMode = true;
-      localStorage.removeItem('almox_token');
-      localStorage.setItem('almox_usuario', JSON.stringify(auth.usuario));
-      localStorage.setItem('almox_dev_mode', 'true');
-      renderApp();
-      navigate('dashboard');
-    }
-
-    function logout() {
+    function clearSession() {
       auth.token = null;
       auth.usuario = null;
-      auth.devMode = false;
       localStorage.removeItem('almox_token');
       localStorage.removeItem('almox_usuario');
-      localStorage.removeItem('almox_dev_mode');
-      renderLogin();
     }
 
     async function api(endpoint, options = {}) {
@@ -567,10 +742,16 @@
         headers.Authorization = `Bearer ${auth.token}`;
       }
 
-      const response = await fetch(`${API_URL}${endpoint}`, {
-        ...options,
-        headers
-      });
+      let response;
+
+      try {
+        response = await fetch(`${API_URL}${endpoint}`, {
+          ...options,
+          headers
+        });
+      } catch (error) {
+        throw new Error('Não foi possível conectar ao backend. Verifique se a API está online e se o CORS está liberado.');
+      }
 
       const contentType = response.headers.get('content-type') || '';
       const data = contentType.includes('application/json')
@@ -581,6 +762,13 @@
         const message = typeof data === 'string'
           ? data
           : data.erro || data.mensagem || 'Erro na requisição';
+
+        if (response.status === 401 && endpoint !== '/auth/login') {
+          clearSession();
+          renderLogin('Sua sessão expirou. Entre novamente.');
+          return;
+        }
+
         throw new Error(message);
       }
 
@@ -594,7 +782,7 @@
       el.className = `message show ${type}`;
       setTimeout(() => {
         el.className = 'message';
-      }, 4500);
+      }, 5200);
     }
 
     function optionList(items, labelBuilder = null) {
@@ -632,39 +820,106 @@
       state.usuarios = requests[9].status === 'fulfilled' ? requests[9].value : [];
     }
 
-    function renderLogin() {
+    function renderAuthShell(content) {
       root.innerHTML = `
-        <main class="login-page">
-          <section class="login-card">
-            <h1>Almoxarifado</h1>
-            <p>Acesse o sistema interno de controle de estoque, solicitações e movimentações.</p>
+        <main class="auth-page">
+          <section class="auth-hero">
+            <div class="auth-brand">
+              <div class="brand-mark">A</div>
+              <div>Almoxarifado</div>
+            </div>
 
-            <form id="loginForm" class="stack">
-              <label>
-                Email
-                <input name="email" type="email" autocomplete="email" required />
-              </label>
+            <div class="auth-hero-copy">
+              <h1>Controle de estoque claro, rastreável e profissional.</h1>
+              <p>Gerencie produtos, entradas, saídas, solicitações internas e permissões em uma interface leve e pronta para uso em empresa.</p>
+            </div>
 
-              <label>
-                Senha
-                <input name="senha" type="password" autocomplete="current-password" required />
-              </label>
+            <div class="auth-metrics">
+              <div class="auth-metric"><strong>API</strong><span>Conectada ao backend publicado</span></div>
+              <div class="auth-metric"><strong>Auth</strong><span>Login com Supabase</span></div>
+              <div class="auth-metric"><strong>Mobile</strong><span>Layout responsivo</span></div>
+            </div>
+          </section>
 
-              <button class="btn" type="submit">Entrar</button>
-              <button class="btn ghost" id="devModeBtn" type="button">Entrar em modo desenvolvimento</button>
-
-              <p class="muted" style="margin: 0; font-size: 13px;">
-                Use o modo desenvolvimento se o backend estiver com AUTH_DESABILITADA=true.
-              </p>
-
-              <div id="loginError" class="message error"></div>
-            </form>
+          <section class="auth-panel">
+            <div class="auth-card">${content}</div>
           </section>
         </main>
       `;
+    }
+
+    function renderLogin(errorMessage = '') {
+      renderAuthShell(`
+        <h2>Entrar</h2>
+        <p>Informe suas credenciais para acessar o sistema.</p>
+
+        <form id="loginForm" class="stack">
+          <label>
+            Email
+            <input name="email" type="email" autocomplete="email" required />
+          </label>
+
+          <label>
+            Senha
+            <input name="senha" type="password" autocomplete="current-password" required />
+          </label>
+
+          <button class="btn full" type="submit">Entrar</button>
+
+          <div class="actions" style="justify-content: space-between;">
+            <a href="#/esqueci-senha">Esqueci minha senha</a>
+          </div>
+
+          <div id="loginError" class="message ${errorMessage ? 'show error' : 'error'}">${escapeHtml(errorMessage)}</div>
+        </form>
+      `);
 
       document.getElementById('loginForm').addEventListener('submit', handleLogin);
-      document.getElementById('devModeBtn').addEventListener('click', startDevMode);
+    }
+
+    function renderForgotPassword() {
+      renderAuthShell(`
+        <h2>Recuperar senha</h2>
+        <p>Digite seu email para solicitar a redefinição de senha.</p>
+
+        <form id="forgotForm" class="stack">
+          <label>
+            Email
+            <input name="email" type="email" autocomplete="email" required />
+          </label>
+
+          <button class="btn full" type="submit">Enviar instruções</button>
+          <a href="#/login">Voltar para o login</a>
+          <div id="forgotMessage" class="message"></div>
+        </form>
+      `);
+
+      document.getElementById('forgotForm').addEventListener('submit', handleForgotPassword);
+    }
+
+    function renderResetPassword() {
+      renderAuthShell(`
+        <h2>Nova senha</h2>
+        <p>Informe sua nova senha para concluir a redefinição.</p>
+
+        <form id="resetForm" class="stack">
+          <label>
+            Token ou código recebido
+            <input name="token" required />
+          </label>
+
+          <label>
+            Nova senha
+            <input name="senha" type="password" autocomplete="new-password" required minlength="6" />
+          </label>
+
+          <button class="btn full" type="submit">Redefinir senha</button>
+          <a href="#/login">Voltar para o login</a>
+          <div id="resetMessage" class="message"></div>
+        </form>
+      `);
+
+      document.getElementById('resetForm').addEventListener('submit', handleResetPassword);
     }
 
     async function handleLogin(event) {
@@ -679,6 +934,7 @@
           body: JSON.stringify(data)
         });
         saveSession(result);
+        location.hash = '#/dashboard';
         renderApp();
         navigate('dashboard');
       } catch (error) {
@@ -687,19 +943,66 @@
       }
     }
 
+    async function handleForgotPassword(event) {
+      event.preventDefault();
+      const message = document.getElementById('forgotMessage');
+      const data = Object.fromEntries(new FormData(event.target));
+
+      try {
+        await api('/auth/forgot-password', {
+          method: 'POST',
+          body: JSON.stringify(data)
+        });
+        message.textContent = 'Se o email estiver cadastrado, as instruções serão enviadas.';
+        message.className = 'message show success';
+      } catch (error) {
+        message.textContent = 'O frontend está pronto, mas o backend precisa da rota POST /auth/forgot-password para concluir este fluxo.';
+        message.className = 'message show error';
+      }
+    }
+
+    async function handleResetPassword(event) {
+      event.preventDefault();
+      const message = document.getElementById('resetMessage');
+      const data = Object.fromEntries(new FormData(event.target));
+
+      try {
+        await api('/auth/reset-password', {
+          method: 'POST',
+          body: JSON.stringify(data)
+        });
+        message.textContent = 'Senha redefinida com sucesso. Você já pode voltar para o login.';
+        message.className = 'message show success';
+      } catch (error) {
+        message.textContent = 'O frontend está pronto, mas o backend precisa da rota POST /auth/reset-password para concluir este fluxo.';
+        message.className = 'message show error';
+      }
+    }
+
     function renderApp() {
       root.innerHTML = `
+        <div class="mobile-header">
+          <strong>Almoxarifado</strong>
+          <button class="btn ghost" id="mobileMenuBtn" type="button">Menu</button>
+        </div>
+
+        <div class="drawer-backdrop" id="drawerBackdrop"></div>
+
         <div class="app-shell">
           <aside class="sidebar">
-            <div class="brand">
-              <div class="brand-title">Almoxarifado</div>
-              <div class="brand-subtitle">Controle empresarial de estoque</div>
+            <div class="sidebar-top">
+              <div class="brand-mark">A</div>
+              <div>
+                <div class="sidebar-title">Almoxarifado</div>
+                <div class="sidebar-subtitle">Gestão de estoque</div>
+              </div>
             </div>
 
             <nav class="nav">
               ${pages.map((page) => `
                 <button data-page="${page.id}" class="${page.id === state.page ? 'active' : ''}">
-                  ${page.label}
+                  <span>${page.icon}</span>
+                  <span>${page.label}</span>
                 </button>
               `).join('')}
             </nav>
@@ -709,14 +1012,11 @@
             <header class="topbar">
               <div>
                 <h1 id="pageTitle">Dashboard</h1>
-                <p>Backend conectado em ${API_URL}</p>
+                <p>Ambiente integrado ao backend em produção</p>
               </div>
-              <div class="user-chip">
-                <span>
-                  ${escapeHtml(auth.usuario?.nome || 'Usuário')}
-                  ${auth.usuario?.perfil ? `• ${escapeHtml(auth.usuario.perfil)}` : ''}
-                  ${auth.devMode ? '• modo desenvolvimento' : ''}
-                </span>
+
+              <div class="user-area">
+                <span class="user-badge">${escapeHtml(auth.usuario?.nome || 'Usuário')} • ${escapeHtml(auth.usuario?.perfil || 'perfil')}</span>
                 <button class="btn secondary" id="refreshBtn" type="button">Atualizar</button>
                 <button class="btn ghost" id="logoutBtn" type="button">Sair</button>
               </div>
@@ -731,11 +1031,27 @@
       `;
 
       document.querySelectorAll('.nav button').forEach((button) => {
-        button.addEventListener('click', () => navigate(button.dataset.page));
+        button.addEventListener('click', () => {
+          document.body.classList.remove('menu-open');
+          location.hash = `#/${button.dataset.page}`;
+          navigate(button.dataset.page);
+        });
       });
 
-      document.getElementById('logoutBtn').addEventListener('click', logout);
       document.getElementById('refreshBtn').addEventListener('click', () => navigate(state.page));
+      document.getElementById('logoutBtn').addEventListener('click', () => {
+        clearSession();
+        location.hash = '#/login';
+        renderLogin();
+      });
+
+      document.getElementById('mobileMenuBtn')?.addEventListener('click', () => {
+        document.body.classList.add('menu-open');
+      });
+
+      document.getElementById('drawerBackdrop')?.addEventListener('click', () => {
+        document.body.classList.remove('menu-open');
+      });
     }
 
     function setPageTitle(text) {
@@ -749,6 +1065,7 @@
 
     async function navigate(page) {
       state.page = page;
+
       document.querySelectorAll('.nav button').forEach((button) => {
         button.classList.toggle('active', button.dataset.page === page);
       });
@@ -757,23 +1074,18 @@
 
       try {
         await loadData();
-        renderPage(page);
+        const renderers = {
+          dashboard: renderDashboard,
+          produtos: renderProdutos,
+          estoque: renderEstoque,
+          solicitacoes: renderSolicitacoes,
+          cadastros: renderCadastros,
+          usuarios: renderUsuarios
+        };
+        renderers[page]();
       } catch (error) {
         setContent(`<div class="panel"><strong>Erro:</strong> ${escapeHtml(error.message)}</div>`);
       }
-    }
-
-    function renderPage(page) {
-      const renderers = {
-        dashboard: renderDashboard,
-        produtos: renderProdutos,
-        estoque: renderEstoque,
-        solicitacoes: renderSolicitacoes,
-        cadastros: renderCadastros,
-        usuarios: renderUsuarios
-      };
-
-      renderers[page]();
     }
 
     function statusBadge(status) {
@@ -786,21 +1098,18 @@
         atendida: 'success',
         cancelada: 'danger'
       };
-
       return `<span class="badge ${map[status] || ''}">${escapeHtml(status || '-')}</span>`;
     }
 
     function renderDashboard() {
       setPageTitle('Dashboard');
       const baixoEstoque = state.saldo.filter((item) => item.abaixo_estoque_minimo);
-      const pendentes = state.solicitacoes.filter((item) => {
-        return ['enviada', 'aprovada', 'atendida_parcial'].includes(item.status);
-      });
+      const pendentes = state.solicitacoes.filter((item) => ['enviada', 'aprovada', 'atendida_parcial'].includes(item.status));
 
       setContent(`
         <div class="grid">
           <div class="card"><span>Produtos</span><strong>${state.produtos.length}</strong></div>
-          <div class="card"><span>Itens em baixo estoque</span><strong>${baixoEstoque.length}</strong></div>
+          <div class="card"><span>Baixo estoque</span><strong>${baixoEstoque.length}</strong></div>
           <div class="card"><span>Solicitações pendentes</span><strong>${pendentes.length}</strong></div>
           <div class="card"><span>Locais de estoque</span><strong>${state.locais.length}</strong></div>
         </div>
@@ -809,57 +1118,24 @@
           <div class="panel">
             <div class="panel-header">
               <div>
-                <h2>Baixo estoque</h2>
-                <p>Produtos com saldo menor ou igual ao mínimo.</p>
+                <h2>Itens Críticos</h2>
+                <p>Produtos com saldo menor ou igual ao estoque mínimo.</p>
               </div>
             </div>
-            ${baixoEstoque.length ? tableSaldo(baixoEstoque) : '<div class="empty">Nenhum produto abaixo do mínimo.</div>'}
+            ${baixoEstoque.length ? tableSaldo(baixoEstoque) : '<div class="empty">Nenhum produto abaixo do estoque mínimo.</div>'}
           </div>
 
           <div class="panel">
             <div class="panel-header">
               <div>
-                <h2>Solicitações recentes</h2>
-                <p>Últimos pedidos registrados no sistema.</p>
+                <h2>Solicitações Recentes</h2>
+                <p>Últimas movimentações de demanda interna.</p>
               </div>
             </div>
-            ${state.solicitacoes.length ? tableSolicitacoes(state.solicitacoes.slice(0, 6), false) : '<div class="empty">Nenhuma solicitação registrada.</div>'}
+            ${state.solicitacoes.length ? tableSolicitacoes(state.solicitacoes.slice(0, 6), false) : '<div class="empty">Nenhuma solicitação encontrada.</div>'}
           </div>
         </div>
       `);
-    }
-
-    function tableProdutos() {
-      return `
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Código</th>
-                <th>Produto</th>
-                <th>Categoria</th>
-                <th>Unidade</th>
-                <th>Mínimo</th>
-                <th>Máximo</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${state.produtos.map((produto) => `
-                <tr>
-                  <td>${escapeHtml(produto.codigo_interno || '-')}</td>
-                  <td>${escapeHtml(produto.nome)}</td>
-                  <td>${escapeHtml(produto.categorias?.nome || '-')}</td>
-                  <td>${escapeHtml(produto.unidades_medida?.sigla || '-')}</td>
-                  <td>${formatNumber(produto.estoque_minimo)}</td>
-                  <td>${formatNumber(produto.estoque_maximo)}</td>
-                  <td>${produto.ativo ? '<span class="badge success">Ativo</span>' : '<span class="badge danger">Inativo</span>'}</td>
-                </tr>
-              `).join('')}
-            </tbody>
-          </table>
-        </div>
-      `;
     }
 
     function renderProdutos() {
@@ -869,7 +1145,7 @@
           <div class="panel-header">
             <div>
               <h2>Cadastrar Produto</h2>
-              <p>Inclua novos itens no catálogo do almoxarifado.</p>
+              <p>Inclua produtos no catálogo do almoxarifado.</p>
             </div>
           </div>
 
@@ -909,6 +1185,39 @@
       `);
 
       document.getElementById('produtoForm').addEventListener('submit', saveProduto);
+    }
+
+    function tableProdutos() {
+      return `
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Código</th>
+                <th>Produto</th>
+                <th>Categoria</th>
+                <th>Unidade</th>
+                <th>Mínimo</th>
+                <th>Máximo</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${state.produtos.map((produto) => `
+                <tr>
+                  <td>${escapeHtml(produto.codigo_interno || '-')}</td>
+                  <td>${escapeHtml(produto.nome)}</td>
+                  <td>${escapeHtml(produto.categorias?.nome || '-')}</td>
+                  <td>${escapeHtml(produto.unidades_medida?.sigla || '-')}</td>
+                  <td>${formatNumber(produto.estoque_minimo)}</td>
+                  <td>${produto.estoque_maximo == null ? '-' : formatNumber(produto.estoque_maximo)}</td>
+                  <td>${produto.ativo ? '<span class="badge success">Ativo</span>' : '<span class="badge danger">Inativo</span>'}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+      `;
     }
 
     async function saveProduto(event) {
@@ -975,7 +1284,7 @@
           <div class="panel-header">
             <div>
               <h2>Nova Movimentação</h2>
-              <p>Registre entradas, saídas e ajustes de estoque.</p>
+              <p>Registre entradas, saídas e ajustes com rastreabilidade.</p>
             </div>
           </div>
 
@@ -1048,7 +1357,8 @@
         documento: data.documento || null,
         lote: data.lote || null,
         data_validade: data.data_validade || null,
-        observacao: data.observacao || null
+        observacao: data.observacao || null,
+        usuario_id: auth.usuario?.id || null
       };
 
       try {
@@ -1082,9 +1392,9 @@
                   <td>${escapeHtml(item.usuarios?.nome || '-')}</td>
                   ${showActions ? `
                     <td>
-                      ${item.status === 'aprovada' ? `
-                        <button class="btn secondary atender-btn" data-id="${item.id}" type="button">Atender</button>
-                      ` : '<span class="muted">-</span>'}
+                      ${item.status === 'aprovada'
+                        ? `<button class="btn secondary atender-btn" data-id="${escapeHtml(item.id)}" type="button">Atender</button>`
+                        : '<span class="muted">-</span>'}
                     </td>
                   ` : ''}
                 </tr>
@@ -1102,7 +1412,7 @@
           <div class="panel-header">
             <div>
               <h2>Nova Solicitação</h2>
-              <p>Ao enviar, o backend gera a autorização para o almoxarife.</p>
+              <p>Crie uma solicitação interna para aprovação e atendimento pelo almoxarifado.</p>
             </div>
           </div>
 
@@ -1142,7 +1452,7 @@
           <div class="panel-header">
             <div>
               <h2>Solicitações</h2>
-              <p>Solicitações aprovadas podem ser atendidas pelo almoxarifado.</p>
+              <p>Solicitações aprovadas podem ser atendidas diretamente por aqui.</p>
             </div>
             <label style="min-width: 240px;">
               Local para atendimento
@@ -1172,18 +1482,16 @@
         centro_custo_id: data.centro_custo_id || null,
         justificativa: data.justificativa,
         observacao: null,
-        itens: [
-          {
-            produto_id: data.produto_id,
-            quantidade_solicitada: Number(data.quantidade_solicitada),
-            observacao: null
-          }
-        ]
+        itens: [{
+          produto_id: data.produto_id,
+          quantidade_solicitada: Number(data.quantidade_solicitada),
+          observacao: null
+        }]
       };
 
       try {
         await api('/solicitacoes', { method: 'POST', body: JSON.stringify(payload) });
-        showMessage('Solicitação enviada. Confira o console do backend para a mensagem simulada do WhatsApp.');
+        showMessage('Solicitação enviada com sucesso.');
         await navigate('solicitacoes');
       } catch (error) {
         showMessage(error.message, 'error');
@@ -1206,7 +1514,7 @@
             usuario_id: auth.usuario?.id || null
           })
         });
-        showMessage('Solicitação atendida e saída de estoque registrada.');
+        showMessage('Solicitação atendida e saída registrada no estoque.');
         await navigate('solicitacoes');
       } catch (error) {
         showMessage(error.message, 'error');
@@ -1220,7 +1528,7 @@
           <div class="panel-header">
             <div>
               <h2>Cadastros Auxiliares</h2>
-              <p>Setores, centros de custo, locais e fornecedores.</p>
+              <p>Gerencie dados de apoio usados nos formulários.</p>
             </div>
           </div>
 
@@ -1252,7 +1560,7 @@
           <div class="card"><span>Setores</span><strong>${state.setores.length}</strong></div>
           <div class="card"><span>Locais</span><strong>${state.locais.length}</strong></div>
           <div class="card"><span>Fornecedores</span><strong>${state.fornecedores.length}</strong></div>
-          <div class="card"><span>Centros de custo</span><strong>${state.centrosCusto.length}</strong></div>
+          <div class="card"><span>Centros</span><strong>${state.centrosCusto.length}</strong></div>
         </div>
       `);
 
@@ -1295,14 +1603,14 @@
         <div class="panel">
           <div class="panel-header">
             <div>
-              <h2>Vincular Usuário do Supabase Auth</h2>
-              <p>Crie o usuário no Supabase Auth, copie o ID e registre aqui os dados do sistema.</p>
+              <h2>Vincular Usuário</h2>
+              <p>Crie o usuário no Supabase Auth, copie o UID e vincule ao perfil do sistema.</p>
             </div>
           </div>
 
           <form id="usuarioForm" class="stack">
             <div class="form-grid">
-              <label>ID do Auth <input name="id" required placeholder="UUID do Supabase Auth" /></label>
+              <label>UID do Auth <input name="id" required placeholder="UUID do Supabase Auth" /></label>
               <label>Nome <input name="nome" required /></label>
               <label>Email <input name="email" type="email" required /></label>
               <label>
@@ -1339,8 +1647,8 @@
         </div>
 
         <div class="panel">
-          <div class="panel-header"><h2>Usuários</h2></div>
-          ${state.usuarios.length ? tableUsuarios() : '<div class="empty">Nenhum usuário cadastrado ou rota /usuarios indisponível.</div>'}
+          <div class="panel-header"><h2>Usuários Cadastrados</h2></div>
+          ${state.usuarios.length ? tableUsuarios() : '<div class="empty">Nenhum usuário cadastrado.</div>'}
         </div>
       `);
 
@@ -1401,19 +1709,28 @@
     }
 
     function boot() {
-      if (!auth.token && !auth.devMode) {
+      const route = location.hash.replace('#/', '') || 'dashboard';
+
+      if (route === 'esqueci-senha') {
+        renderForgotPassword();
+        return;
+      }
+
+      if (route === 'resetar-senha') {
+        renderResetPassword();
+        return;
+      }
+
+      if (!auth.token) {
         renderLogin();
         return;
       }
 
-      if (!auth.usuario) {
-        auth.usuario = { nome: 'Usuário', perfil: 'admin' };
-      }
-
       renderApp();
-      navigate('dashboard');
+      navigate(pages.some((page) => page.id === route) ? route : 'dashboard');
     }
 
+    window.addEventListener('hashchange', boot);
     boot();
   </script>
 </body>
