@@ -206,8 +206,10 @@
     }
     @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
     .fade-in{animation:fade .22s ease both}
-    @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes fade{from{opacity:0}to{opacity:1}}
     .modal-content,.offcanvas{border-radius:22px;border:1px solid var(--border)}
+    .modal{z-index:3000!important}
+    .modal-backdrop{z-index:2990!important}
     .mobile-menu-btn{display:none}
 
     @media(max-width:991.98px){
@@ -936,9 +938,40 @@
     }
 
     async function renderUsuarios(fresh=false){
-      const d = await load(['usuarios','setores','centros'], fresh);
-      $('app').innerHTML = `<div class="surface p-3 p-md-4"><div class="d-flex flex-column flex-md-row justify-content-between gap-3 mb-3"><div><h5 class="fw-bold mb-1">Usuários</h5><p class="small text-secondary mb-0">Perfis e permissões.</p></div><button class="btn btn-primary" onclick="showModal('userModal')"><i class="bi bi-person-plus me-1"></i>Novo</button></div>${tableUsuarios(d.usuarios)}</div>${userModal(d)}`;
-      $('userForm').addEventListener('submit', saveUser);
+      let d = { usuarios: [], setores: [], centros: [] };
+      let aviso = '';
+
+      try{
+        const basicos = await load(['setores','centros'], fresh);
+        d.setores = basicos.setores;
+        d.centros = basicos.centros;
+      }catch(err){
+        aviso = `Não foi possível carregar setores/centros: ${esc(err.message)}`;
+      }
+
+      try{
+        d.usuarios = await get('/usuarios', 'usuarios', { fresh });
+      }catch(err){
+        aviso = err.message || 'Não foi possível carregar usuários.';
+        d.usuarios = [];
+      }
+
+      $('app').innerHTML = `<div class="surface p-3 p-md-4">
+        <div class="d-flex flex-column flex-md-row justify-content-between gap-3 mb-3">
+          <div>
+            <h5 class="fw-bold mb-1">Usuários</h5>
+            <p class="small text-secondary mb-0">Perfis e permissões do sistema.</p>
+          </div>
+          <button class="btn btn-primary" onclick="showModal('userModal')">
+            <i class="bi bi-person-plus me-1"></i>Novo
+          </button>
+        </div>
+        ${aviso ? `<div class="alert alert-warning"><strong>Atenção:</strong> ${esc(aviso)}</div>` : ''}
+        ${tableUsuarios(d.usuarios)}
+      </div>${userModal(d)}`;
+
+      const form = $('userForm');
+      if(form) form.addEventListener('submit', saveUser);
     }
 
     function tableUsuarios(items){
@@ -980,24 +1013,55 @@
       document.body.classList.remove('modal-open');
       document.body.style.removeProperty('overflow');
       document.body.style.removeProperty('padding-right');
+      document.body.removeAttribute('data-bs-overflow');
+      document.body.removeAttribute('data-bs-padding-right');
+    }
+
+    function moveModalToBody(id){
+      const el = $(id);
+      if(!el) return null;
+
+      // Modais dentro de áreas animadas ou com stacking context podem ficar atrás do backdrop.
+      // Antes de abrir, movemos a janela para o body, que é o local mais seguro para Bootstrap Modal.
+      if(el.parentElement !== document.body){
+        document.body.appendChild(el);
+      }
+
+      return el;
     }
 
     function showModal(id){
-      const el = $(id);
+      cleanupBootstrapArtifacts();
+
+      const el = moveModalToBody(id);
       if(!el){
         toast('Janela não encontrada. Atualize a página e tente novamente.', 'danger');
         return;
       }
-      bootstrap.Modal.getOrCreateInstance(el).show();
+
+      bootstrap.Modal.getOrCreateInstance(el, {
+        backdrop: true,
+        keyboard: true,
+        focus: true
+      }).show();
     }
 
     function hideModal(id){
       const el = $(id);
-      if(!el) return;
+      if(!el){
+        cleanupBootstrapArtifacts();
+        return;
+      }
+
       const m = bootstrap.Modal.getInstance(el) || bootstrap.Modal.getOrCreateInstance(el);
       if(m) m.hide();
+
       setTimeout(cleanupBootstrapArtifacts, 180);
     }
+
+    document.addEventListener('hidden.bs.modal', () => {
+      setTimeout(cleanupBootstrapArtifacts, 80);
+    });
 
     function boot(){
       document.documentElement.setAttribute('data-bs-theme', localStorage.getItem('almox_theme') || 'light');
