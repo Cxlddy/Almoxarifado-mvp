@@ -1,0 +1,1420 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Almoxarifado</title>
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --surface: #ffffff;
+      --surface-soft: #f8fafc;
+      --border: #e2e8f0;
+      --text: #0f172a;
+      --muted: #64748b;
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --success: #16a34a;
+      --danger: #dc2626;
+      --warning: #ca8a04;
+      --sidebar: #0f172a;
+      --radius: 8px;
+      --shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .login-page {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      background:
+        radial-gradient(circle at top left, rgba(37, 99, 235, 0.16), transparent 34%),
+        var(--bg);
+    }
+
+    .login-card {
+      width: 100%;
+      max-width: 420px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 28px;
+      box-shadow: var(--shadow);
+    }
+
+    .login-card h1 {
+      margin: 0 0 8px;
+      font-size: 28px;
+    }
+
+    .login-card p {
+      margin: 0 0 22px;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .app-shell {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      width: 260px;
+      background: var(--sidebar);
+      color: white;
+      padding: 20px 14px;
+      position: fixed;
+      inset: 0 auto 0 0;
+      overflow-y: auto;
+    }
+
+    .brand {
+      padding: 8px 10px 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      margin-bottom: 16px;
+    }
+
+    .brand-title {
+      font-size: 22px;
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+
+    .brand-subtitle {
+      color: #94a3b8;
+      font-size: 13px;
+    }
+
+    .nav {
+      display: grid;
+      gap: 6px;
+    }
+
+    .nav button {
+      width: 100%;
+      border: 0;
+      background: transparent;
+      color: #cbd5e1;
+      text-align: left;
+      padding: 11px 12px;
+      border-radius: var(--radius);
+      transition: 0.15s ease;
+    }
+
+    .nav button:hover,
+    .nav button.active {
+      background: var(--primary);
+      color: white;
+    }
+
+    .main {
+      width: calc(100% - 260px);
+      margin-left: 260px;
+      padding: 22px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px;
+      margin-bottom: 18px;
+      box-shadow: 0 8px 18px rgba(15, 23, 42, 0.04);
+    }
+
+    .topbar h1 {
+      margin: 0 0 4px;
+      font-size: 24px;
+    }
+
+    .topbar p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .user-chip {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(150px, 1fr));
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(220px, 1fr));
+      gap: 14px;
+    }
+
+    .card,
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+    }
+
+    .card {
+      padding: 18px;
+    }
+
+    .card span {
+      display: block;
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+
+    .card strong {
+      font-size: 30px;
+    }
+
+    .panel {
+      padding: 18px;
+      margin-bottom: 16px;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .panel-header h2 {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    .panel-header p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(150px, 1fr));
+      gap: 12px;
+      align-items: end;
+    }
+
+    .form-grid.cols-3 {
+      grid-template-columns: repeat(3, minmax(180px, 1fr));
+    }
+
+    .form-grid.cols-2 {
+      grid-template-columns: repeat(2, minmax(220px, 1fr));
+    }
+
+    label {
+      display: grid;
+      gap: 6px;
+      color: #334155;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      border: 1px solid #cbd5e1;
+      border-radius: var(--radius);
+      background: white;
+      padding: 10px 11px;
+      color: var(--text);
+      outline: none;
+      font-weight: 400;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
+
+    textarea {
+      min-height: 74px;
+      resize: vertical;
+    }
+
+    .btn {
+      border: 0;
+      border-radius: var(--radius);
+      background: var(--primary);
+      color: white;
+      padding: 10px 13px;
+      font-weight: 800;
+      min-height: 40px;
+      transition: 0.15s ease;
+    }
+
+    .btn:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn.secondary {
+      background: #475569;
+    }
+
+    .btn.secondary:hover {
+      background: #334155;
+    }
+
+    .btn.ghost {
+      background: var(--surface-soft);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn.ghost:hover {
+      background: #e2e8f0;
+    }
+
+    .btn.danger {
+      background: var(--danger);
+    }
+
+    .btn.danger:hover {
+      background: #b91c1c;
+    }
+
+    .actions {
+      display: flex;
+      align-items: end;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .table-wrap {
+      overflow: auto;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+    }
+
+    table {
+      width: 100%;
+      min-width: 760px;
+      border-collapse: collapse;
+      background: white;
+    }
+
+    th,
+    td {
+      padding: 11px 12px;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+      font-size: 14px;
+      vertical-align: middle;
+    }
+
+    th {
+      background: var(--surface-soft);
+      color: #334155;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 5px 9px;
+      font-size: 12px;
+      font-weight: 800;
+      background: #e2e8f0;
+      color: #334155;
+      white-space: nowrap;
+    }
+
+    .badge.success {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .badge.danger {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .badge.warning {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .badge.info {
+      background: #dbeafe;
+      color: #1e40af;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .empty {
+      color: var(--muted);
+      background: var(--surface-soft);
+      border: 1px dashed #cbd5e1;
+      border-radius: var(--radius);
+      padding: 18px;
+    }
+
+    .message {
+      display: none;
+      margin-bottom: 14px;
+      padding: 12px 14px;
+      border-radius: var(--radius);
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .message.show {
+      display: block;
+    }
+
+    .message.success {
+      background: #dcfce7;
+      color: #166534;
+      border: 1px solid #bbf7d0;
+    }
+
+    .message.error {
+      background: #fee2e2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
+    }
+
+    .stack {
+      display: grid;
+      gap: 12px;
+    }
+
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 16px 0;
+    }
+
+    @media (max-width: 980px) {
+      .app-shell {
+        display: block;
+      }
+
+      .sidebar {
+        position: static;
+        width: 100%;
+      }
+
+      .main {
+        width: 100%;
+        margin-left: 0;
+      }
+
+      .grid,
+      .grid-2,
+      .form-grid,
+      .form-grid.cols-2,
+      .form-grid.cols-3 {
+        grid-template-columns: 1fr;
+      }
+
+      .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .user-chip {
+        justify-content: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script>
+    const API_URL = 'http://localhost:3000';
+
+    const root = document.getElementById('root');
+
+    const auth = {
+      token: localStorage.getItem('almox_token'),
+      usuario: JSON.parse(localStorage.getItem('almox_usuario') || 'null'),
+      devMode: localStorage.getItem('almox_dev_mode') === 'true'
+    };
+
+    const state = {
+      page: 'dashboard',
+      categorias: [],
+      unidades: [],
+      produtos: [],
+      saldo: [],
+      solicitacoes: [],
+      locais: [],
+      fornecedores: [],
+      setores: [],
+      centrosCusto: [],
+      usuarios: []
+    };
+
+    const pages = [
+      { id: 'dashboard', label: 'Dashboard' },
+      { id: 'produtos', label: 'Produtos' },
+      { id: 'estoque', label: 'Estoque' },
+      { id: 'solicitacoes', label: 'Solicitações' },
+      { id: 'cadastros', label: 'Cadastros' },
+      { id: 'usuarios', label: 'Usuários' }
+    ];
+
+    function escapeHtml(value) {
+      return String(value ?? '')
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#039;');
+    }
+
+    function formatNumber(value) {
+      return Number(value || 0).toLocaleString('pt-BR');
+    }
+
+    function formatDate(value) {
+      if (!value) return '-';
+      return new Date(value).toLocaleDateString('pt-BR');
+    }
+
+    function saveSession(data) {
+      auth.token = data.access_token;
+      auth.usuario = data.usuario;
+      auth.devMode = false;
+      localStorage.setItem('almox_token', data.access_token);
+      localStorage.setItem('almox_usuario', JSON.stringify(data.usuario));
+      localStorage.removeItem('almox_dev_mode');
+    }
+
+    function startDevMode() {
+      auth.token = null;
+      auth.usuario = { nome: 'Desenvolvimento', perfil: 'admin' };
+      auth.devMode = true;
+      localStorage.removeItem('almox_token');
+      localStorage.setItem('almox_usuario', JSON.stringify(auth.usuario));
+      localStorage.setItem('almox_dev_mode', 'true');
+      renderApp();
+      navigate('dashboard');
+    }
+
+    function logout() {
+      auth.token = null;
+      auth.usuario = null;
+      auth.devMode = false;
+      localStorage.removeItem('almox_token');
+      localStorage.removeItem('almox_usuario');
+      localStorage.removeItem('almox_dev_mode');
+      renderLogin();
+    }
+
+    async function api(endpoint, options = {}) {
+      const headers = {
+        'Content-Type': 'application/json',
+        ...(options.headers || {})
+      };
+
+      if (auth.token) {
+        headers.Authorization = `Bearer ${auth.token}`;
+      }
+
+      const response = await fetch(`${API_URL}${endpoint}`, {
+        ...options,
+        headers
+      });
+
+      const contentType = response.headers.get('content-type') || '';
+      const data = contentType.includes('application/json')
+        ? await response.json()
+        : await response.text();
+
+      if (!response.ok) {
+        const message = typeof data === 'string'
+          ? data
+          : data.erro || data.mensagem || 'Erro na requisição';
+        throw new Error(message);
+      }
+
+      return data;
+    }
+
+    function showMessage(text, type = 'success') {
+      const el = document.getElementById('message');
+      if (!el) return;
+      el.textContent = text;
+      el.className = `message show ${type}`;
+      setTimeout(() => {
+        el.className = 'message';
+      }, 4500);
+    }
+
+    function optionList(items, labelBuilder = null) {
+      return items.map((item) => {
+        const label = labelBuilder
+          ? labelBuilder(item)
+          : item.nome || item.sigla || item.codigo || item.email || item.id;
+        return `<option value="${escapeHtml(item.id)}">${escapeHtml(label)}</option>`;
+      }).join('');
+    }
+
+    async function loadData() {
+      const requests = await Promise.allSettled([
+        api('/categorias'),
+        api('/produtos'),
+        api('/saldo-estoque'),
+        api('/solicitacoes'),
+        api('/cadastros/unidades-medida'),
+        api('/cadastros/locais-estoque'),
+        api('/cadastros/fornecedores'),
+        api('/cadastros/setores'),
+        api('/cadastros/centros-custo'),
+        api('/usuarios')
+      ]);
+
+      state.categorias = requests[0].status === 'fulfilled' ? requests[0].value : [];
+      state.produtos = requests[1].status === 'fulfilled' ? requests[1].value : [];
+      state.saldo = requests[2].status === 'fulfilled' ? requests[2].value : [];
+      state.solicitacoes = requests[3].status === 'fulfilled' ? requests[3].value : [];
+      state.unidades = requests[4].status === 'fulfilled' ? requests[4].value : [];
+      state.locais = requests[5].status === 'fulfilled' ? requests[5].value : [];
+      state.fornecedores = requests[6].status === 'fulfilled' ? requests[6].value : [];
+      state.setores = requests[7].status === 'fulfilled' ? requests[7].value : [];
+      state.centrosCusto = requests[8].status === 'fulfilled' ? requests[8].value : [];
+      state.usuarios = requests[9].status === 'fulfilled' ? requests[9].value : [];
+    }
+
+    function renderLogin() {
+      root.innerHTML = `
+        <main class="login-page">
+          <section class="login-card">
+            <h1>Almoxarifado</h1>
+            <p>Acesse o sistema interno de controle de estoque, solicitações e movimentações.</p>
+
+            <form id="loginForm" class="stack">
+              <label>
+                Email
+                <input name="email" type="email" autocomplete="email" required />
+              </label>
+
+              <label>
+                Senha
+                <input name="senha" type="password" autocomplete="current-password" required />
+              </label>
+
+              <button class="btn" type="submit">Entrar</button>
+              <button class="btn ghost" id="devModeBtn" type="button">Entrar em modo desenvolvimento</button>
+
+              <p class="muted" style="margin: 0; font-size: 13px;">
+                Use o modo desenvolvimento se o backend estiver com AUTH_DESABILITADA=true.
+              </p>
+
+              <div id="loginError" class="message error"></div>
+            </form>
+          </section>
+        </main>
+      `;
+
+      document.getElementById('loginForm').addEventListener('submit', handleLogin);
+      document.getElementById('devModeBtn').addEventListener('click', startDevMode);
+    }
+
+    async function handleLogin(event) {
+      event.preventDefault();
+      const errorEl = document.getElementById('loginError');
+      const data = Object.fromEntries(new FormData(event.target));
+
+      try {
+        errorEl.className = 'message error';
+        const result = await api('/auth/login', {
+          method: 'POST',
+          body: JSON.stringify(data)
+        });
+        saveSession(result);
+        renderApp();
+        navigate('dashboard');
+      } catch (error) {
+        errorEl.textContent = error.message;
+        errorEl.className = 'message show error';
+      }
+    }
+
+    function renderApp() {
+      root.innerHTML = `
+        <div class="app-shell">
+          <aside class="sidebar">
+            <div class="brand">
+              <div class="brand-title">Almoxarifado</div>
+              <div class="brand-subtitle">Controle empresarial de estoque</div>
+            </div>
+
+            <nav class="nav">
+              ${pages.map((page) => `
+                <button data-page="${page.id}" class="${page.id === state.page ? 'active' : ''}">
+                  ${page.label}
+                </button>
+              `).join('')}
+            </nav>
+          </aside>
+
+          <main class="main">
+            <header class="topbar">
+              <div>
+                <h1 id="pageTitle">Dashboard</h1>
+                <p>Backend conectado em ${API_URL}</p>
+              </div>
+              <div class="user-chip">
+                <span>
+                  ${escapeHtml(auth.usuario?.nome || 'Usuário')}
+                  ${auth.usuario?.perfil ? `• ${escapeHtml(auth.usuario.perfil)}` : ''}
+                  ${auth.devMode ? '• modo desenvolvimento' : ''}
+                </span>
+                <button class="btn secondary" id="refreshBtn" type="button">Atualizar</button>
+                <button class="btn ghost" id="logoutBtn" type="button">Sair</button>
+              </div>
+            </header>
+
+            <div id="message" class="message"></div>
+            <section id="appContent">
+              <div class="panel">Carregando...</div>
+            </section>
+          </main>
+        </div>
+      `;
+
+      document.querySelectorAll('.nav button').forEach((button) => {
+        button.addEventListener('click', () => navigate(button.dataset.page));
+      });
+
+      document.getElementById('logoutBtn').addEventListener('click', logout);
+      document.getElementById('refreshBtn').addEventListener('click', () => navigate(state.page));
+    }
+
+    function setPageTitle(text) {
+      const title = document.getElementById('pageTitle');
+      if (title) title.textContent = text;
+    }
+
+    function setContent(html) {
+      document.getElementById('appContent').innerHTML = html;
+    }
+
+    async function navigate(page) {
+      state.page = page;
+      document.querySelectorAll('.nav button').forEach((button) => {
+        button.classList.toggle('active', button.dataset.page === page);
+      });
+
+      setContent('<div class="panel">Carregando...</div>');
+
+      try {
+        await loadData();
+        renderPage(page);
+      } catch (error) {
+        setContent(`<div class="panel"><strong>Erro:</strong> ${escapeHtml(error.message)}</div>`);
+      }
+    }
+
+    function renderPage(page) {
+      const renderers = {
+        dashboard: renderDashboard,
+        produtos: renderProdutos,
+        estoque: renderEstoque,
+        solicitacoes: renderSolicitacoes,
+        cadastros: renderCadastros,
+        usuarios: renderUsuarios
+      };
+
+      renderers[page]();
+    }
+
+    function statusBadge(status) {
+      const map = {
+        rascunho: 'warning',
+        enviada: 'info',
+        aprovada: 'success',
+        recusada: 'danger',
+        atendida_parcial: 'warning',
+        atendida: 'success',
+        cancelada: 'danger'
+      };
+
+      return `<span class="badge ${map[status] || ''}">${escapeHtml(status || '-')}</span>`;
+    }
+
+    function renderDashboard() {
+      setPageTitle('Dashboard');
+      const baixoEstoque = state.saldo.filter((item) => item.abaixo_estoque_minimo);
+      const pendentes = state.solicitacoes.filter((item) => {
+        return ['enviada', 'aprovada', 'atendida_parcial'].includes(item.status);
+      });
+
+      setContent(`
+        <div class="grid">
+          <div class="card"><span>Produtos</span><strong>${state.produtos.length}</strong></div>
+          <div class="card"><span>Itens em baixo estoque</span><strong>${baixoEstoque.length}</strong></div>
+          <div class="card"><span>Solicitações pendentes</span><strong>${pendentes.length}</strong></div>
+          <div class="card"><span>Locais de estoque</span><strong>${state.locais.length}</strong></div>
+        </div>
+
+        <div class="grid-2">
+          <div class="panel">
+            <div class="panel-header">
+              <div>
+                <h2>Baixo estoque</h2>
+                <p>Produtos com saldo menor ou igual ao mínimo.</p>
+              </div>
+            </div>
+            ${baixoEstoque.length ? tableSaldo(baixoEstoque) : '<div class="empty">Nenhum produto abaixo do mínimo.</div>'}
+          </div>
+
+          <div class="panel">
+            <div class="panel-header">
+              <div>
+                <h2>Solicitações recentes</h2>
+                <p>Últimos pedidos registrados no sistema.</p>
+              </div>
+            </div>
+            ${state.solicitacoes.length ? tableSolicitacoes(state.solicitacoes.slice(0, 6), false) : '<div class="empty">Nenhuma solicitação registrada.</div>'}
+          </div>
+        </div>
+      `);
+    }
+
+    function tableProdutos() {
+      return `
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Código</th>
+                <th>Produto</th>
+                <th>Categoria</th>
+                <th>Unidade</th>
+                <th>Mínimo</th>
+                <th>Máximo</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${state.produtos.map((produto) => `
+                <tr>
+                  <td>${escapeHtml(produto.codigo_interno || '-')}</td>
+                  <td>${escapeHtml(produto.nome)}</td>
+                  <td>${escapeHtml(produto.categorias?.nome || '-')}</td>
+                  <td>${escapeHtml(produto.unidades_medida?.sigla || '-')}</td>
+                  <td>${formatNumber(produto.estoque_minimo)}</td>
+                  <td>${formatNumber(produto.estoque_maximo)}</td>
+                  <td>${produto.ativo ? '<span class="badge success">Ativo</span>' : '<span class="badge danger">Inativo</span>'}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    function renderProdutos() {
+      setPageTitle('Produtos');
+      setContent(`
+        <div class="panel">
+          <div class="panel-header">
+            <div>
+              <h2>Cadastrar Produto</h2>
+              <p>Inclua novos itens no catálogo do almoxarifado.</p>
+            </div>
+          </div>
+
+          <form id="produtoForm" class="stack">
+            <div class="form-grid">
+              <label>Nome <input name="nome" required /></label>
+              <label>Código interno <input name="codigo_interno" /></label>
+              <label>
+                Categoria
+                <select name="categoria_id">
+                  <option value="">Selecione</option>
+                  ${optionList(state.categorias)}
+                </select>
+              </label>
+              <label>
+                Unidade
+                <select name="unidade_medida_id">
+                  <option value="">Selecione</option>
+                  ${optionList(state.unidades, (item) => `${item.sigla} - ${item.nome}`)}
+                </select>
+              </label>
+              <label>Estoque mínimo <input name="estoque_minimo" type="number" min="0" step="0.001" value="0" /></label>
+              <label>Estoque máximo <input name="estoque_maximo" type="number" min="0" step="0.001" /></label>
+              <label>Código de barras <input name="codigo_barras" /></label>
+              <label>Descrição <input name="descricao" /></label>
+            </div>
+            <div class="actions">
+              <button class="btn" type="submit">Salvar produto</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header"><h2>Produtos Cadastrados</h2></div>
+          ${state.produtos.length ? tableProdutos() : '<div class="empty">Nenhum produto cadastrado.</div>'}
+        </div>
+      `);
+
+      document.getElementById('produtoForm').addEventListener('submit', saveProduto);
+    }
+
+    async function saveProduto(event) {
+      event.preventDefault();
+      const data = Object.fromEntries(new FormData(event.target));
+
+      const payload = {
+        categoria_id: data.categoria_id || null,
+        unidade_medida_id: data.unidade_medida_id || null,
+        nome: data.nome,
+        descricao: data.descricao || null,
+        codigo_interno: data.codigo_interno || null,
+        codigo_barras: data.codigo_barras || null,
+        estoque_minimo: Number(data.estoque_minimo || 0),
+        estoque_maximo: data.estoque_maximo ? Number(data.estoque_maximo) : null,
+        controla_validade: false,
+        controla_lote: false
+      };
+
+      try {
+        await api('/produtos', { method: 'POST', body: JSON.stringify(payload) });
+        showMessage('Produto cadastrado com sucesso.');
+        await navigate('produtos');
+      } catch (error) {
+        showMessage(error.message, 'error');
+      }
+    }
+
+    function tableSaldo(items = state.saldo) {
+      return `
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Produto</th>
+                <th>Código</th>
+                <th>Local</th>
+                <th>Saldo</th>
+                <th>Mínimo</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${items.map((item) => `
+                <tr>
+                  <td>${escapeHtml(item.produto)}</td>
+                  <td>${escapeHtml(item.codigo_interno || '-')}</td>
+                  <td>${escapeHtml(item.local_estoque || '-')}</td>
+                  <td>${formatNumber(item.saldo_atual)}</td>
+                  <td>${formatNumber(item.estoque_minimo)}</td>
+                  <td>${item.abaixo_estoque_minimo ? '<span class="badge danger">Baixo</span>' : '<span class="badge success">OK</span>'}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    function renderEstoque() {
+      setPageTitle('Estoque');
+      setContent(`
+        <div class="panel">
+          <div class="panel-header">
+            <div>
+              <h2>Nova Movimentação</h2>
+              <p>Registre entradas, saídas e ajustes de estoque.</p>
+            </div>
+          </div>
+
+          <form id="movForm" class="stack">
+            <div class="form-grid">
+              <label>
+                Produto
+                <select name="produto_id" required>
+                  <option value="">Selecione</option>
+                  ${optionList(state.produtos)}
+                </select>
+              </label>
+              <label>
+                Local
+                <select name="local_estoque_id" required>
+                  <option value="">Selecione</option>
+                  ${optionList(state.locais)}
+                </select>
+              </label>
+              <label>
+                Tipo
+                <select name="tipo" required>
+                  <option value="entrada">Entrada</option>
+                  <option value="saida">Saída</option>
+                  <option value="ajuste_entrada">Ajuste entrada</option>
+                  <option value="ajuste_saida">Ajuste saída</option>
+                </select>
+              </label>
+              <label>
+                Origem
+                <select name="origem">
+                  <option value="manual">Manual</option>
+                  <option value="compra">Compra</option>
+                  <option value="solicitacao">Solicitação</option>
+                  <option value="inventario">Inventário</option>
+                  <option value="devolucao">Devolução</option>
+                </select>
+              </label>
+              <label>Quantidade <input name="quantidade" type="number" min="0.001" step="0.001" required /></label>
+              <label>Documento <input name="documento" placeholder="NF, OS, requisição..." /></label>
+              <label>Lote <input name="lote" /></label>
+              <label>Validade <input name="data_validade" type="date" /></label>
+            </div>
+            <label>Observação <textarea name="observacao"></textarea></label>
+            <div class="actions">
+              <button class="btn" type="submit">Registrar movimentação</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header"><h2>Saldo Atual</h2></div>
+          ${state.saldo.length ? tableSaldo() : '<div class="empty">Nenhum saldo encontrado.</div>'}
+        </div>
+      `);
+
+      document.getElementById('movForm').addEventListener('submit', saveMovimentacao);
+    }
+
+    async function saveMovimentacao(event) {
+      event.preventDefault();
+      const data = Object.fromEntries(new FormData(event.target));
+
+      const payload = {
+        produto_id: data.produto_id,
+        local_estoque_id: data.local_estoque_id,
+        tipo: data.tipo,
+        origem: data.origem || 'manual',
+        quantidade: Number(data.quantidade),
+        documento: data.documento || null,
+        lote: data.lote || null,
+        data_validade: data.data_validade || null,
+        observacao: data.observacao || null
+      };
+
+      try {
+        await api('/movimentacoes', { method: 'POST', body: JSON.stringify(payload) });
+        showMessage('Movimentação registrada com sucesso.');
+        await navigate('estoque');
+      } catch (error) {
+        showMessage(error.message, 'error');
+      }
+    }
+
+    function tableSolicitacoes(items = state.solicitacoes, showActions = true) {
+      return `
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Data</th>
+                <th>Status</th>
+                <th>Justificativa</th>
+                <th>Solicitante</th>
+                ${showActions ? '<th>Ação</th>' : ''}
+              </tr>
+            </thead>
+            <tbody>
+              ${items.map((item) => `
+                <tr>
+                  <td>${formatDate(item.data_solicitacao)}</td>
+                  <td>${statusBadge(item.status)}</td>
+                  <td>${escapeHtml(item.justificativa || '-')}</td>
+                  <td>${escapeHtml(item.usuarios?.nome || '-')}</td>
+                  ${showActions ? `
+                    <td>
+                      ${item.status === 'aprovada' ? `
+                        <button class="btn secondary atender-btn" data-id="${item.id}" type="button">Atender</button>
+                      ` : '<span class="muted">-</span>'}
+                    </td>
+                  ` : ''}
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    function renderSolicitacoes() {
+      setPageTitle('Solicitações');
+      setContent(`
+        <div class="panel">
+          <div class="panel-header">
+            <div>
+              <h2>Nova Solicitação</h2>
+              <p>Ao enviar, o backend gera a autorização para o almoxarife.</p>
+            </div>
+          </div>
+
+          <form id="solForm" class="stack">
+            <div class="form-grid">
+              <label>
+                Produto
+                <select name="produto_id" required>
+                  <option value="">Selecione</option>
+                  ${optionList(state.produtos)}
+                </select>
+              </label>
+              <label>Quantidade <input name="quantidade_solicitada" type="number" min="0.001" step="0.001" required /></label>
+              <label>
+                Setor
+                <select name="setor_id">
+                  <option value="">Selecione</option>
+                  ${optionList(state.setores)}
+                </select>
+              </label>
+              <label>
+                Centro de custo
+                <select name="centro_custo_id">
+                  <option value="">Selecione</option>
+                  ${optionList(state.centrosCusto, (item) => `${item.codigo} - ${item.nome}`)}
+                </select>
+              </label>
+            </div>
+            <label>Justificativa <textarea name="justificativa" required></textarea></label>
+            <div class="actions">
+              <button class="btn" type="submit">Enviar solicitação</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header">
+            <div>
+              <h2>Solicitações</h2>
+              <p>Solicitações aprovadas podem ser atendidas pelo almoxarifado.</p>
+            </div>
+            <label style="min-width: 240px;">
+              Local para atendimento
+              <select id="localAtendimento">
+                <option value="">Selecione</option>
+                ${optionList(state.locais)}
+              </select>
+            </label>
+          </div>
+          ${state.solicitacoes.length ? tableSolicitacoes() : '<div class="empty">Nenhuma solicitação encontrada.</div>'}
+        </div>
+      `);
+
+      document.getElementById('solForm').addEventListener('submit', saveSolicitacao);
+      document.querySelectorAll('.atender-btn').forEach((button) => {
+        button.addEventListener('click', () => atenderSolicitacao(button.dataset.id));
+      });
+    }
+
+    async function saveSolicitacao(event) {
+      event.preventDefault();
+      const data = Object.fromEntries(new FormData(event.target));
+
+      const payload = {
+        solicitante_id: auth.usuario?.id || null,
+        setor_id: data.setor_id || null,
+        centro_custo_id: data.centro_custo_id || null,
+        justificativa: data.justificativa,
+        observacao: null,
+        itens: [
+          {
+            produto_id: data.produto_id,
+            quantidade_solicitada: Number(data.quantidade_solicitada),
+            observacao: null
+          }
+        ]
+      };
+
+      try {
+        await api('/solicitacoes', { method: 'POST', body: JSON.stringify(payload) });
+        showMessage('Solicitação enviada. Confira o console do backend para a mensagem simulada do WhatsApp.');
+        await navigate('solicitacoes');
+      } catch (error) {
+        showMessage(error.message, 'error');
+      }
+    }
+
+    async function atenderSolicitacao(id) {
+      const localId = document.getElementById('localAtendimento')?.value;
+
+      if (!localId) {
+        showMessage('Selecione o local de estoque para atendimento.', 'error');
+        return;
+      }
+
+      try {
+        await api(`/solicitacoes/${id}/atender`, {
+          method: 'POST',
+          body: JSON.stringify({
+            local_estoque_id: localId,
+            usuario_id: auth.usuario?.id || null
+          })
+        });
+        showMessage('Solicitação atendida e saída de estoque registrada.');
+        await navigate('solicitacoes');
+      } catch (error) {
+        showMessage(error.message, 'error');
+      }
+    }
+
+    function renderCadastros() {
+      setPageTitle('Cadastros');
+      setContent(`
+        <div class="panel">
+          <div class="panel-header">
+            <div>
+              <h2>Cadastros Auxiliares</h2>
+              <p>Setores, centros de custo, locais e fornecedores.</p>
+            </div>
+          </div>
+
+          <div class="form-grid">
+            <form class="simpleForm stack" data-endpoint="/cadastros/setores">
+              <label>Novo setor <input name="nome" required /></label>
+              <button class="btn" type="submit">Salvar setor</button>
+            </form>
+
+            <form class="simpleForm stack" data-endpoint="/cadastros/locais-estoque">
+              <label>Novo local <input name="nome" required /></label>
+              <button class="btn" type="submit">Salvar local</button>
+            </form>
+
+            <form class="simpleForm stack" data-endpoint="/cadastros/fornecedores">
+              <label>Novo fornecedor <input name="nome" required /></label>
+              <button class="btn" type="submit">Salvar fornecedor</button>
+            </form>
+
+            <form id="centroForm" class="stack">
+              <label>Código <input name="codigo" required placeholder="CC-001" /></label>
+              <label>Nome <input name="nome" required /></label>
+              <button class="btn" type="submit">Salvar centro</button>
+            </form>
+          </div>
+        </div>
+
+        <div class="grid">
+          <div class="card"><span>Setores</span><strong>${state.setores.length}</strong></div>
+          <div class="card"><span>Locais</span><strong>${state.locais.length}</strong></div>
+          <div class="card"><span>Fornecedores</span><strong>${state.fornecedores.length}</strong></div>
+          <div class="card"><span>Centros de custo</span><strong>${state.centrosCusto.length}</strong></div>
+        </div>
+      `);
+
+      document.querySelectorAll('.simpleForm').forEach((form) => {
+        form.addEventListener('submit', saveSimpleCadastro);
+      });
+      document.getElementById('centroForm').addEventListener('submit', saveCentroCusto);
+    }
+
+    async function saveSimpleCadastro(event) {
+      event.preventDefault();
+      const form = event.target;
+      const payload = Object.fromEntries(new FormData(form));
+
+      try {
+        await api(form.dataset.endpoint, { method: 'POST', body: JSON.stringify(payload) });
+        showMessage('Cadastro salvo com sucesso.');
+        await navigate('cadastros');
+      } catch (error) {
+        showMessage(error.message, 'error');
+      }
+    }
+
+    async function saveCentroCusto(event) {
+      event.preventDefault();
+      const payload = Object.fromEntries(new FormData(event.target));
+
+      try {
+        await api('/cadastros/centros-custo', { method: 'POST', body: JSON.stringify(payload) });
+        showMessage('Centro de custo salvo com sucesso.');
+        await navigate('cadastros');
+      } catch (error) {
+        showMessage(error.message, 'error');
+      }
+    }
+
+    function renderUsuarios() {
+      setPageTitle('Usuários');
+      setContent(`
+        <div class="panel">
+          <div class="panel-header">
+            <div>
+              <h2>Vincular Usuário do Supabase Auth</h2>
+              <p>Crie o usuário no Supabase Auth, copie o ID e registre aqui os dados do sistema.</p>
+            </div>
+          </div>
+
+          <form id="usuarioForm" class="stack">
+            <div class="form-grid">
+              <label>ID do Auth <input name="id" required placeholder="UUID do Supabase Auth" /></label>
+              <label>Nome <input name="nome" required /></label>
+              <label>Email <input name="email" type="email" required /></label>
+              <label>
+                Perfil
+                <select name="perfil" required>
+                  <option value="admin">Admin</option>
+                  <option value="gestor">Gestor</option>
+                  <option value="almoxarife">Almoxarife</option>
+                  <option value="solicitante">Solicitante</option>
+                  <option value="consulta">Consulta</option>
+                </select>
+              </label>
+              <label>
+                Setor
+                <select name="setor_id">
+                  <option value="">Selecione</option>
+                  ${optionList(state.setores)}
+                </select>
+              </label>
+              <label>
+                Centro de custo
+                <select name="centro_custo_id">
+                  <option value="">Selecione</option>
+                  ${optionList(state.centrosCusto, (item) => `${item.codigo} - ${item.nome}`)}
+                </select>
+              </label>
+              <label>Cargo <input name="cargo" /></label>
+              <label>Telefone <input name="telefone" /></label>
+            </div>
+            <div class="actions">
+              <button class="btn" type="submit">Salvar usuário</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header"><h2>Usuários</h2></div>
+          ${state.usuarios.length ? tableUsuarios() : '<div class="empty">Nenhum usuário cadastrado ou rota /usuarios indisponível.</div>'}
+        </div>
+      `);
+
+      document.getElementById('usuarioForm').addEventListener('submit', saveUsuario);
+    }
+
+    function tableUsuarios() {
+      return `
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>Email</th>
+                <th>Perfil</th>
+                <th>Setor</th>
+                <th>Centro de custo</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${state.usuarios.map((usuario) => `
+                <tr>
+                  <td>${escapeHtml(usuario.nome)}</td>
+                  <td>${escapeHtml(usuario.email)}</td>
+                  <td>${escapeHtml(usuario.perfil)}</td>
+                  <td>${escapeHtml(usuario.setores?.nome || '-')}</td>
+                  <td>${escapeHtml(usuario.centros_custo?.nome || '-')}</td>
+                  <td>${usuario.ativo ? '<span class="badge success">Ativo</span>' : '<span class="badge danger">Inativo</span>'}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    async function saveUsuario(event) {
+      event.preventDefault();
+      const data = Object.fromEntries(new FormData(event.target));
+
+      const payload = {
+        ...data,
+        setor_id: data.setor_id || null,
+        centro_custo_id: data.centro_custo_id || null,
+        cargo: data.cargo || null,
+        telefone: data.telefone || null,
+        ativo: true
+      };
+
+      try {
+        await api('/usuarios', { method: 'POST', body: JSON.stringify(payload) });
+        showMessage('Usuário salvo com sucesso.');
+        await navigate('usuarios');
+      } catch (error) {
+        showMessage(error.message, 'error');
+      }
+    }
+
+    function boot() {
+      if (!auth.token && !auth.devMode) {
+        renderLogin();
+        return;
+      }
+
+      if (!auth.usuario) {
+        auth.usuario = { nome: 'Usuário', perfil: 'admin' };
+      }
+
+      renderApp();
+      navigate('dashboard');
+    }
+
+    boot();
+  </script>
+</body>
+</html>
