@@ -267,6 +267,14 @@
 
     const $ = (id) => document.getElementById(id);
 
+    function isAdmin(){
+      return auth.usuario?.perfil === 'admin';
+    }
+
+    function visiblePages(){
+      return pages.filter(([id]) => isAdmin() || id !== 'usuarios');
+    }
+
     const esc = (v) => String(v ?? '')
       .replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;')
       .replaceAll('"','&quot;').replaceAll("'",'&#039;');
@@ -515,7 +523,7 @@
     }
 
     function sidebar(){
-      const links = pages.map(([id,label,icon]) => `
+      const links = visiblePages().map(([id,label,icon]) => `
         <a class="side-link ${state.page === id ? 'active' : ''}" href="#/${id}" data-route="${id}">
           <i class="bi ${icon}"></i><span>${label}</span>
         </a>`).join('');
@@ -578,7 +586,7 @@
     }
 
     function setMeta(page){
-      const p = pages.find(x => x[0] === page) || pages[0];
+      const p = visiblePages().find(x => x[0] === page) || visiblePages()[0] || pages[0];
       $('pageTitle').textContent = p[1];
       $('pageSub').textContent = p[3];
       document.querySelectorAll('[data-route]').forEach(x => x.classList.toggle('active', x.dataset.route === page));
@@ -593,6 +601,12 @@
     }
 
     async function navigate(page, fresh=false){
+      if(page === 'usuarios' && !isAdmin()){
+        page = 'dashboard';
+        history.replaceState(null, '', '#/dashboard');
+        toast('Apenas administradores podem acessar usuários.', 'warning');
+      }
+
       state.page = page;
       setMeta(page);
       loading();
@@ -1144,6 +1158,11 @@ async function renderDevolucoes(fresh = false) {
     }
 
     async function renderUsuarios(fresh=false){
+      if(!isAdmin()){
+        $('app').innerHTML = `<div class="surface p-4"><div class="empty"><i class="bi bi-shield-lock"></i><h5>Acesso restrito</h5><p>Apenas administradores podem cadastrar usuários.</p></div></div>`;
+        return;
+      }
+
       const d = await load(['usuarios','setores','centros'], fresh);
       $('app').innerHTML = `<div class="surface p-3 p-md-4"><div class="d-flex flex-column flex-md-row justify-content-between gap-3 mb-3"><div><h5 class="fw-bold mb-1">Usuários</h5><p class="small text-secondary mb-0">Perfis e permissões.</p></div><button class="btn btn-primary" onclick="showModal('userModal')"><i class="bi bi-person-plus me-1"></i>Novo</button></div>${tableUsuarios(d.usuarios)}</div>${userModal(d)}`;
       $('userForm').addEventListener('submit', saveUser);
@@ -1161,7 +1180,7 @@ async function renderDevolucoes(fresh = false) {
           <div class="col-12"><label class="form-label">ID do Auth<input class="form-control mt-1" name="id" required></label></div>
           <div class="col-md-6"><label class="form-label">Nome<input class="form-control mt-1" name="nome" required></label></div>
           <div class="col-md-6"><label class="form-label">Email<input class="form-control mt-1" name="email" type="email" required></label></div>
-          <div class="col-md-4"><label class="form-label">Perfil<select class="form-select mt-1" name="perfil"><option value="admin">Admin</option><option value="gestor">Gestor</option><option value="almoxarife">Almoxarife</option><option value="solicitante">Solicitante</option><option value="consulta">Consulta</option></select></label></div>
+          <div class="col-md-4"><label class="form-label">Perfil<select class="form-select mt-1" name="perfil" required><option value="usuario">Usuário</option><option value="admin">Admin</option></select></label></div>
           <div class="col-md-4"><label class="form-label">Cargo<input class="form-control mt-1" name="cargo"></label></div>
           <div class="col-md-4"><label class="form-label">Telefone<input class="form-control mt-1" name="telefone"></label></div>
           <div class="col-md-6"><label class="form-label">Setor<select class="form-select mt-1" name="setor_id"><option value="">Selecione</option>${options(d.setores)}</select></label></div>
@@ -1240,7 +1259,7 @@ async function renderDevolucoes(fresh = false) {
       if(['login','esqueci-senha','resetar-senha'].includes(route)) return renderAuth(route);
       if(!auth.token) return renderAuth('login');
       renderShell();
-      navigate(pages.some(p=>p[0]===route) ? route : 'dashboard');
+      navigate(visiblePages().some(p=>p[0]===route) ? route : 'dashboard');
     }
 
     window.addEventListener('hashchange', boot);
