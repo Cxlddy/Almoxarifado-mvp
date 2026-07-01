@@ -249,6 +249,7 @@
       ['solicitacoes','Solicitações','bi-clipboard2-check','Solicitações internas e autorizações'],
       ['cadastros','Cadastros','bi-folder2-open','Setores, locais, fornecedores e centros de custo'],
       ['usuarios','Usuários','bi-people','Perfis e permissões do sistema']
+      ['devolucoes', 'Usuários', 'bi-people']
     ];
 
     const root = document.getElementById('root');
@@ -597,8 +598,9 @@
           produtos: renderProdutos,
           estoque: renderEstoque,
           solicitacoes: renderSolicitacoes,
+          devolucoes: renderDevolucoes,
           cadastros: renderCadastros,
-          usuarios: renderUsuarios
+          usuarios: renderUsuarios,
         }[page] || renderDashboard;
         await render(fresh);
         setMeta(page);
@@ -888,6 +890,197 @@
           submitBtn.disabled = false;
           submitBtn.innerHTML = originalText;
         }
+      }
+    }
+    
+async function renderDevolucoes(fresh = false) {
+      let emprestimos = [];
+      let locais = [];
+
+      try {
+        emprestimos = await api('/devolucoes/emprestimos');
+        locais = await api('/cadastros/locais-estoque');
+      } catch (err) {
+        toast(err.message, 'danger');
+      }
+
+      $('app').innerHTML = `
+        <div class="surface p-3 p-md-4">
+          <div class="d-flex flex-column flex-md-row justify-content-between gap-3 mb-3">
+            <div>
+              <h5 class="fw-bold mb-1">Devoluções</h5>
+              <p class="small text-secondary mb-0">
+                Solicite a devolução de itens emprestados. O estoque só será atualizado após confirmação do admin.
+              </p>
+            </div>
+          </div>
+
+          ${tableDevolucoes(emprestimos)}
+        </div>
+
+        ${devolucaoModal(locais)}
+      `;
+
+      document.querySelectorAll('[data-devolver]').forEach((btn) => {
+        btn.addEventListener('click', () => abrirDevolucao(btn));
+      });
+
+      $('devolucaoForm')?.addEventListener('submit', solicitarDevolucao);
+    }
+
+    function tableDevolucoes(items) {
+      if (!items.length) {
+        return empty('Nenhum item pendente de devolução.', 'bi-arrow-counterclockwise');
+      }
+
+      return `
+        <div class="table-responsive">
+          <table class="table table-hover mb-0">
+            <thead>
+              <tr>
+                <th>Produto</th>
+                <th>Solicitante</th>
+                <th>Atendido</th>
+                <th>Devolvido</th>
+                <th>Pendente</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${items.map((item) => `
+                <tr>
+                  <td>
+                    <div class="fw-bold">${esc(item.produto?.nome || '-')}</div>
+                    <div class="small text-secondary">${esc(item.produto?.codigo_interno || '')}</div>
+                  </td>
+                  <td>${esc(item.solicitacao?.usuarios?.nome || '-')}</td>
+                  <td>${fmt(item.quantidade_atendida)}</td>
+                  <td>${fmt(item.quantidade_devolvida)}</td>
+                  <td class="fw-bold">${fmt(item.quantidade_pendente_devolucao)}</td>
+                  <td>
+                    <button
+                      class="btn btn-sm btn-primary"
+                      type="button"
+                      data-devolver
+                      data-id="${esc(item.id)}"
+                      data-produto="${esc(item.produto?.nome || 'Item')}"
+                      data-pendente="${esc(item.quantidade_pendente_devolucao)}"
+                    >
+                      Solicitar devolução
+                    </button>
+                  </td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    function devolucaoModal(locais) {
+      return `
+        <div class="modal fade" id="devolucaoModal" tabindex="-1">
+          <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+              <form id="devolucaoForm">
+                <div class="modal-header">
+                  <div>
+                    <h5 class="modal-title fw-bold">Solicitar devolução</h5>
+                    <p class="small text-secondary mb-0" id="devolucaoResumo">
+                      Informe a quantidade devolvida.
+                    </p>
+                  </div>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                  <input type="hidden" name="solicitacao_item_id">
+
+                  <div class="row g-3">
+                    <div class="col-md-6">
+                      <label class="form-label">
+                        Local de retorno
+                        <select class="form-select mt-1" name="local_estoque_id" required>
+                          <option value="">Selecione</option>
+                          ${options(locais)}
+                        </select>
+                      </label>
+                    </div>
+
+                    <div class="col-md-3">
+                      <label class="form-label">
+                        Quantidade
+                        <input class="form-control mt-1" name="quantidade" type="number" min="0.001" step="0.001" required>
+                      </label>
+                    </div>
+
+                    <div class="col-md-3">
+                      <label class="form-label">
+                        Pendente
+                        <input class="form-control mt-1" name="pendente" disabled>
+                      </label>
+                    </div>
+
+                    <div class="col-12">
+                      <label class="form-label">
+                        Observação
+                        <textarea class="form-control mt-1" name="observacao" rows="3" placeholder="Ex.: item devolvido em boas condições"></textarea>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
+                  <button class="btn btn-primary" type="submit">Enviar ao admin</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function abrirDevolucao(btn) {
+      const form = $('devolucaoForm');
+      const pendente = Number(btn.dataset.pendente || 0);
+
+      form.reset();
+      form.solicitacao_item_id.value = btn.dataset.id;
+      form.quantidade.value = pendente;
+      form.quantidade.max = pendente;
+      form.pendente.value = fmt(pendente);
+
+      $('devolucaoResumo').textContent =
+        `Produto: ${btn.dataset.produto}. Quantidade máxima para devolução: ${fmt(pendente)}.`;
+
+      showModal('devolucaoModal');
+    }
+
+    async function solicitarDevolucao(e) {
+      e.preventDefault();
+
+      const data = Object.fromEntries(new FormData(e.currentTarget));
+
+      const payload = {
+        solicitacao_item_id: data.solicitacao_item_id,
+        local_estoque_id: data.local_estoque_id,
+        solicitado_por_id: auth.usuario?.id || null,
+        quantidade: Number(data.quantidade),
+        observacao: data.observacao || null
+      };
+
+      try {
+        await api('/devolucoes/solicitar', {
+          method: 'POST',
+          body: JSON.stringify(payload)
+        });
+
+        hideModal('devolucaoModal');
+        toast('Solicitação de devolução enviada ao admin.');
+        await navigate('devolucoes', true);
+      } catch (err) {
+        toast(err.message, 'danger');
       }
     }
 
