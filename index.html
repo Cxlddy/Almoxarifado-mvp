@@ -247,9 +247,9 @@
       ['produtos','Produtos','bi-box-seam','Cadastro e consulta de materiais'],
       ['estoque','Estoque','bi-boxes','Movimentações e saldo por local'],
       ['solicitacoes','Solicitações','bi-clipboard2-check','Solicitações internas e autorizações'],
+      ['devolucoes','Devoluções','bi-arrow-counterclockwise','Devolução de itens emprestados'],
       ['cadastros','Cadastros','bi-folder2-open','Setores, locais, fornecedores e centros de custo'],
-      ['usuarios','Usuários','bi-people','Perfis e permissões do sistema'],
-      ['devolucoes', 'Usuários', 'bi-people']
+      ['usuarios','Usuários','bi-people','Perfis e permissões do sistema']
     ];
 
     const root = document.getElementById('root');
@@ -1045,11 +1045,20 @@ async function renderDevolucoes(fresh = false) {
       const form = $('devolucaoForm');
       const pendente = Number(btn.dataset.pendente || 0);
 
+      if(!form){
+        toast('Formulário de devolução não encontrado. Atualize a página e tente novamente.', 'danger');
+        return;
+      }
+
+      const inputItem = form.querySelector('[name="solicitacao_item_id"]');
+      const inputQuantidade = form.querySelector('[name="quantidade"]');
+      const inputPendente = form.querySelector('[name="pendente"]');
+
       form.reset();
-      form.solicitacao_item_id.value = btn.dataset.id;
-      form.quantidade.value = pendente;
-      form.quantidade.max = pendente;
-      form.pendente.value = fmt(pendente);
+      inputItem.value = btn.dataset.id;
+      inputQuantidade.value = pendente;
+      inputQuantidade.max = pendente;
+      inputPendente.value = fmt(pendente);
 
       $('devolucaoResumo').textContent =
         `Produto: ${btn.dataset.produto}. Quantidade máxima para devolução: ${fmt(pendente)}.`;
