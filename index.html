@@ -2,6 +2,7 @@
 <html lang="pt-BR" data-bs-theme="light">
 <head>
   <meta charset="UTF-8" />
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="description" content="Sistema de almoxarifado corporativo." />
   <title>Almoxarifado | Sistema Corporativo</title>
@@ -206,7 +207,9 @@
     }
     @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
     .fade-in{animation:fade .22s ease both}
-    @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes fade{from{opacity:0}to{opacity:1}}
+    .modal{z-index:3000!important}
+    .modal-backdrop{z-index:2990!important}
     .modal-content,.offcanvas{border-radius:22px;border:1px solid var(--border)}
     .mobile-menu-btn{display:none}
 
@@ -1182,24 +1185,51 @@ async function renderDevolucoes(fresh = false) {
       document.body.classList.remove('modal-open');
       document.body.style.removeProperty('overflow');
       document.body.style.removeProperty('padding-right');
+      document.body.removeAttribute('data-bs-overflow');
+      document.body.removeAttribute('data-bs-padding-right');
+    }
+
+    function moveModalToBody(id){
+      const el = $(id);
+      if(!el) return null;
+
+      if(el.parentElement !== document.body){
+        document.body.appendChild(el);
+      }
+
+      return el;
     }
 
     function showModal(id){
-      const el = $(id);
+      cleanupBootstrapArtifacts();
+
+      const el = moveModalToBody(id);
       if(!el){
         toast('Janela não encontrada. Atualize a página e tente novamente.', 'danger');
         return;
       }
-      bootstrap.Modal.getOrCreateInstance(el).show();
+
+      bootstrap.Modal.getOrCreateInstance(el, {
+        backdrop: true,
+        keyboard: true,
+        focus: true
+      }).show();
     }
 
     function hideModal(id){
       const el = $(id);
-      if(!el) return;
+      if(!el){
+        cleanupBootstrapArtifacts();
+        return;
+      }
       const m = bootstrap.Modal.getInstance(el) || bootstrap.Modal.getOrCreateInstance(el);
       if(m) m.hide();
       setTimeout(cleanupBootstrapArtifacts, 180);
     }
+
+    document.addEventListener('hidden.bs.modal', () => {
+      setTimeout(cleanupBootstrapArtifacts, 80);
+    });
 
     function boot(){
       document.documentElement.setAttribute('data-bs-theme', localStorage.getItem('almox_theme') || 'light');
