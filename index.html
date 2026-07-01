@@ -353,7 +353,8 @@
         fornecedores: ['/cadastros/fornecedores','fornecedores'],
         setores: ['/cadastros/setores','setores'],
         centros: ['/cadastros/centros-custo','centros'],
-        usuarios: ['/usuarios','usuarios']
+        usuarios: ['/usuarios','usuarios'],
+        admins: ['/usuarios/admins','admins']
       };
       const results = await Promise.all(keys.map(k => get(map[k][0], map[k][1], { fresh })));
       return Object.fromEntries(keys.map((k,i) => [k, results[i]]));
@@ -763,10 +764,10 @@
     }
 
     async function renderSolicitacoes(fresh=false){
-      const d = await load(['solicitacoes','produtos','setores','centros','locais'], fresh);
+      const d = await load(['solicitacoes','produtos','setores','centros','locais','admins'], fresh);
       $('app').innerHTML = `<div class="surface p-3 p-md-4">
         <div class="d-flex flex-column flex-md-row justify-content-between gap-3 mb-3">
-          <div><h5 class="fw-bold mb-1">Solicitações</h5><p class="text-secondary small mb-0">O almoxarife recebe a autorização por WhatsApp.</p></div>
+          <div><h5 class="fw-bold mb-1">Solicitações</h5><p class="text-secondary small mb-0">Escolha o admin que receberá a autorização por WhatsApp.</p></div>
           <button class="btn btn-primary" onclick="showModal('solModal')"><i class="bi bi-plus-lg me-1"></i>Nova solicitação</button>
         </div>${tableSolicitacoes(d.solicitacoes)}
       </div>${solModal(d)}${atenderModal(d)}`;
@@ -790,6 +791,7 @@
         <div class="modal-body"><div class="row g-3">
           <div class="col-md-6"><label class="form-label">Setor<select class="form-select mt-1" name="setor_id"><option value="">Selecione</option>${options(d.setores)}</select></label></div>
           <div class="col-md-6"><label class="form-label">Centro de custo<select class="form-select mt-1" name="centro_custo_id"><option value="">Selecione</option>${d.centros.map(c=>`<option value="${esc(c.id)}">${esc(c.codigo||'')} ${esc(c.nome||'')}</option>`).join('')}</select></label></div>
+          <div class="col-md-6"><label class="form-label">Admin responsável<select class="form-select mt-1" name="admin_id" required><option value="">Selecione</option>${d.admins.map(a=>`<option value="${esc(a.id)}">${esc(a.nome || a.email || 'Admin')} ${a.telefone ? '- ' + esc(a.telefone) : '- sem telefone'}</option>`).join('')}</select></label></div>
           <div class="col-12"><label class="form-label">Justificativa<textarea class="form-control mt-1" name="justificativa" required rows="3"></textarea></label></div>
           <div class="col-12"><div class="d-flex justify-content-between align-items-center mb-2"><h6 class="fw-bold mb-0">Itens</h6><button id="addItemBtn" type="button" class="btn btn-sm btn-light"><i class="bi bi-plus-lg me-1"></i>Adicionar</button></div><div id="itensSol" class="vstack gap-2"></div></div>
         </div></div>
@@ -812,11 +814,12 @@
       const data = Object.fromEntries(new FormData(e.currentTarget));
       const itens = [...document.querySelectorAll('#itensSol .row')].map(r => ({ produto_id:r.querySelector('.item-prod').value, quantidade_solicitada:Number(r.querySelector('.item-qtd').value), observacao:null })).filter(i => i.produto_id && i.quantidade_solicitada > 0);
       if(!itens.length){ toast('Adicione pelo menos um item.', 'warning'); return; }
+      if(!data.admin_id){ toast('Selecione o admin responsável pela autorização.', 'warning'); return; }
       try{
-        await api('/solicitacoes',{method:'POST',body:JSON.stringify({solicitante_id:auth.usuario?.id||null,setor_id:data.setor_id||null,centro_custo_id:data.centro_custo_id||null,justificativa:data.justificativa,observacao:null,itens})});
+        await api('/solicitacoes',{method:'POST',body:JSON.stringify({admin_id:data.admin_id,setor_id:data.setor_id||null,centro_custo_id:data.centro_custo_id||null,justificativa:data.justificativa,observacao:null,itens})});
         invalidate('solicitacoes');
         hideModal('solModal');
-        toast('Solicitação criada e enviada ao almoxarife.');
+        toast('Solicitação criada e enviada ao admin selecionado.');
         await navigate('solicitacoes', true);
       }catch(err){toast(err.message,'danger')}
     }
