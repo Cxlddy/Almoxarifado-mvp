@@ -204,6 +204,49 @@
     }
     .form-control,.form-select{border-radius:7px;min-height:2.62rem;border-color:#aeb7c2;background:var(--surface-strong)}
     .form-control:focus,.form-select:focus{box-shadow:0 0 0 .2rem rgba(183,121,31,.18);border-color:var(--accent)}
+    .phone-field{
+      display:flex;
+      align-items:stretch;
+      margin-top:.25rem;
+      border:1px solid #aeb7c2;
+      border-radius:7px;
+      background:var(--surface-strong);
+      overflow:hidden;
+      transition:border-color .16s ease, box-shadow .16s ease;
+    }
+    [data-bs-theme="dark"] .phone-field{border-color:#3b4653;background:var(--surface-strong)}
+    .phone-field:focus-within{
+      border-color:var(--accent);
+      box-shadow:0 0 0 .2rem rgba(183,121,31,.18);
+    }
+    .phone-prefix{
+      display:inline-flex;
+      align-items:center;
+      gap:.38rem;
+      min-height:2.62rem;
+      padding:0 .78rem;
+      background:#e3e9ef;
+      border-right:1px solid #aeb7c2;
+      color:#263241;
+      font-weight:700;
+      font-size:.9rem;
+      white-space:nowrap;
+    }
+    [data-bs-theme="dark"] .phone-prefix{background:#222b35;color:#e8edf2;border-color:#3b4653}
+    .phone-field .form-control{
+      border:0;
+      border-radius:0;
+      margin:0!important;
+      box-shadow:none!important;
+      background:transparent;
+    }
+    .phone-help{
+      display:block;
+      margin-top:.38rem;
+      color:var(--muted);
+      font-size:.76rem;
+      font-weight:500;
+    }
     .stat{
       position:relative;overflow:hidden;
       padding:1rem;min-height:124px;
@@ -329,6 +372,44 @@
 
     const fmt = (v) => Number(v || 0).toLocaleString('pt-BR', { maximumFractionDigits: 3 });
     const dateBR = (v) => v ? new Date(v).toLocaleDateString('pt-BR') : '-';
+
+    function phoneDigits(value){
+      let digits = String(value || '').replace(/\D/g, '');
+      if(digits.startsWith('55') && digits.length > 11) digits = digits.slice(2);
+      return digits.slice(0, 11);
+    }
+
+    function formatPhone(value){
+      const digits = phoneDigits(value);
+      const ddd = digits.slice(0, 2);
+      const first = digits.length > 10 ? digits.slice(2, 7) : digits.slice(2, 6);
+      const second = digits.length > 10 ? digits.slice(7, 11) : digits.slice(6, 10);
+
+      if(digits.length <= 2) return ddd ? `(${ddd}` : '';
+      if(!second) return `(${ddd}) ${first}`;
+      return `(${ddd}) ${first}-${second}`;
+    }
+
+    function normalizePhone(value){
+      const digits = phoneDigits(value);
+      return digits ? `55${digits}` : '';
+    }
+
+    function bindPhoneFields(scope=document){
+      scope.querySelectorAll('[data-phone]').forEach(input => {
+        input.value = formatPhone(input.value);
+        input.addEventListener('input', () => {
+          input.value = formatPhone(input.value);
+        });
+        input.addEventListener('blur', () => {
+          input.value = formatPhone(input.value);
+        });
+      });
+    }
+
+    function phoneIsValid(value){
+      return phoneDigits(value).length >= 10;
+    }
 
     function debounce(fn, wait=220){
       let timer;
@@ -463,11 +544,18 @@
       if(forgot) $('forgotForm').addEventListener('submit', handleForgot);
       else if(reset) $('resetForm').addEventListener('submit', handleReset);
       else $('loginForm').addEventListener('submit', handleLogin);
+      bindPhoneFields(root);
     }
 
     function loginForm(error){
       return `<form id="loginForm" class="vstack gap-3">
-        <label class="form-label">Telefone<input class="form-control mt-1" name="identificador" type="tel" inputmode="tel" autocomplete="tel" placeholder="(11) 99999-9999" required></label>
+        <label class="form-label">Telefone
+          <span class="phone-field">
+            <span class="phone-prefix">BR +55</span>
+            <input class="form-control" name="identificador" type="tel" inputmode="numeric" autocomplete="tel-national" placeholder="(11) 99999-9999" maxlength="15" data-phone required>
+          </span>
+          <span class="phone-help">Use o número corporativo cadastrado no sistema.</span>
+        </label>
         <label class="form-label">Senha<input class="form-control mt-1" name="senha" type="password" autocomplete="current-password" required></label>
         ${error ? `<div class="alert alert-danger mb-0">${esc(error)}</div>` : ''}
         <button class="btn btn-primary w-100" type="submit"><i class="bi bi-box-arrow-in-right me-2"></i>Entrar</button>
@@ -504,6 +592,14 @@
       const form = e.currentTarget;
       const btn = form.querySelector('button');
       const data = Object.fromEntries(new FormData(form));
+
+      if(!phoneIsValid(data.identificador)){
+        renderAuth('login', 'Informe um telefone válido.');
+        return;
+      }
+
+      data.identificador = normalizePhone(data.identificador);
+
       btn.disabled = true;
       btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Entrando...';
       try{
@@ -846,7 +942,7 @@
         <div class="modal-body"><div class="row g-3">
           <div class="col-md-6"><label class="form-label">Setor<select class="form-select mt-1" name="setor_id"><option value="">Selecione</option>${options(d.setores)}</select></label></div>
           <div class="col-md-6"><label class="form-label">Centro de custo<select class="form-select mt-1" name="centro_custo_id"><option value="">Selecione</option>${d.centros.map(c=>`<option value="${esc(c.id)}">${esc(c.codigo||'')} ${esc(c.nome||'')}</option>`).join('')}</select></label></div>
-          <div class="col-md-6"><label class="form-label">Admin responsável<select class="form-select mt-1" name="admin_id" required><option value="">Selecione</option>${d.admins.map(a=>`<option value="${esc(a.id)}">${esc(a.nome || a.email || 'Admin')} ${a.telefone ? '- ' + esc(a.telefone) : '- sem telefone'}</option>`).join('')}</select></label></div>
+          <div class="col-md-6"><label class="form-label">Admin responsável<select class="form-select mt-1" name="admin_id" required><option value="">Selecione</option>${d.admins.map(a=>`<option value="${esc(a.id)}">${esc(a.nome || a.email || 'Admin')} ${a.telefone ? '- ' + esc(formatPhone(a.telefone)) : '- sem telefone'}</option>`).join('')}</select></label></div>
           <div class="col-12"><label class="form-label">Justificativa<textarea class="form-control mt-1" name="justificativa" required rows="3"></textarea></label></div>
           <div class="col-12"><div class="d-flex justify-content-between align-items-center mb-2"><h6 class="fw-bold mb-0">Itens</h6><button id="addItemBtn" type="button" class="btn btn-sm btn-light"><i class="bi bi-plus-lg me-1"></i>Adicionar</button></div><div id="itensSol" class="vstack gap-2"></div></div>
         </div></div>
@@ -1207,6 +1303,7 @@ async function renderDevolucoes(fresh = false) {
       const d = await load(['usuarios','setores','centros'], fresh);
       $('app').innerHTML = `<div class="surface p-3 p-md-4"><div class="d-flex flex-column flex-md-row justify-content-between gap-3 mb-3"><div><h5 class="fw-bold mb-1">Usuários</h5><p class="small text-secondary mb-0">Perfis e permissões.</p></div><button class="btn btn-primary" onclick="showModal('userModal')"><i class="bi bi-person-plus me-1"></i>Novo</button></div>${tableUsuarios(d.usuarios)}</div>${userModal(d)}`;
       $('userForm').addEventListener('submit', saveUser);
+      bindPhoneFields($('userModal'));
     }
 
     function tableUsuarios(items){
@@ -1223,7 +1320,12 @@ async function renderDevolucoes(fresh = false) {
           <div class="col-md-4"><label class="form-label">Senha inicial<input class="form-control mt-1" name="senha" type="password" autocomplete="new-password" minlength="8" required></label></div>
           <div class="col-md-4"><label class="form-label">Perfil<select class="form-select mt-1" name="perfil" required><option value="usuario">Usuário</option><option value="admin">Admin</option></select></label></div>
           <div class="col-md-4"><label class="form-label">Cargo<input class="form-control mt-1" name="cargo"></label></div>
-          <div class="col-md-4"><label class="form-label">Telefone<input class="form-control mt-1" name="telefone"></label></div>
+          <div class="col-md-4"><label class="form-label">Telefone
+            <span class="phone-field">
+              <span class="phone-prefix">BR +55</span>
+              <input class="form-control" name="telefone" type="tel" inputmode="numeric" autocomplete="tel-national" placeholder="(11) 99999-9999" maxlength="15" data-phone required>
+            </span>
+          </label></div>
           <div class="col-md-6"><label class="form-label">Setor<select class="form-select mt-1" name="setor_id"><option value="">Selecione</option>${options(d.setores)}</select></label></div>
           <div class="col-md-6"><label class="form-label">Centro<select class="form-select mt-1" name="centro_custo_id"><option value="">Selecione</option>${d.centros.map(c=>`<option value="${esc(c.id)}">${esc(c.codigo||'')} ${esc(c.nome||'')}</option>`).join('')}</select></label></div>
         </div></div>
@@ -1234,6 +1336,14 @@ async function renderDevolucoes(fresh = false) {
     async function saveUser(e){
       e.preventDefault();
       const data = Object.fromEntries(new FormData(e.currentTarget));
+
+      if(!phoneIsValid(data.telefone)){
+        toast('Informe um telefone válido para o usuário.', 'warning');
+        return;
+      }
+
+      data.telefone = normalizePhone(data.telefone);
+
       try{
         await api('/usuarios',{method:'POST',body:JSON.stringify({...data,setor_id:data.setor_id||null,centro_custo_id:data.centro_custo_id||null,ativo:true})});
         invalidate('usuarios');
