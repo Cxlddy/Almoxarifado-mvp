@@ -15,7 +15,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" rel="stylesheet">
 
@@ -59,63 +59,31 @@
         var(--bg);
       background-size:32px 32px;
       color:var(--text);
-      font-family:"IBM Plex Sans",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      font-family:"Inter",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
       line-height:1.48;
       min-height:100vh;
       overflow-x:hidden;
     }
     .auth-page{
       min-height:100vh;
-      display:grid;
-      grid-template-columns:1.05fr .95fr;
-      background:#111820;
-    }
-    .auth-hero{
-      color:#f8fafc;
-      padding:clamp(2rem,6vw,5rem);
       display:flex;
-      flex-direction:column;
-      justify-content:space-between;
+      align-items:center;
+      justify-content:center;
+      padding:clamp(1rem,4vw,3rem);
       background:
-        linear-gradient(135deg, rgba(183,121,31,.18), transparent 34%),
-        linear-gradient(180deg, rgba(255,255,255,.04), transparent 42%),
+        linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px),
+        linear-gradient(180deg, rgba(255,255,255,.03) 1px, transparent 1px),
+        radial-gradient(circle at 50% 0%, rgba(183,121,31,.2), transparent 32%),
         #111820;
-      border-right:1px solid rgba(255,255,255,.08);
+      background-size:34px 34px,34px 34px,auto,auto;
     }
-    .auth-hero h1{
-      font-size:clamp(2rem,4vw,3.75rem);
-      font-weight:700;
-      letter-spacing:0;
-      line-height:1.12;
-      max-width:720px;
-    }
-    .auth-hero p{max-width:620px;color:#b8c1cc;font-size:1.05rem;line-height:1.62}
-    .proof-list{
-      display:grid;
-      gap:.85rem;
-      max-width:640px;
-      margin-top:2rem;
-    }
-    .proof-item{
-      display:flex;
-      gap:.75rem;
-      align-items:flex-start;
-      padding:.9rem 0;
-      border-top:1px solid rgba(255,255,255,.12);
-      color:#f8fafc;
-    }
-    .proof-item i{color:var(--accent);font-size:1.1rem;margin-top:.1rem}
-    .proof-item strong{display:block;font-weight:700}
-    .proof-item span{display:block;color:#a8b2bf;font-size:.95rem;line-height:1.55}
     .auth-box{
-      min-height:100vh;
+      width:min(100%,455px);
       display:grid;
-      place-items:center;
-      padding:clamp(1rem,3vw,2.5rem);
-      background:#dce2e8;
+      gap:1rem;
     }
     .auth-card{
-      width:min(100%,455px);
+      width:100%;
       padding:clamp(1.4rem,4vw,2.4rem);
       border-radius:var(--radius);
       background:#f8fafc;
@@ -123,7 +91,6 @@
       box-shadow:var(--shadow);
     }
     [data-bs-theme="dark"] .auth-page{background:var(--bg)}
-    [data-bs-theme="dark"] .auth-box{background:#0f1725}
     [data-bs-theme="dark"] .auth-card{background:var(--surface)}
 
     .app{display:flex;min-height:100vh}
@@ -300,10 +267,7 @@
       .stat{min-height:118px}
     }
     @media(max-width:575.98px){
-      .auth-page{grid-template-columns:1fr}
-      .auth-hero{min-height:auto;padding:2rem 1.1rem .5rem}
-      .auth-hero .small{display:none}
-      .auth-box{min-height:auto;padding:1rem}
+      .auth-page{padding:1rem}
       .topbar{padding:.85rem}
       .surface{border-radius:8px}
       .stat strong{font-size:1.6rem}
@@ -325,13 +289,13 @@
     const CACHE_TTL = 45_000;
 
     const pages = [
-      ['dashboard','Dashboard','bi-speedometer2','VisÃ£o geral do almoxarifado'],
+      ['dashboard','Dashboard','bi-speedometer2','Visão geral do almoxarifado'],
       ['produtos','Produtos','bi-box-seam','Cadastro e consulta de materiais'],
-      ['estoque','Estoque','bi-boxes','MovimentaÃ§Ãµes e saldo por local'],
-      ['solicitacoes','SolicitaÃ§Ãµes','bi-clipboard2-check','SolicitaÃ§Ãµes internas e autorizaÃ§Ãµes'],
-      ['devolucoes','DevoluÃ§Ãµes','bi-arrow-counterclockwise','DevoluÃ§Ã£o de itens emprestados'],
+      ['estoque','Estoque','bi-boxes','Movimentações e saldo por local'],
+      ['solicitacoes','Solicitações','bi-clipboard2-check','Solicitações internas e autorizações'],
+      ['devolucoes','Devoluções','bi-arrow-counterclockwise','Devolução de itens emprestados'],
       ['cadastros','Cadastros','bi-folder2-open','Setores, locais, fornecedores e centros de custo'],
-      ['usuarios','UsuÃ¡rios','bi-people','Perfis e permissÃµes do sistema']
+      ['usuarios','Usuários','bi-people','Perfis e permissões do sistema']
     ];
 
     const root = document.getElementById('root');
@@ -406,7 +370,7 @@
         const payload = type.includes('application/json') ? await response.json() : await response.text();
 
         if(!response.ok){
-          const msg = typeof payload === 'string' ? payload : payload.erro || payload.mensagem || 'Erro na requisiÃ§Ã£o';
+          const msg = typeof payload === 'string' ? payload : payload.erro || payload.mensagem || 'Erro na requisição';
           if(response.status === 401 || response.status === 403){
             clearSession();
             renderAuth('login', msg);
@@ -490,13 +454,6 @@
       const reset = mode === 'resetar-senha';
       root.innerHTML = `
         <main class="auth-page">
-          <section class="auth-hero">
-            <div>
-              <div class="d-flex align-items-center gap-2 mb-4">
-                <div class="brand-icon"><i class="bi bi-box-seam"></i></div>
-              </div>
-            </div>
-          </section>
           <section class="auth-box">
             <div class="auth-card">
               ${forgot ? forgotForm(error) : reset ? resetForm(error) : loginForm(error)}
@@ -523,7 +480,7 @@
         <label class="form-label">Email<input class="form-control mt-1" name="email" type="email" autocomplete="email" required></label>
         ${error ? `<div class="alert alert-danger mb-0">${esc(error)}</div>` : ''}
         <div id="forgotMessage"></div>
-        <button class="btn btn-primary w-100" type="submit"><i class="bi bi-envelope-arrow-up me-2"></i>Enviar instruÃ§Ãµes</button>
+        <button class="btn btn-primary w-100" type="submit"><i class="bi bi-envelope-arrow-up me-2"></i>Enviar instruções</button>
         <a class="text-center small fw-semibold" href="#/login">Voltar ao login</a>
       </form>`;
     }
@@ -571,7 +528,7 @@
       const box = $('forgotMessage');
       try{
         await api('/auth/forgot-password', { method:'POST', body:JSON.stringify(Object.fromEntries(new FormData(e.currentTarget))) });
-        box.innerHTML = '<div class="alert alert-success mb-0">Se o email estiver cadastrado, as instruÃ§Ãµes serÃ£o enviadas.</div>';
+        box.innerHTML = '<div class="alert alert-success mb-0">Se o email estiver cadastrado, as instruções serão enviadas.</div>';
       }catch(err){
         box.innerHTML = `<div class="alert alert-danger mb-0">${esc(err.message)}</div>`;
       }
@@ -582,16 +539,16 @@
       const data = Object.fromEntries(new FormData(e.currentTarget));
       const box = $('resetMessage');
       if(data.senha !== data.confirmar_senha){
-        box.innerHTML = '<div class="alert alert-danger mb-0">As senhas nÃ£o conferem.</div>';
+        box.innerHTML = '<div class="alert alert-danger mb-0">As senhas não conferem.</div>';
         return;
       }
       if(!data.access_token || !data.refresh_token){
-        box.innerHTML = '<div class="alert alert-danger mb-0">Link invÃ¡lido ou expirado.</div>';
+        box.innerHTML = '<div class="alert alert-danger mb-0">Link inválido ou expirado.</div>';
         return;
       }
       try{
         await api('/auth/reset-password', { method:'POST', body:JSON.stringify({access_token:data.access_token, refresh_token:data.refresh_token, senha:data.senha}) });
-        box.innerHTML = '<div class="alert alert-success mb-0">Senha alterada com sucesso. FaÃ§a login novamente.</div>';
+        box.innerHTML = '<div class="alert alert-success mb-0">Senha alterada com sucesso. Faça login novamente.</div>';
         clearSession();
         setTimeout(() => { location.hash = '#/login'; renderAuth('login'); }, 1400);
       }catch(err){
@@ -611,7 +568,7 @@
         <div class="nav-label">Menu</div>
         <nav>${links}</nav>
         <div class="position-absolute bottom-0 start-0 end-0 p-3 small text-white-50">
-          <i class="bi bi-whatsapp me-2"></i>AutorizaÃ§Ãµes integradas
+          <i class="bi bi-whatsapp me-2"></i>Autorizações integradas
         </div>`;
     }
 
@@ -624,14 +581,14 @@
             <div class="d-flex justify-content-between align-items-center gap-3">
               <div class="d-flex align-items-center gap-2">
                 <button class="btn btn-light btn-icon mobile-menu-btn" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu" aria-label="Abrir menu"><i class="bi bi-list"></i></button>
-                <div><h1 id="pageTitle" class="page-title">Dashboard</h1><p id="pageSub" class="page-sub">VisÃ£o geral</p></div>
+                <div><h1 id="pageTitle" class="page-title">Dashboard</h1><p id="pageSub" class="page-sub">Visão geral</p></div>
               </div>
               <div class="d-flex align-items-center gap-2">
                 <button id="themeBtn" class="btn btn-light btn-icon" aria-label="Tema"><i class="bi bi-moon-stars"></i></button>
                 <div class="dropdown">
                   <button class="btn btn-light d-flex align-items-center gap-2" data-bs-toggle="dropdown">
                     <span class="user-badge">${esc((auth.usuario?.nome || 'U').slice(0,1).toUpperCase())}</span>
-                    <span class="d-none d-md-inline small fw-bold">${esc(auth.usuario?.nome || 'UsuÃ¡rio')}</span>
+                    <span class="d-none d-md-inline small fw-bold">${esc(auth.usuario?.nome || 'Usuário')}</span>
                   </button>
                   <ul class="dropdown-menu dropdown-menu-end shadow border-0">
                     <li><h6 class="dropdown-header">${esc(auth.usuario?.email || '')}</h6></li>
@@ -688,7 +645,7 @@
       if(page === 'usuarios' && !isAdmin()){
         page = 'dashboard';
         history.replaceState(null, '', '#/dashboard');
-        toast('Apenas administradores podem acessar usuÃ¡rios.', 'warning');
+        toast('Apenas administradores podem acessar usuários.', 'warning');
       }
 
       state.page = page;
@@ -741,11 +698,11 @@
         ${card('Produtos', d.produtos.length, 'bi-box-seam')}
         ${card('Itens em estoque', fmt(total), 'bi-boxes')}
         ${card('Baixo estoque', baixo.length, 'bi-exclamation-triangle')}
-        ${card('SolicitaÃ§Ãµes pendentes', pend.length, 'bi-hourglass-split')}
+        ${card('Solicitações pendentes', pend.length, 'bi-hourglass-split')}
       </div>
       <div class="row g-3">
-        <div class="col-lg-7"><div class="surface p-3 p-md-4 h-100"><div class="d-flex justify-content-between mb-3"><div><h5 class="fw-bold mb-1">SolicitaÃ§Ãµes recentes</h5><p class="text-secondary small mb-0">Ãšltimas movimentaÃ§Ãµes do fluxo interno.</p></div><button class="btn btn-sm btn-primary" onclick="navigate('solicitacoes')">Ver</button></div>${tableSolicitacoes(d.solicitacoes.slice(0,6), true)}</div></div>
-        <div class="col-lg-5"><div class="surface p-3 p-md-4 h-100"><div class="d-flex justify-content-between mb-3"><div><h5 class="fw-bold mb-1">Itens crÃ­ticos</h5><p class="text-secondary small mb-0">Produtos abaixo do mÃ­nimo.</p></div><span class="soft ${baixo.length ? 'soft-danger':'soft-success'}">${baixo.length} itens</span></div>${tableSaldo(baixo.slice(0,6), true)}</div></div>
+        <div class="col-lg-7"><div class="surface p-3 p-md-4 h-100"><div class="d-flex justify-content-between mb-3"><div><h5 class="fw-bold mb-1">Solicitações recentes</h5><p class="text-secondary small mb-0">Últimas movimentações do fluxo interno.</p></div><button class="btn btn-sm btn-primary" onclick="navigate('solicitacoes')">Ver</button></div>${tableSolicitacoes(d.solicitacoes.slice(0,6), true)}</div></div>
+        <div class="col-lg-5"><div class="surface p-3 p-md-4 h-100"><div class="d-flex justify-content-between mb-3"><div><h5 class="fw-bold mb-1">Itens críticos</h5><p class="text-secondary small mb-0">Produtos abaixo do mínimo.</p></div><span class="soft ${baixo.length ? 'soft-danger':'soft-success'}">${baixo.length} itens</span></div>${tableSaldo(baixo.slice(0,6), true)}</div></div>
       </div>`;
     }
 
@@ -753,7 +710,7 @@
       const d = await load(['produtos','categorias','unidades'], fresh);
       $('app').innerHTML = `<div class="surface p-3 p-md-4">
         <div class="d-flex flex-column flex-md-row justify-content-between gap-3 mb-3">
-          <div><h5 class="fw-bold mb-1">Produtos cadastrados</h5><p class="text-secondary small mb-0">Busca rÃ¡pida e cadastro otimizado.</p></div>
+          <div><h5 class="fw-bold mb-1">Produtos cadastrados</h5><p class="text-secondary small mb-0">Busca rápida e cadastro otimizado.</p></div>
           <div class="d-flex gap-2"><div class="search"><i class="bi bi-search"></i><input id="produtoSearch" class="form-control" placeholder="Buscar..."></div><button class="btn btn-primary" onclick="showModal('produtoModal')"><i class="bi bi-plus-lg me-1"></i>Novo</button></div>
         </div>
         <div id="produtosTable">${tableProdutos(d.produtos)}</div>
@@ -768,7 +725,7 @@
 
     function tableProdutos(items){
       if(!items.length) return empty('Nenhum produto cadastrado','bi-box-seam');
-      return `<div class="table-responsive"><table class="table table-hover mb-0"><thead><tr><th>CÃ³digo</th><th>Produto</th><th>Categoria</th><th>Unidade</th><th>MÃ­nimo</th><th>Status</th></tr></thead><tbody>${items.map(p=>`<tr>
+      return `<div class="table-responsive"><table class="table table-hover mb-0"><thead><tr><th>Código</th><th>Produto</th><th>Categoria</th><th>Unidade</th><th>Mínimo</th><th>Status</th></tr></thead><tbody>${items.map(p=>`<tr>
         <td class="fw-bold">${esc(p.codigo_interno || '-')}</td><td><div class="fw-bold">${esc(p.nome)}</div><div class="small text-secondary">${esc(p.descricao || '')}</div></td>
         <td>${esc(p.categorias?.nome || '-')}</td><td>${esc(p.unidades_medida?.sigla || '-')}</td><td>${fmt(p.estoque_minimo)}</td>
         <td>${p.ativo ? '<span class="soft soft-success">Ativo</span>' : '<span class="soft soft-danger">Inativo</span>'}</td>
@@ -780,13 +737,13 @@
         <div class="modal-header"><div><h5 class="modal-title fw-bold">Novo produto</h5><p class="small text-secondary mb-0">Cadastre um material.</p></div><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
         <div class="modal-body"><div class="row g-3">
           <div class="col-md-8"><label class="form-label">Nome<input class="form-control mt-1" name="nome" required></label></div>
-          <div class="col-md-4"><label class="form-label">CÃ³digo interno<input class="form-control mt-1" name="codigo_interno"></label></div>
+          <div class="col-md-4"><label class="form-label">Código interno<input class="form-control mt-1" name="codigo_interno"></label></div>
           <div class="col-md-6"><label class="form-label">Categoria<select class="form-select mt-1" name="categoria_id"><option value="">Selecione</option>${options(d.categorias)}</select></label></div>
           <div class="col-md-6"><label class="form-label">Unidade<select class="form-select mt-1" name="unidade_medida_id"><option value="">Selecione</option>${options(d.unidades,'sigla')}</select></label></div>
-          <div class="col-md-4"><label class="form-label">Estoque mÃ­nimo<input class="form-control mt-1" name="estoque_minimo" type="number" min="0" step="0.001" value="0"></label></div>
-          <div class="col-md-4"><label class="form-label">Estoque mÃ¡ximo<input class="form-control mt-1" name="estoque_maximo" type="number" min="0" step="0.001"></label></div>
-          <div class="col-md-4"><label class="form-label">CÃ³digo de barras<input class="form-control mt-1" name="codigo_barras"></label></div>
-          <div class="col-12"><label class="form-label">DescriÃ§Ã£o<textarea class="form-control mt-1" name="descricao" rows="3"></textarea></label></div>
+          <div class="col-md-4"><label class="form-label">Estoque mínimo<input class="form-control mt-1" name="estoque_minimo" type="number" min="0" step="0.001" value="0"></label></div>
+          <div class="col-md-4"><label class="form-label">Estoque máximo<input class="form-control mt-1" name="estoque_maximo" type="number" min="0" step="0.001"></label></div>
+          <div class="col-md-4"><label class="form-label">Código de barras<input class="form-control mt-1" name="codigo_barras"></label></div>
+          <div class="col-12"><label class="form-label">Descrição<textarea class="form-control mt-1" name="descricao" rows="3"></textarea></label></div>
         </div></div>
         <div class="modal-footer"><button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button><button class="btn btn-primary" type="submit">Salvar</button></div>
       </form></div></div></div>`;
@@ -809,7 +766,7 @@
       const d = await load(['saldo','produtos','locais'], fresh);
       $('app').innerHTML = `<div class="surface p-3 p-md-4">
         <div class="d-flex flex-column flex-md-row justify-content-between gap-3 mb-3">
-          <div><h5 class="fw-bold mb-1">Saldo de estoque</h5><p class="text-secondary small mb-0">Consulta rÃ¡pida por produto, local ou categoria.</p></div>
+          <div><h5 class="fw-bold mb-1">Saldo de estoque</h5><p class="text-secondary small mb-0">Consulta rápida por produto, local ou categoria.</p></div>
           <div class="d-flex gap-2"><div class="search"><i class="bi bi-search"></i><input id="saldoSearch" class="form-control" placeholder="Buscar..."></div><button class="btn btn-primary" onclick="showModal('movModal')"><i class="bi bi-arrow-left-right me-1"></i>Movimentar</button></div>
         </div>
         <div id="saldoTable">${tableSaldo(d.saldo)}</div>
@@ -823,7 +780,7 @@
 
     function tableSaldo(items, compact=false){
       if(!items.length) return empty('Nenhum saldo encontrado','bi-boxes');
-      return `<div class="table-responsive"><table class="table table-hover mb-0"><thead><tr><th>Produto</th>${compact?'':'<th>Categoria</th>'}<th>Local</th><th>Saldo</th><th>MÃ­nimo</th><th>Status</th></tr></thead><tbody>${items.map(s=>`<tr>
+      return `<div class="table-responsive"><table class="table table-hover mb-0"><thead><tr><th>Produto</th>${compact?'':'<th>Categoria</th>'}<th>Local</th><th>Saldo</th><th>Mínimo</th><th>Status</th></tr></thead><tbody>${items.map(s=>`<tr>
         <td><div class="fw-bold">${esc(s.produto || '-')}</div><div class="small text-secondary">${esc(s.codigo_interno || '')}</div></td>
         ${compact?'':`<td>${esc(s.categoria || '-')}</td>`}<td>${esc(s.local_estoque || '-')}</td><td class="fw-bold">${fmt(s.saldo_atual)}</td><td>${fmt(s.estoque_minimo)}</td>
         <td>${s.abaixo_estoque_minimo?'<span class="soft soft-danger">Baixo</span>':'<span class="soft soft-success">OK</span>'}</td>
@@ -832,17 +789,17 @@
 
     function movModal(d){
       return `<div class="modal fade" id="movModal" tabindex="-1"><div class="modal-dialog modal-lg modal-dialog-centered"><div class="modal-content"><form id="movForm">
-        <div class="modal-header"><div><h5 class="modal-title fw-bold">Nova movimentaÃ§Ã£o</h5><p class="small text-secondary mb-0">Entrada, saÃ­da ou ajuste.</p></div><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+        <div class="modal-header"><div><h5 class="modal-title fw-bold">Nova movimentação</h5><p class="small text-secondary mb-0">Entrada, saída ou ajuste.</p></div><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
         <div class="modal-body"><div class="row g-3">
           <div class="col-md-6"><label class="form-label">Produto<select class="form-select mt-1" name="produto_id" required><option value="">Selecione</option>${options(d.produtos)}</select></label></div>
           <div class="col-md-6"><label class="form-label">Local<select class="form-select mt-1" name="local_estoque_id" required><option value="">Selecione</option>${options(d.locais)}</select></label></div>
-          <div class="col-md-4"><label class="form-label">Tipo<select class="form-select mt-1" name="tipo"><option value="entrada">Entrada</option><option value="saida">SaÃ­da</option><option value="ajuste_entrada">Ajuste entrada</option><option value="ajuste_saida">Ajuste saÃ­da</option></select></label></div>
-          <div class="col-md-4"><label class="form-label">Origem<select class="form-select mt-1" name="origem"><option value="manual">Manual</option><option value="compra">Compra</option><option value="solicitacao">SolicitaÃ§Ã£o</option><option value="inventario">InventÃ¡rio</option><option value="devolucao">DevoluÃ§Ã£o</option></select></label></div>
+          <div class="col-md-4"><label class="form-label">Tipo<select class="form-select mt-1" name="tipo"><option value="entrada">Entrada</option><option value="saida">Saída</option><option value="ajuste_entrada">Ajuste entrada</option><option value="ajuste_saida">Ajuste saída</option></select></label></div>
+          <div class="col-md-4"><label class="form-label">Origem<select class="form-select mt-1" name="origem"><option value="manual">Manual</option><option value="compra">Compra</option><option value="solicitacao">Solicitação</option><option value="inventario">Inventário</option><option value="devolucao">Devolução</option></select></label></div>
           <div class="col-md-4"><label class="form-label">Quantidade<input class="form-control mt-1" name="quantidade" type="number" min="0.001" step="0.001" required></label></div>
           <div class="col-md-4"><label class="form-label">Documento<input class="form-control mt-1" name="documento"></label></div>
           <div class="col-md-4"><label class="form-label">Lote<input class="form-control mt-1" name="lote"></label></div>
           <div class="col-md-4"><label class="form-label">Validade<input class="form-control mt-1" name="data_validade" type="date"></label></div>
-          <div class="col-12"><label class="form-label">ObservaÃ§Ã£o<textarea class="form-control mt-1" name="observacao" rows="3"></textarea></label></div>
+          <div class="col-12"><label class="form-label">Observação<textarea class="form-control mt-1" name="observacao" rows="3"></textarea></label></div>
         </div></div>
         <div class="modal-footer"><button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button><button class="btn btn-primary">Registrar</button></div>
       </form></div></div></div>`;
@@ -856,7 +813,7 @@
         await api('/movimentacoes',{method:'POST',body:JSON.stringify(payload)});
         invalidate('saldo');
         hideModal('movModal');
-        toast('MovimentaÃ§Ã£o registrada.');
+        toast('Movimentação registrada.');
         await navigate('estoque', true);
       }catch(err){toast(err.message,'danger')}
     }
@@ -865,8 +822,8 @@
       const d = await load(['solicitacoes','produtos','setores','centros','locais','admins'], fresh);
       $('app').innerHTML = `<div class="surface p-3 p-md-4">
         <div class="d-flex flex-column flex-md-row justify-content-between gap-3 mb-3">
-          <div><h5 class="fw-bold mb-1">SolicitaÃ§Ãµes</h5><p class="text-secondary small mb-0">Escolha o admin que receberÃ¡ a autorizaÃ§Ã£o por WhatsApp.</p></div>
-          <button class="btn btn-primary" onclick="showModal('solModal')"><i class="bi bi-plus-lg me-1"></i>Nova solicitaÃ§Ã£o</button>
+          <div><h5 class="fw-bold mb-1">Solicitações</h5><p class="text-secondary small mb-0">Escolha o admin que receberá a autorização por WhatsApp.</p></div>
+          <button class="btn btn-primary" onclick="showModal('solModal')"><i class="bi bi-plus-lg me-1"></i>Nova solicitação</button>
         </div>${tableSolicitacoes(d.solicitacoes)}
       </div>${solModal(d)}${atenderModal(d)}`;
       $('solForm').addEventListener('submit', saveSol);
@@ -876,8 +833,8 @@
     }
 
     function tableSolicitacoes(items, compact=false){
-      if(!items.length) return empty('Nenhuma solicitaÃ§Ã£o encontrada','bi-clipboard2');
-      return `<div class="table-responsive"><table class="table table-hover mb-0"><thead><tr><th>Data</th><th>Status</th><th>Justificativa</th>${compact?'':'<th>Solicitante</th><th>Itens</th><th>AÃ§Ãµes</th>'}</tr></thead><tbody>${items.map(s=>`<tr>
+      if(!items.length) return empty('Nenhuma solicitação encontrada','bi-clipboard2');
+      return `<div class="table-responsive"><table class="table table-hover mb-0"><thead><tr><th>Data</th><th>Status</th><th>Justificativa</th>${compact?'':'<th>Solicitante</th><th>Itens</th><th>Ações</th>'}</tr></thead><tbody>${items.map(s=>`<tr>
         <td>${dateBR(s.data_solicitacao)}</td><td>${badge(s.status)}</td><td><div class="fw-bold">${esc(s.justificativa||'-')}</div><div class="small text-secondary">${esc(s.observacao||'')}</div></td>
         ${compact?'':`<td>${esc(s.usuarios?.nome || '-')}</td><td>${(s.solicitacao_itens||[]).length}</td><td>${s.status==='aprovada'?`<button class="btn btn-sm btn-primary" onclick="openAtender('${s.id}')">Atender</button>`:'<span class="text-secondary small">-</span>'}</td>`}
       </tr>`).join('')}</tbody></table></div>`;
@@ -885,11 +842,11 @@
 
     function solModal(d){
       return `<div class="modal fade" id="solModal" tabindex="-1"><div class="modal-dialog modal-xl modal-dialog-centered"><div class="modal-content"><form id="solForm">
-        <div class="modal-header"><div><h5 class="modal-title fw-bold">Nova solicitaÃ§Ã£o</h5><p class="small text-secondary mb-0">SerÃ¡ enviada para autorizaÃ§Ã£o.</p></div><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+        <div class="modal-header"><div><h5 class="modal-title fw-bold">Nova solicitação</h5><p class="small text-secondary mb-0">Será enviada para autorização.</p></div><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
         <div class="modal-body"><div class="row g-3">
           <div class="col-md-6"><label class="form-label">Setor<select class="form-select mt-1" name="setor_id"><option value="">Selecione</option>${options(d.setores)}</select></label></div>
           <div class="col-md-6"><label class="form-label">Centro de custo<select class="form-select mt-1" name="centro_custo_id"><option value="">Selecione</option>${d.centros.map(c=>`<option value="${esc(c.id)}">${esc(c.codigo||'')} ${esc(c.nome||'')}</option>`).join('')}</select></label></div>
-          <div class="col-md-6"><label class="form-label">Admin responsÃ¡vel<select class="form-select mt-1" name="admin_id" required><option value="">Selecione</option>${d.admins.map(a=>`<option value="${esc(a.id)}">${esc(a.nome || a.email || 'Admin')} ${a.telefone ? '- ' + esc(a.telefone) : '- sem telefone'}</option>`).join('')}</select></label></div>
+          <div class="col-md-6"><label class="form-label">Admin responsável<select class="form-select mt-1" name="admin_id" required><option value="">Selecione</option>${d.admins.map(a=>`<option value="${esc(a.id)}">${esc(a.nome || a.email || 'Admin')} ${a.telefone ? '- ' + esc(a.telefone) : '- sem telefone'}</option>`).join('')}</select></label></div>
           <div class="col-12"><label class="form-label">Justificativa<textarea class="form-control mt-1" name="justificativa" required rows="3"></textarea></label></div>
           <div class="col-12"><div class="d-flex justify-content-between align-items-center mb-2"><h6 class="fw-bold mb-0">Itens</h6><button id="addItemBtn" type="button" class="btn btn-sm btn-light"><i class="bi bi-plus-lg me-1"></i>Adicionar</button></div><div id="itensSol" class="vstack gap-2"></div></div>
         </div></div>
@@ -912,19 +869,19 @@
       const data = Object.fromEntries(new FormData(e.currentTarget));
       const itens = [...document.querySelectorAll('#itensSol .row')].map(r => ({ produto_id:r.querySelector('.item-prod').value, quantidade_solicitada:Number(r.querySelector('.item-qtd').value), observacao:null })).filter(i => i.produto_id && i.quantidade_solicitada > 0);
       if(!itens.length){ toast('Adicione pelo menos um item.', 'warning'); return; }
-      if(!data.admin_id){ toast('Selecione o admin responsÃ¡vel pela autorizaÃ§Ã£o.', 'warning'); return; }
+      if(!data.admin_id){ toast('Selecione o admin responsável pela autorização.', 'warning'); return; }
       try{
         await api('/solicitacoes',{method:'POST',body:JSON.stringify({admin_id:data.admin_id,setor_id:data.setor_id||null,centro_custo_id:data.centro_custo_id||null,justificativa:data.justificativa,observacao:null,itens})});
         invalidate('solicitacoes');
         hideModal('solModal');
-        toast('SolicitaÃ§Ã£o criada e enviada ao admin selecionado.');
+        toast('Solicitação criada e enviada ao admin selecionado.');
         await navigate('solicitacoes', true);
       }catch(err){toast(err.message,'danger')}
     }
 
     function atenderModal(d){
       return `<div class="modal fade" id="atenderModal" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content"><form id="atenderForm">
-        <div class="modal-header"><h5 class="modal-title fw-bold">Atender solicitaÃ§Ã£o</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+        <div class="modal-header"><h5 class="modal-title fw-bold">Atender solicitação</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
         <div class="modal-body"><input type="hidden" name="solicitacao_id"><label class="form-label">Local<select class="form-select mt-1" name="local_estoque_id" required><option value="">Selecione</option>${options(d.locais)}</select></label></div>
         <div class="modal-footer"><button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button><button class="btn btn-primary" type="submit">Confirmar</button></div>
       </form></div></div></div>`;
@@ -933,7 +890,7 @@
     function openAtender(id){
       const form = $('atenderForm');
       if(!form){
-        toast('FormulÃ¡rio de atendimento nÃ£o encontrado. Atualize a pÃ¡gina e tente novamente.', 'danger');
+        toast('Formulário de atendimento não encontrado. Atualize a página e tente novamente.', 'danger');
         return;
       }
 
@@ -941,7 +898,7 @@
 
       const inputSolicitacao = form.querySelector('[name="solicitacao_id"]');
       if(!inputSolicitacao){
-        toast('Campo da solicitaÃ§Ã£o nÃ£o encontrado.', 'danger');
+        toast('Campo da solicitação não encontrado.', 'danger');
         return;
       }
 
@@ -956,12 +913,12 @@
       const data = Object.fromEntries(new FormData(form));
 
       if(!data.solicitacao_id){
-        toast('SolicitaÃ§Ã£o nÃ£o identificada para atendimento.', 'danger');
+        toast('Solicitação não identificada para atendimento.', 'danger');
         return;
       }
 
       if(!data.local_estoque_id){
-        toast('Selecione o local de estoque para atender a solicitaÃ§Ã£o.', 'warning');
+        toast('Selecione o local de estoque para atender a solicitação.', 'warning');
         return;
       }
 
@@ -984,7 +941,7 @@
 
         invalidate('solicitacoes','saldo');
         hideModal('atenderModal');
-        toast('SolicitaÃ§Ã£o atendida com sucesso.');
+        toast('Solicitação atendida com sucesso.');
         await navigate('solicitacoes', true);
         cleanupBootstrapArtifacts();
       }catch(err){
@@ -1012,9 +969,9 @@ async function renderDevolucoes(fresh = false) {
         <div class="surface p-3 p-md-4">
           <div class="d-flex flex-column flex-md-row justify-content-between gap-3 mb-3">
             <div>
-              <h5 class="fw-bold mb-1">DevoluÃ§Ãµes</h5>
+              <h5 class="fw-bold mb-1">Devoluções</h5>
               <p class="small text-secondary mb-0">
-                Solicite a devoluÃ§Ã£o de itens emprestados. O estoque sÃ³ serÃ¡ atualizado apÃ³s confirmaÃ§Ã£o do admin.
+                Solicite a devolução de itens emprestados. O estoque só será atualizado após confirmação do admin.
               </p>
             </div>
           </div>
@@ -1034,7 +991,7 @@ async function renderDevolucoes(fresh = false) {
 
     function tableDevolucoes(items) {
       if (!items.length) {
-        return empty('Nenhum item pendente de devoluÃ§Ã£o.', 'bi-arrow-counterclockwise');
+        return empty('Nenhum item pendente de devolução.', 'bi-arrow-counterclockwise');
       }
 
       return `
@@ -1047,7 +1004,7 @@ async function renderDevolucoes(fresh = false) {
                 <th>Atendido</th>
                 <th>Devolvido</th>
                 <th>Pendente</th>
-                <th>AÃ§Ãµes</th>
+                <th>Ações</th>
               </tr>
             </thead>
             <tbody>
@@ -1070,7 +1027,7 @@ async function renderDevolucoes(fresh = false) {
                       data-produto="${esc(item.produto?.nome || 'Item')}"
                       data-pendente="${esc(item.quantidade_pendente_devolucao)}"
                     >
-                      Solicitar devoluÃ§Ã£o
+                      Solicitar devolução
                     </button>
                   </td>
                 </tr>
@@ -1089,7 +1046,7 @@ async function renderDevolucoes(fresh = false) {
               <form id="devolucaoForm">
                 <div class="modal-header">
                   <div>
-                    <h5 class="modal-title fw-bold">Solicitar devoluÃ§Ã£o</h5>
+                    <h5 class="modal-title fw-bold">Solicitar devolução</h5>
                     <p class="small text-secondary mb-0" id="devolucaoResumo">
                       Informe a quantidade devolvida.
                     </p>
@@ -1127,8 +1084,8 @@ async function renderDevolucoes(fresh = false) {
 
                     <div class="col-12">
                       <label class="form-label">
-                        ObservaÃ§Ã£o
-                        <textarea class="form-control mt-1" name="observacao" rows="3" placeholder="Ex.: item devolvido em boas condiÃ§Ãµes"></textarea>
+                        Observação
+                        <textarea class="form-control mt-1" name="observacao" rows="3" placeholder="Ex.: item devolvido em boas condições"></textarea>
                       </label>
                     </div>
                   </div>
@@ -1150,7 +1107,7 @@ async function renderDevolucoes(fresh = false) {
       const pendente = Number(btn.dataset.pendente || 0);
 
       if(!form){
-        toast('FormulÃ¡rio de devoluÃ§Ã£o nÃ£o encontrado. Atualize a pÃ¡gina e tente novamente.', 'danger');
+        toast('Formulário de devolução não encontrado. Atualize a página e tente novamente.', 'danger');
         return;
       }
 
@@ -1165,7 +1122,7 @@ async function renderDevolucoes(fresh = false) {
       inputPendente.value = fmt(pendente);
 
       $('devolucaoResumo').textContent =
-        `Produto: ${btn.dataset.produto}. Quantidade mÃ¡xima para devoluÃ§Ã£o: ${fmt(pendente)}.`;
+        `Produto: ${btn.dataset.produto}. Quantidade máxima para devolução: ${fmt(pendente)}.`;
 
       showModal('devolucaoModal');
     }
@@ -1190,7 +1147,7 @@ async function renderDevolucoes(fresh = false) {
         });
 
         hideModal('devolucaoModal');
-        toast('SolicitaÃ§Ã£o de devoluÃ§Ã£o enviada ao admin.');
+        toast('Solicitação de devolução enviada ao admin.');
         await navigate('devolucoes', true);
       } catch (err) {
         toast(err.message, 'danger');
@@ -1217,7 +1174,7 @@ async function renderDevolucoes(fresh = false) {
 
     function centroCard(items){
       return `<div class="col-lg-6"><div class="surface p-3 p-md-4 h-100"><h5 class="fw-bold mb-1"><i class="bi bi-cash-coin text-primary me-2"></i>Centros de custo</h5><p class="small text-secondary">${items.length} registros</p>
-        <form id="centroForm" class="row g-2 mb-3"><div class="col-sm-4"><input class="form-control" name="codigo" placeholder="CÃ³digo" required></div><div class="col-sm-6"><input class="form-control" name="nome" placeholder="Nome" required></div><div class="col-sm-2"><button class="btn btn-primary w-100"><i class="bi bi-check-lg"></i></button></div></form>
+        <form id="centroForm" class="row g-2 mb-3"><div class="col-sm-4"><input class="form-control" name="codigo" placeholder="Código" required></div><div class="col-sm-6"><input class="form-control" name="nome" placeholder="Nome" required></div><div class="col-sm-2"><button class="btn btn-primary w-100"><i class="bi bi-check-lg"></i></button></div></form>
         <div class="vstack gap-2">${items.slice(0,10).map(i=>`<div class="record-row"><strong>${esc(i.codigo||'-')}</strong><span class="text-secondary">${esc(i.nome||'')}</span></div>`).join('') || '<p class="text-secondary small">Nenhum registro.</p>'}</div></div></div>`;
     }
 
@@ -1243,17 +1200,17 @@ async function renderDevolucoes(fresh = false) {
 
     async function renderUsuarios(fresh=false){
       if(!isAdmin()){
-        $('app').innerHTML = `<div class="surface p-4"><div class="empty"><i class="bi bi-shield-lock"></i><h5>Acesso restrito</h5><p>Apenas administradores podem cadastrar usuÃ¡rios.</p></div></div>`;
+        $('app').innerHTML = `<div class="surface p-4"><div class="empty"><i class="bi bi-shield-lock"></i><h5>Acesso restrito</h5><p>Apenas administradores podem cadastrar usuários.</p></div></div>`;
         return;
       }
 
       const d = await load(['usuarios','setores','centros'], fresh);
-      $('app').innerHTML = `<div class="surface p-3 p-md-4"><div class="d-flex flex-column flex-md-row justify-content-between gap-3 mb-3"><div><h5 class="fw-bold mb-1">UsuÃ¡rios</h5><p class="small text-secondary mb-0">Perfis e permissÃµes.</p></div><button class="btn btn-primary" onclick="showModal('userModal')"><i class="bi bi-person-plus me-1"></i>Novo</button></div>${tableUsuarios(d.usuarios)}</div>${userModal(d)}`;
+      $('app').innerHTML = `<div class="surface p-3 p-md-4"><div class="d-flex flex-column flex-md-row justify-content-between gap-3 mb-3"><div><h5 class="fw-bold mb-1">Usuários</h5><p class="small text-secondary mb-0">Perfis e permissões.</p></div><button class="btn btn-primary" onclick="showModal('userModal')"><i class="bi bi-person-plus me-1"></i>Novo</button></div>${tableUsuarios(d.usuarios)}</div>${userModal(d)}`;
       $('userForm').addEventListener('submit', saveUser);
     }
 
     function tableUsuarios(items){
-      if(!items.length) return empty('Nenhum usuÃ¡rio cadastrado','bi-people');
+      if(!items.length) return empty('Nenhum usuário cadastrado','bi-people');
       return `<div class="table-responsive"><table class="table table-hover mb-0"><thead><tr><th>Nome</th><th>Email</th><th>Perfil</th><th>Cargo</th><th>Status</th></tr></thead><tbody>${items.map(u=>`<tr><td class="fw-bold">${esc(u.nome||'-')}</td><td>${esc(u.email||'-')}</td><td><span class="soft soft-primary">${esc(u.perfil||'-')}</span></td><td>${esc(u.cargo||'-')}</td><td>${u.ativo?'<span class="soft soft-success">Ativo</span>':'<span class="soft soft-danger">Inativo</span>'}</td></tr>`).join('')}</tbody></table></div>`;
     }
 
@@ -1264,7 +1221,7 @@ async function renderDevolucoes(fresh = false) {
           <div class="col-md-6"><label class="form-label">Nome<input class="form-control mt-1" name="nome" required></label></div>
           <div class="col-md-6"><label class="form-label">Email<input class="form-control mt-1" name="email" type="email" required></label></div>
           <div class="col-md-4"><label class="form-label">Senha inicial<input class="form-control mt-1" name="senha" type="password" autocomplete="new-password" minlength="8" required></label></div>
-          <div class="col-md-4"><label class="form-label">Perfil<select class="form-select mt-1" name="perfil" required><option value="usuario">UsuÃ¡rio</option><option value="admin">Admin</option></select></label></div>
+          <div class="col-md-4"><label class="form-label">Perfil<select class="form-select mt-1" name="perfil" required><option value="usuario">Usuário</option><option value="admin">Admin</option></select></label></div>
           <div class="col-md-4"><label class="form-label">Cargo<input class="form-control mt-1" name="cargo"></label></div>
           <div class="col-md-4"><label class="form-label">Telefone<input class="form-control mt-1" name="telefone"></label></div>
           <div class="col-md-6"><label class="form-label">Setor<select class="form-select mt-1" name="setor_id"><option value="">Selecione</option>${options(d.setores)}</select></label></div>
@@ -1311,7 +1268,7 @@ async function renderDevolucoes(fresh = false) {
 
       const el = moveModalToBody(id);
       if(!el){
-        toast('Janela nÃ£o encontrada. Atualize a pÃ¡gina e tente novamente.', 'danger');
+        toast('Janela não encontrada. Atualize a página e tente novamente.', 'danger');
         return;
       }
 
