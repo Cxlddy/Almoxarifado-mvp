@@ -11,38 +11,39 @@
   <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
   <link rel="preconnect" href="https://almoxarifado-backend-tan.vercel.app" crossorigin>
 
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" rel="stylesheet">
 
   <style>
     :root{
       --sidebar:280px;
-      --bg:#f5f7fb;
-      --surface:rgba(255,255,255,.92);
-      --border:rgba(15,23,42,.08);
-      --text:#0f172a;
+      --bg:#f6f7f9;
+      --surface:#ffffff;
+      --border:#d9dee7;
+      --text:#172033;
       --muted:#64748b;
-      --primary:#2563eb;
-      --shadow:0 14px 38px rgba(15,23,42,.08);
-      --radius:22px;
+      --primary:#1f5fbf;
+      --shadow:0 8px 22px rgba(23,32,51,.07);
+      --radius:14px;
     }
     [data-bs-theme="dark"]{
-      --bg:#0b1220;
-      --surface:rgba(15,23,42,.88);
-      --border:rgba(148,163,184,.18);
+      --bg:#101624;
+      --surface:#151d2c;
+      --border:#2b3548;
       --text:#e2e8f0;
       --muted:#94a3b8;
-      --shadow:0 18px 50px rgba(0,0,0,.28);
+      --shadow:0 8px 22px rgba(0,0,0,.24);
     }
     *{box-sizing:border-box}
     body{
       margin:0;
-      background:
-        radial-gradient(circle at top left,rgba(37,99,235,.13),transparent 34rem),
-        radial-gradient(circle at bottom right,rgba(14,165,233,.10),transparent 32rem),
-        var(--bg);
+      background:var(--bg);
       color:var(--text);
-      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      font-family:"Nunito Sans",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      line-height:1.56;
       min-height:100vh;
       overflow-x:hidden;
     }
@@ -50,41 +51,58 @@
       min-height:100vh;
       display:grid;
       grid-template-columns:1.05fr .95fr;
-      background:linear-gradient(135deg,#0f172a,#1e40af);
+      background:#f6f7f9;
     }
     .auth-hero{
-      color:#fff;
+      color:var(--text);
       padding:clamp(2rem,6vw,5rem);
       display:flex;
       flex-direction:column;
       justify-content:space-between;
     }
     .auth-hero h1{
-      font-size:clamp(2.1rem,4.2vw,4.4rem);
-      font-weight:850;
-      letter-spacing:-.055em;
-      line-height:1.05;
-      max-width:760px;
+      font-size:clamp(2rem,4vw,4rem);
+      font-weight:800;
+      letter-spacing:0;
+      line-height:1.12;
+      max-width:720px;
     }
-    .auth-hero p{max-width:620px;color:rgba(255,255,255,.76);font-size:1.05rem}
+    .auth-hero p{max-width:620px;color:var(--muted);font-size:1.08rem;line-height:1.6}
+    .proof-list{
+      display:grid;
+      gap:.85rem;
+      max-width:640px;
+      margin-top:2rem;
+    }
+    .proof-item{
+      display:flex;
+      gap:.75rem;
+      align-items:flex-start;
+      padding:.9rem 0;
+      border-top:1px solid var(--border);
+      color:var(--text);
+    }
+    .proof-item i{color:var(--primary);font-size:1.1rem;margin-top:.1rem}
+    .proof-item strong{display:block;font-weight:800}
+    .proof-item span{display:block;color:var(--muted);font-size:.95rem;line-height:1.55}
     .auth-box{
       min-height:100vh;
       display:grid;
       place-items:center;
-      padding:1.2rem;
-      backdrop-filter:blur(18px);
-      background:rgba(255,255,255,.035);
+      padding:clamp(1rem,3vw,2.5rem);
+      background:#eef1f5;
     }
     .auth-card{
       width:min(100%,455px);
-      padding:clamp(1.3rem,4vw,2.2rem);
-      border-radius:26px;
-      background:rgba(255,255,255,.95);
-      box-shadow:0 28px 90px rgba(0,0,0,.25);
-      animation:rise .35s ease both;
+      padding:clamp(1.4rem,4vw,2.4rem);
+      border-radius:var(--radius);
+      background:#ffffff;
+      border:1px solid var(--border);
+      box-shadow:var(--shadow);
     }
-    [data-bs-theme="dark"] .auth-card{background:rgba(15,23,42,.94)}
-    @keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+    [data-bs-theme="dark"] .auth-page{background:var(--bg)}
+    [data-bs-theme="dark"] .auth-box{background:#0f1725}
+    [data-bs-theme="dark"] .auth-card{background:var(--surface)}
 
     .app{display:flex;min-height:100vh}
     .sidebar{
@@ -106,9 +124,9 @@
       margin-bottom:1rem;
     }
     .brand-icon{
-      width:44px;height:44px;display:grid;place-items:center;border-radius:15px;
-      background:linear-gradient(135deg,#2563eb,#0ea5e9);
-      box-shadow:0 12px 24px rgba(37,99,235,.32);
+      width:44px;height:44px;display:grid;place-items:center;border-radius:12px;
+      background:var(--primary);
+      color:#fff;
     }
     .brand strong{display:block;line-height:1}
     .brand small{color:rgba(255,255,255,.58)}
@@ -130,7 +148,7 @@
       text-decoration:none;
       transition:.16s ease;
     }
-    .side-link:hover,.side-link.active{background:#2563eb;color:#fff;transform:translateX(3px)}
+    .side-link:hover,.side-link.active{background:var(--primary);color:#fff}
     .side-link i{width:1.2rem;text-align:center}
     .main{
       margin-left:var(--sidebar);
@@ -146,7 +164,6 @@
       border:1px solid var(--border);
       background:var(--surface);
       border-radius:var(--radius);
-      backdrop-filter:blur(18px);
       box-shadow:var(--shadow);
       margin-bottom:1.25rem;
     }
@@ -156,24 +173,23 @@
       border-radius:var(--radius);
       box-shadow:var(--shadow);
     }
-    .page-title{font-size:clamp(1.35rem,2.5vw,2rem);font-weight:850;letter-spacing:-.04em;margin:0}
+    .page-title{font-size:clamp(1.35rem,2.5vw,2rem);font-weight:800;letter-spacing:0;margin:0}
     .page-sub{color:var(--muted);font-size:.92rem;margin:.15rem 0 0}
     .btn{border-radius:14px;font-weight:760;min-height:2.65rem}
-    .btn-primary{background:linear-gradient(135deg,#2563eb,#1d4ed8);border-color:transparent;box-shadow:0 10px 24px rgba(37,99,235,.22)}
+    .btn-primary{background:var(--primary);border-color:var(--primary);box-shadow:none}
+    .btn-primary:hover,.btn-primary:focus{background:#184f9f;border-color:#184f9f}
     .btn-icon{width:2.65rem;display:inline-grid;place-items:center;padding:0}
     .form-control,.form-select{border-radius:14px;min-height:2.75rem;border-color:rgba(100,116,139,.25)}
     .form-control:focus,.form-select:focus{box-shadow:0 0 0 .22rem rgba(37,99,235,.13);border-color:rgba(37,99,235,.45)}
     .stat{
       position:relative;overflow:hidden;
       padding:1.2rem;min-height:132px;
-      transition:.16s ease;
     }
-    .stat:hover{transform:translateY(-2px)}
     .stat small{display:block;color:var(--muted);font-weight:760}
     .stat strong{font-size:2rem;letter-spacing:-.05em}
     .stat .icon{
       width:48px;height:48px;display:grid;place-items:center;border-radius:16px;
-      background:rgba(37,99,235,.12);color:#1d4ed8;font-size:1.3rem;
+      background:#e8f0ff;color:var(--primary);font-size:1.3rem;
     }
     .soft{border-radius:999px;padding:.38rem .65rem;font-weight:760;font-size:.76rem;display:inline-flex;gap:.35rem;align-items:center}
     .soft-primary{background:rgba(37,99,235,.12);color:#1d4ed8}
@@ -201,13 +217,8 @@
     .skeleton{
       border-radius:var(--radius);
       min-height:130px;
-      background:linear-gradient(90deg,rgba(148,163,184,.13),rgba(148,163,184,.28),rgba(148,163,184,.13));
-      background-size:240% 100%;
-      animation:shimmer 1.15s linear infinite;
+      background:#e8edf5;
     }
-    @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
-    .fade-in{animation:fade .22s ease both}
-    @keyframes fade{from{opacity:0}to{opacity:1}}
     .modal{z-index:3000!important}
     .modal-backdrop{z-index:2990!important}
     .modal-content,.offcanvas{border-radius:22px;border:1px solid var(--border)}
@@ -412,16 +423,39 @@
                 <div class="brand-icon"><i class="bi bi-box-seam"></i></div>
                 <strong class="fs-5">Almoxarifado</strong>
               </div>
-              <h1>Controle profissional de materiais, estoque e solicitações.</h1>
-              <p class="mt-4">Interface rápida, responsiva e integrada ao processo de autorização por WhatsApp.</p>
+              <h1>Um sistema simples para controlar materiais da empresa.</h1>
+              <p class="mt-4">Cadastre produtos, acompanhe o estoque, registre saídas e peça autorização quando alguém precisar retirar um item.</p>
+              <div class="proof-list">
+                <div class="proof-item">
+                  <i class="bi bi-check2-circle"></i>
+                  <div>
+                    <strong>Fluxo de solicitação real</strong>
+                    <span>O usuário escolhe um admin, informa os itens e a aprovação é enviada por WhatsApp.</span>
+                  </div>
+                </div>
+                <div class="proof-item">
+                  <i class="bi bi-boxes"></i>
+                  <div>
+                    <strong>Estoque com movimentação registrada</strong>
+                    <span>Entradas, saídas, atendimentos e devoluções ficam vinculados aos produtos e locais de estoque.</span>
+                  </div>
+                </div>
+                <div class="proof-item">
+                  <i class="bi bi-person-check"></i>
+                  <div>
+                    <strong>Perfis separados</strong>
+                    <span>Admin gerencia cadastros e usuários. Usuário comum faz solicitações e acompanha o que pediu.</span>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="small text-white-50"><i class="bi bi-shield-check me-2"></i>Sessão segura via Supabase Auth.</div>
+            <div class="small text-secondary"></div>
           </section>
           <section class="auth-box">
             <div class="auth-card">
-              <span class="soft soft-primary mb-3"><i class="bi bi-building-lock"></i>Sistema interno</span>
+              <span class="soft soft-primary mb-3"><i class="bi bi-building-lock"></i>Acesso interno</span>
               <h2 class="fw-bold">${forgot ? 'Recuperar senha' : reset ? 'Nova senha' : 'Entrar no sistema'}</h2>
-              <p class="text-secondary">${forgot ? 'Informe seu email para receber as instruções.' : reset ? 'Crie uma nova senha para acessar o sistema.' : 'Acesse com seu usuário autorizado.'}</p>
+              <p class="text-secondary">${forgot ? 'Digite seu email para receber o link de recuperação.' : reset ? 'Escolha uma nova senha para continuar usando o sistema.' : 'Entre com o email e a senha cadastrados pelo admin.'}</p>
               ${forgot ? forgotForm(error) : reset ? resetForm(error) : loginForm(error)}
             </div>
           </section>
