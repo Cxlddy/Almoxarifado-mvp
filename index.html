@@ -467,7 +467,7 @@
 
     function loginForm(error){
       return `<form id="loginForm" class="vstack gap-3">
-        <label class="form-label">Email<input class="form-control mt-1" name="email" type="email" autocomplete="email" required></label>
+        <label class="form-label">Telefone<input class="form-control mt-1" name="identificador" type="tel" inputmode="tel" autocomplete="tel" placeholder="(11) 99999-9999" required></label>
         <label class="form-label">Senha<input class="form-control mt-1" name="senha" type="password" autocomplete="current-password" required></label>
         ${error ? `<div class="alert alert-danger mb-0">${esc(error)}</div>` : ''}
         <button class="btn btn-primary w-100" type="submit"><i class="bi bi-box-arrow-in-right me-2"></i>Entrar</button>
