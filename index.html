@@ -5,6 +5,8 @@
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="description" content="Sistema de almoxarifado corporativo." />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'self' https://almoxarifado-backend-tan.vercel.app; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com; font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com data:; img-src 'self' data:; base-uri 'none'; frame-ancestors 'none'; form-action 'self' https://almoxarifado-backend-tan.vercel.app">
+  <meta name="referrer" content="no-referrer" />
   <title>Almoxarifado | Sistema Corporativo</title>
 
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
@@ -270,10 +272,15 @@
     const cache = new Map();
     const state = { page:'dashboard' };
 
+    function safeJson(value, fallback=null){
+      try{ return JSON.parse(value || 'null') ?? fallback; }
+      catch{ return fallback; }
+    }
+
     const auth = {
-      token: localStorage.getItem('almox_token'),
-      refreshToken: localStorage.getItem('almox_refresh_token'),
-      usuario: JSON.parse(localStorage.getItem('almox_usuario') || 'null')
+      token: sessionStorage.getItem('almox_token'),
+      refreshToken: sessionStorage.getItem('almox_refresh_token'),
+      usuario: safeJson(sessionStorage.getItem('almox_usuario'))
     };
 
     const $ = (id) => document.getElementById(id);
@@ -305,9 +312,9 @@
       auth.token = data.access_token;
       auth.refreshToken = data.refresh_token;
       auth.usuario = data.usuario;
-      localStorage.setItem('almox_token', data.access_token);
-      localStorage.setItem('almox_refresh_token', data.refresh_token || '');
-      localStorage.setItem('almox_usuario', JSON.stringify(data.usuario));
+      sessionStorage.setItem('almox_token', data.access_token);
+      sessionStorage.setItem('almox_refresh_token', data.refresh_token || '');
+      sessionStorage.setItem('almox_usuario', JSON.stringify(data.usuario));
     }
 
     function clearSession(){
@@ -315,9 +322,9 @@
       auth.refreshToken = null;
       auth.usuario = null;
       cache.clear();
-      localStorage.removeItem('almox_token');
-      localStorage.removeItem('almox_refresh_token');
-      localStorage.removeItem('almox_usuario');
+      sessionStorage.removeItem('almox_token');
+      sessionStorage.removeItem('almox_refresh_token');
+      sessionStorage.removeItem('almox_usuario');
     }
 
     async function api(endpoint, options={}){
@@ -635,6 +642,13 @@
     }
 
     async function navigate(page, fresh=false){
+      const allowed = visiblePages().map(([id]) => id);
+
+      if(!allowed.includes(page)){
+        page = 'dashboard';
+        history.replaceState(null, '', '#/dashboard');
+      }
+
       if(page === 'usuarios' && !isAdmin()){
         page = 'dashboard';
         history.replaceState(null, '', '#/dashboard');
