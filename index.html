@@ -30,6 +30,30 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" rel="stylesheet">
 
   <style>
+    @font-face{
+      font-family:"San Francisco";
+      font-style:normal;
+      font-weight:400;
+      src:local("SF Pro Text Regular"),local("SFProText-Regular"),local(".SFNSText-Regular"),local("SF Pro Text");
+    }
+    @font-face{
+      font-family:"San Francisco";
+      font-style:normal;
+      font-weight:500;
+      src:local("SF Pro Text Medium"),local("SFProText-Medium"),local(".SFNSText-Medium"),local("SF Pro Text");
+    }
+    @font-face{
+      font-family:"San Francisco";
+      font-style:normal;
+      font-weight:600;
+      src:local("SF Pro Text Semibold"),local("SFProText-Semibold"),local(".SFNSText-Semibold"),local("SF Pro Text");
+    }
+    @font-face{
+      font-family:"San Francisco";
+      font-style:normal;
+      font-weight:700 900;
+      src:local("SF Pro Text Bold"),local("SFProText-Bold"),local(".SFNSText-Bold"),local("SF Pro Text");
+    }
     :root{
       color-scheme:light;
       --sidebar:288px;
@@ -61,6 +85,7 @@
       --bs-border-color:#d1d1d6;
       --bs-link-color:#007aff;
       --bs-link-hover-color:#0a84ff;
+      --font-sf:"San Francisco","SF Pro Text","SF Pro Display",-apple-system,BlinkMacSystemFont,"Segoe UI Variable","Segoe UI","Helvetica Neue",Arial,sans-serif;
     }
     [data-bs-theme="dark"]{
       color-scheme:dark;
@@ -96,12 +121,28 @@
       overflow-x:hidden;
       background:var(--bg);
       color:var(--text);
-      font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Helvetica Neue",Arial,sans-serif;
+      font-family:var(--font-sf);
       font-size:15px;
       line-height:1.55;
       -webkit-font-smoothing:antialiased;
       text-rendering:optimizeLegibility;
       transition:background-color .28s var(--ease-ios), color .28s var(--ease-ios);
+    }
+    body,
+    button,
+    input,
+    optgroup,
+    select,
+    textarea,
+    .btn,
+    .form-control,
+    .form-select,
+    .dropdown-menu,
+    .modal,
+    .offcanvas,
+    .table,
+    .toast{
+      font-family:var(--font-sf)!important;
     }
     a{color:var(--primary);text-decoration:none}
     a:hover{text-decoration:none;color:var(--primary-strong)}
