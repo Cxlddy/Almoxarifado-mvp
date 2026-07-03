@@ -991,6 +991,9 @@
     }
 
     async function navigate(page, fresh=false){
+      cleanupBootstrapArtifacts();
+      removeStaleModals();
+
       const allowed = visiblePages().map(([id]) => id);
 
       if(!allowed.includes(page)){
@@ -1112,7 +1115,7 @@
       try{
         await api('/produtos',{method:'POST',body:JSON.stringify(payload)});
         invalidate('produtos','saldo');
-        hideModal('produtoModal');
+        await hideModal('produtoModal');
         toast('Produto cadastrado com sucesso.');
         await navigate('produtos', true);
       }catch(err){toast(err.message,'danger')}
@@ -1168,7 +1171,7 @@
       try{
         await api('/movimentacoes',{method:'POST',body:JSON.stringify(payload)});
         invalidate('saldo');
-        hideModal('movModal');
+        await hideModal('movModal');
         toast('Movimentação registrada.');
         await navigate('estoque', true);
       }catch(err){toast(err.message,'danger')}
@@ -1229,7 +1232,7 @@
       try{
         await api('/solicitacoes',{method:'POST',body:JSON.stringify({admin_id:data.admin_id,setor_id:data.setor_id||null,centro_custo_id:data.centro_custo_id||null,justificativa:data.justificativa,observacao:null,itens})});
         invalidate('solicitacoes');
-        hideModal('solModal');
+        await hideModal('solModal');
         toast('Solicitação criada e enviada ao admin selecionado.');
         await navigate('solicitacoes', true);
       }catch(err){toast(err.message,'danger')}
@@ -1296,7 +1299,7 @@
         });
 
         invalidate('solicitacoes','saldo');
-        hideModal('atenderModal');
+        await hideModal('atenderModal');
         toast('Solicitação atendida com sucesso.');
         await navigate('solicitacoes', true);
         cleanupBootstrapArtifacts();
@@ -1502,7 +1505,7 @@ async function renderDevolucoes(fresh = false) {
           body: JSON.stringify(payload)
         });
 
-        hideModal('devolucaoModal');
+        await hideModal('devolucaoModal');
         toast('Solicitação de devolução enviada ao admin.');
         await navigate('devolucoes', true);
       } catch (err) {
@@ -1607,7 +1610,7 @@ async function renderDevolucoes(fresh = false) {
       try{
         await api('/usuarios',{method:'POST',body:JSON.stringify({...data,setor_id:data.setor_id||null,centro_custo_id:data.centro_custo_id||null,ativo:true})});
         invalidate('usuarios');
-        hideModal('userModal');
+        await hideModal('userModal');
         toast('Usuário criado.');
         await navigate('usuarios', true);
       }catch(err){toast(err.message,'danger')}
@@ -1620,6 +1623,13 @@ async function renderDevolucoes(fresh = false) {
       document.body.style.removeProperty('padding-right');
       document.body.removeAttribute('data-bs-overflow');
       document.body.removeAttribute('data-bs-padding-right');
+    }
+
+    function removeStaleModals(){
+      document.querySelectorAll('body > .modal').forEach(el => {
+        bootstrap.Modal.getInstance(el)?.dispose();
+        el.remove();
+      });
     }
 
     function moveModalToBody(id){
@@ -1653,11 +1663,27 @@ async function renderDevolucoes(fresh = false) {
       const el = $(id);
       if(!el){
         cleanupBootstrapArtifacts();
-        return;
+        return Promise.resolve();
       }
-      const m = bootstrap.Modal.getInstance(el) || bootstrap.Modal.getOrCreateInstance(el);
-      if(m) m.hide();
-      setTimeout(cleanupBootstrapArtifacts, 180);
+
+      return new Promise((resolve) => {
+        let resolved = false;
+        const finish = () => {
+          if(resolved) return;
+          resolved = true;
+          el.removeEventListener('hidden.bs.modal', finish);
+          cleanupBootstrapArtifacts();
+          resolve();
+        };
+
+        el.addEventListener('hidden.bs.modal', finish, { once:true });
+        const m = bootstrap.Modal.getInstance(el) || bootstrap.Modal.getOrCreateInstance(el);
+
+        if(m) m.hide();
+        else finish();
+
+        setTimeout(finish, 260);
+      });
     }
 
     document.addEventListener('hidden.bs.modal', () => {
