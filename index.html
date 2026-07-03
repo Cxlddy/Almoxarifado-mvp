@@ -631,13 +631,13 @@
     const CACHE_TTL = 45_000;
 
     const pages = [
-      ['dashboard','Dashboard','bi-speedometer2','Visão geral do almoxarifado'],
-      ['produtos','Produtos','bi-box-seam','Cadastro e consulta de materiais'],
-      ['estoque','Estoque','bi-boxes','Movimentações e saldo por local'],
-      ['solicitacoes','Solicitações','bi-clipboard2-check','Solicitações internas e autorizações'],
-      ['devolucoes','Devoluções','bi-arrow-counterclockwise','Devolução de itens emprestados'],
-      ['cadastros','Cadastros','bi-folder2-open','Setores, locais, fornecedores e centros de custo'],
-      ['usuarios','Usuários','bi-people','Perfis e permissões do sistema']
+      ['dashboard','Dashboard','bi-speedometer2',''],
+      ['produtos','Produtos','bi-box-seam',''],
+      ['estoque','Estoque','bi-boxes',''],
+      ['solicitacoes','Solicitações','bi-clipboard2-check',''],
+      ['devolucoes','Devoluções','bi-arrow-counterclockwise',''],
+      ['cadastros','Cadastros','bi-folder2-open',''],
+      ['usuarios','Usuários','bi-people','']
     ];
 
     const root = document.getElementById('root');
@@ -958,12 +958,11 @@
         </a>`).join('');
       return `<div class="brand">
           <div class="brand-icon"><i class="bi bi-box-seam"></i></div>
-          <div><strong>Almoxarifado</strong><small>Controle corporativo</small></div>
+          <div><strong>Almoxarifado</strong><small></small></div>
         </div>
-        <div class="nav-label">Menu</div>
+        <div class="nav-label"></div>
         <nav>${links}</nav>
         <div class="position-absolute bottom-0 start-0 end-0 p-3 small text-white-50">
-          <i class="bi bi-whatsapp me-2"></i>Autorizações integradas
         </div>`;
     }
 
@@ -1098,7 +1097,7 @@
         ${card('Solicitações pendentes', pend.length, 'bi-hourglass-split')}
       </div>
       <div class="row g-3">
-        <div class="col-lg-7"><div class="surface p-3 p-md-4 h-100"><div class="d-flex justify-content-between mb-3"><div><h5 class="fw-bold mb-1">Solicitações recentes</h5><p class="text-secondary small mb-0">Últimas movimentações do fluxo interno.</p></div><button class="btn btn-sm btn-primary" onclick="navigate('solicitacoes')">Ver</button></div>${tableSolicitacoes(d.solicitacoes.slice(0,6), true)}</div></div>
+        <div class="col-lg-7"><div class="surface p-3 p-md-4 h-100"><div class="d-flex justify-content-between mb-3"><div><h5 class="fw-bold mb-1">Solicitações recentes</h5><p class="text-secondary small mb-0"></p></div><button class="btn btn-sm btn-primary" onclick="navigate('solicitacoes')">Ver</button></div>${tableSolicitacoes(d.solicitacoes.slice(0,6), true)}</div></div>
         <div class="col-lg-5"><div class="surface p-3 p-md-4 h-100"><div class="d-flex justify-content-between mb-3"><div><h5 class="fw-bold mb-1">Itens críticos</h5><p class="text-secondary small mb-0">Produtos abaixo do mínimo.</p></div><span class="soft ${baixo.length ? 'soft-danger':'soft-success'}">${baixo.length} itens</span></div>${tableSaldo(baixo.slice(0,6), true)}</div></div>
       </div>`;
     }
