@@ -784,7 +784,17 @@
       text-align:right;
       white-space:nowrap;
     }
-    .summary-strip{
+    .action-group{
+      display:flex;
+      gap:.35rem;
+      justify-content:flex-end;
+      flex-wrap:wrap;
+    }
+    .btn-xs{
+      min-height:2rem;
+      padding:.22rem .55rem;
+      font-size:.76rem;
+    }    .summary-strip{
       display:grid;
       grid-template-columns:repeat(3,minmax(0,1fr));
       border:1px solid var(--border);
@@ -829,7 +839,17 @@
       .stat strong{font-size:1.55rem}
       .table-responsive{border-radius:var(--radius-sm)}
       .btn{width:auto}
-      .summary-strip{grid-template-columns:1fr}
+      .action-group{
+      display:flex;
+      gap:.35rem;
+      justify-content:flex-end;
+      flex-wrap:wrap;
+    }
+    .btn-xs{
+      min-height:2rem;
+      padding:.22rem .55rem;
+      font-size:.76rem;
+    }    .summary-strip{grid-template-columns:1fr}
       .summary-item{border-right:0;border-bottom:1px solid var(--border)}
       .summary-item:last-child{border-bottom:0}
     }
@@ -1303,6 +1323,27 @@
       return items.map(i => `<option value="${esc(i.id)}">${esc(i[key] || i.nome || i.codigo || i.id)}</option>`).join('');
     }
 
+    function csvCell(value){
+      return `"${String(value ?? '').replaceAll('"', '""')}"`;
+    }
+
+    function exportCsv(filename, rows){
+      if(!rows.length){ toast('Não há dados para exportar.', 'warning'); return; }
+      const csv = rows.map(row => row.map(csvCell).join(';')).join('\n');
+      const blob = new Blob([`\ufeff${csv}`], { type:'text/csv;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    function findById(list, id){
+      return (list || []).find(item => String(item.id) === String(id));
+    }
     async function renderDashboard(fresh=false){
       const d = await load(['produtos','categorias','saldo','solicitacoes'], fresh);
       const baixo = d.saldo.filter(x => x.abaixo_estoque_minimo);
@@ -1322,10 +1363,11 @@
 
     async function renderProdutos(fresh=false){
       const d = await load(['produtos','categorias','unidades'], fresh);
+      state.produtosData = d;
       $('app').innerHTML = `<div class="surface p-3 p-md-4">
         <div class="d-flex flex-column flex-md-row justify-content-between gap-3 mb-3">
           <div><h5 class="fw-bold mb-1">Produtos cadastrados</h5><p class="text-secondary small mb-0">${d.produtos.length} produtos ativos e inativos no catálogo.</p></div>
-          <div class="d-flex gap-2"><div class="search"><i class="bi bi-search"></i><input id="produtoSearch" class="form-control" placeholder="Buscar produto, código ou categoria"></div><button class="btn btn-primary" onclick="showModal('produtoModal')"><i class="bi bi-plus-lg me-1"></i>Novo</button></div>
+          <div class="d-flex gap-2 flex-wrap"><div class="search"><i class="bi bi-search"></i><input id="produtoSearch" class="form-control" placeholder="Buscar produto, código ou categoria"></div><button class="btn btn-light" onclick="exportProdutos()"><i class="bi bi-download me-1"></i>Exportar</button><button class="btn btn-primary" onclick="openProduto()"><i class="bi bi-plus-lg me-1"></i>Novo</button></div>
         </div>
         <div id="produtosTable">${tableProdutos(d.produtos)}</div>
       </div>${produtoModal(d)}`;
@@ -1342,19 +1384,20 @@
 
     function tableProdutos(items){
       if(!items.length) return empty('Nenhum produto cadastrado','bi-box-seam');
-      return `<div class="table-responsive"><table class="table table-hover mb-0"><thead><tr><th>Código</th><th>Produto</th><th>Classificação</th><th>Unidade</th><th class="text-end">Mínimo</th><th>Status</th></tr></thead><tbody>${items.map(p=>`<tr>
+      return `<div class="table-responsive"><table class="table table-hover mb-0"><thead><tr><th>Código</th><th>Produto</th><th>Classificação</th><th>Unidade</th><th class="text-end">Mínimo</th><th>Status</th><th class="text-end">Ações</th></tr></thead><tbody>${items.map(p=>`<tr>
         <td><span class="code-pill">${esc(p.codigo_interno || '-')}</span></td>
         <td><div class="fw-bold">${esc(p.nome)}</div><span class="table-meta">${esc(p.descricao || 'Sem descrição')}</span></td>
         <td><div>${esc(p.categorias?.nome || '-')}</div><span class="table-meta">${esc(p.codigo_barras || 'Sem código de barras')}</span></td>
         <td><span class="code-pill">${esc(p.unidades_medida?.sigla || '-')}</span></td>
         <td class="table-number">${fmt(p.estoque_minimo)}</td>
         <td>${p.ativo ? '<span class="soft soft-success">Ativo</span>' : '<span class="soft soft-danger">Inativo</span>'}</td>
+        <td><div class="action-group"><button class="btn btn-light btn-xs" type="button" onclick="openProduto('${p.id}')">Editar</button><button class="btn btn-light btn-xs" type="button" onclick="toggleProduto('${p.id}')">${p.ativo ? 'Desativar' : 'Ativar'}</button></div></td>
       </tr>`).join('')}</tbody></table></div>`;
     }
 
     function produtoModal(d){
-      return `<div class="modal fade" id="produtoModal" tabindex="-1"><div class="modal-dialog modal-lg modal-dialog-centered"><div class="modal-content"><form id="produtoForm">
-        <div class="modal-header"><div><h5 class="modal-title fw-bold">Novo produto</h5><p class="small text-secondary mb-0">Cadastre um material.</p></div><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+      return `<div class="modal fade" id="produtoModal" tabindex="-1"><div class="modal-dialog modal-lg modal-dialog-centered"><div class="modal-content"><form id="produtoForm"><input type="hidden" name="id">
+        <div class="modal-header"><div><h5 id="produtoModalTitle" class="modal-title fw-bold">Novo produto</h5><p id="produtoModalSub" class="small text-secondary mb-0">Cadastre um material.</p></div><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
         <div class="modal-body"><div class="row g-3">
           <div class="col-md-8"><label class="form-label">Nome<input class="form-control mt-1" name="nome" required></label></div>
           <div class="col-md-4"><label class="form-label">Código interno<input class="form-control mt-1" name="codigo_interno"></label></div>
@@ -1365,8 +1408,60 @@
           <div class="col-md-4"><label class="form-label">Código de barras<input class="form-control mt-1" name="codigo_barras"></label></div>
           <div class="col-12"><label class="form-label">Descrição<textarea class="form-control mt-1" name="descricao" rows="3"></textarea></label></div>
         </div></div>
-        <div class="modal-footer"><button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button><button class="btn btn-primary" type="submit">Salvar</button></div>
+        <div class="modal-footer"><button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button><button id="produtoSubmit" class="btn btn-primary" type="submit">Salvar</button></div>
       </form></div></div></div>`;
+    }
+
+    function openProduto(id=''){
+      const form = $('produtoForm');
+      if(!form){ toast('Formulário de produto não encontrado.', 'danger'); return; }
+      form.reset();
+      form.elements.id.value = id || '';
+
+      const produto = id ? findById(state.produtosData?.produtos, id) : null;
+      $('produtoModalTitle').textContent = produto ? 'Editar produto' : 'Novo produto';
+      $('produtoModalSub').textContent = produto ? 'Atualize os dados do material.' : 'Cadastre um material.';
+      $('produtoSubmit').textContent = produto ? 'Salvar alterações' : 'Salvar';
+
+      if(produto){
+        form.elements.nome.value = produto.nome || '';
+        form.elements.codigo_interno.value = produto.codigo_interno || '';
+        form.elements.categoria_id.value = produto.categorias?.id || '';
+        form.elements.unidade_sigla.value = String(produto.unidades_medida?.sigla || '').toUpperCase().slice(0, 2);
+        form.elements.estoque_minimo.value = produto.estoque_minimo ?? 0;
+        form.elements.estoque_maximo.value = produto.estoque_maximo ?? '';
+        form.elements.codigo_barras.value = produto.codigo_barras || '';
+        form.elements.descricao.value = produto.descricao || '';
+      }
+
+      showModal('produtoModal');
+    }
+
+    async function toggleProduto(id){
+      const produto = findById(state.produtosData?.produtos, id);
+      if(!produto){ toast('Produto não encontrado.', 'danger'); return; }
+      try{
+        await api(`/produtos/${id}`, { method:'PATCH', body:JSON.stringify({ ativo:!produto.ativo }) });
+        invalidate('produtos','saldo');
+        toast(produto.ativo ? 'Produto desativado.' : 'Produto ativado.');
+        await navigate('produtos', true);
+      }catch(err){ toast(err.message, 'danger'); }
+    }
+
+    function exportProdutos(){
+      const produtos = state.produtosData?.produtos || [];
+      exportCsv('produtos.csv', [
+        ['Código','Produto','Categoria','Unidade','Estoque mínimo','Estoque máximo','Status'],
+        ...produtos.map(p => [
+          p.codigo_interno || '',
+          p.nome || '',
+          p.categorias?.nome || '',
+          p.unidades_medida?.sigla || '',
+          p.estoque_minimo ?? '',
+          p.estoque_maximo ?? '',
+          p.ativo ? 'Ativo' : 'Inativo'
+        ])
+      ]);
     }
 
     async function saveProduto(e){
@@ -1385,22 +1480,25 @@
       }
 
       const payload = {...data, categoria_id:data.categoria_id||null, unidade_medida_id:unidade?.id||null, codigo_barras:data.codigo_barras||null, estoque_minimo:Number(data.estoque_minimo||0), estoque_maximo:data.estoque_maximo?Number(data.estoque_maximo):null, controla_validade:false, controla_lote:false};
+      const produtoId = payload.id;
+      delete payload.id;
       delete payload.unidade_sigla;
       try{
-        await api('/produtos',{method:'POST',body:JSON.stringify(payload)});
+        await api(produtoId ? `/produtos/${produtoId}` : '/produtos',{method:produtoId ? 'PATCH' : 'POST',body:JSON.stringify(payload)});
         invalidate('produtos','saldo');
         await hideModal('produtoModal');
-        toast('Produto cadastrado com sucesso.');
+        toast(produtoId ? 'Produto atualizado com sucesso.' : 'Produto cadastrado com sucesso.');
         await navigate('produtos', true);
       }catch(err){toast(err.message,'danger')}
     }
 
     async function renderEstoque(fresh=false){
       const d = await load(['saldo','produtos','locais'], fresh);
+      state.saldoData = d;
       $('app').innerHTML = `<div class="surface p-3 p-md-4">
         <div class="d-flex flex-column flex-md-row justify-content-between gap-3 mb-3">
           <div><h5 class="fw-bold mb-1">Saldo de estoque</h5><p class="text-secondary small mb-0">Consulta rápida por produto, local ou categoria.</p></div>
-          <div class="d-flex gap-2"><div class="search"><i class="bi bi-search"></i><input id="saldoSearch" class="form-control" placeholder="Buscar..."></div><button class="btn btn-primary" onclick="showModal('movModal')"><i class="bi bi-arrow-left-right me-1"></i>Movimentar</button></div>
+          <div class="d-flex gap-2 flex-wrap"><div class="search"><i class="bi bi-search"></i><input id="saldoSearch" class="form-control" placeholder="Buscar produto, local ou categoria"></div><button class="btn btn-light" onclick="exportSaldo()"><i class="bi bi-download me-1"></i>Exportar</button><button class="btn btn-primary" onclick="showModal('movModal')"><i class="bi bi-arrow-left-right me-1"></i>Movimentar</button></div>
         </div>
         <div id="saldoTable">${tableSaldo(d.saldo)}</div>
       </div>${movModal(d)}`;
@@ -1418,6 +1516,22 @@
         ${compact?'':`<td>${esc(s.categoria || '-')}</td>`}<td>${esc(s.local_estoque || '-')}</td><td class="table-number">${fmt(s.saldo_atual)}</td><td class="table-number">${fmt(s.estoque_minimo)}</td>
         <td>${s.abaixo_estoque_minimo?'<span class="soft soft-danger">Baixo</span>':'<span class="soft soft-success">OK</span>'}</td>
       </tr>`).join('')}</tbody></table></div>`;
+    }
+
+    function exportSaldo(){
+      const saldo = state.saldoData?.saldo || [];
+      exportCsv('saldo-estoque.csv', [
+        ['Produto','Código','Categoria','Local','Saldo','Mínimo','Status'],
+        ...saldo.map(s => [
+          s.produto || '',
+          s.codigo_interno || '',
+          s.categoria || '',
+          s.local_estoque || '',
+          s.saldo_atual ?? '',
+          s.estoque_minimo ?? '',
+          s.abaixo_estoque_minimo ? 'Baixo' : 'OK'
+        ])
+      ]);
     }
 
     function movModal(d){
@@ -1453,10 +1567,11 @@
 
     async function renderSolicitacoes(fresh=false){
       const d = await load(['solicitacoes','produtos','setores','centros','locais','admins'], fresh);
+      state.solicitacoesData = d;
       $('app').innerHTML = `<div class="surface p-3 p-md-4">
         <div class="d-flex flex-column flex-md-row justify-content-between gap-3 mb-3">
           <div><h5 class="fw-bold mb-1">Solicitações</h5><p class="text-secondary small mb-0">Escolha o admin que receberá a autorização por WhatsApp.</p></div>
-          <button class="btn btn-primary" onclick="showModal('solModal')"><i class="bi bi-plus-lg me-1"></i>Nova solicitação</button>
+          <div class="d-flex gap-2 flex-wrap"><button class="btn btn-light" onclick="exportSolicitacoes()"><i class="bi bi-download me-1"></i>Exportar</button><button class="btn btn-primary" onclick="showModal('solModal')"><i class="bi bi-plus-lg me-1"></i>Nova solicitação</button></div>
         </div>${tableSolicitacoes(d.solicitacoes)}
       </div>${solModal(d)}${atenderModal(d)}`;
       $('solForm').addEventListener('submit', saveSol);
@@ -1471,6 +1586,20 @@
         <td><span class="fw-bold">${dateBR(s.data_solicitacao)}</span></td><td>${badge(s.status)}</td><td><div class="fw-bold">${esc(s.justificativa||'-')}</div><span class="table-meta">${esc((s.solicitacao_itens||[]).map(i => `${i.produtos?.nome || 'Item'} (${fmt(i.quantidade_solicitada)})`).join(' · ') || s.observacao || 'Sem itens descritos')}</span></td>
         ${compact?'':`<td>${esc(s.usuarios?.nome || '-')}</td><td class="table-number">${(s.solicitacao_itens||[]).length}</td><td>${s.status==='aprovada'?`<button class="btn btn-sm btn-primary" onclick="openAtender('${s.id}')">Atender</button>`:'<span class="text-secondary small">-</span>'}</td>`}
       </tr>`).join('')}</tbody></table></div>`;
+    }
+
+    function exportSolicitacoes(){
+      const solicitacoes = state.solicitacoesData?.solicitacoes || [];
+      exportCsv('solicitacoes.csv', [
+        ['Data','Status','Solicitante','Justificativa','Itens'],
+        ...solicitacoes.map(s => [
+          dateBR(s.data_solicitacao),
+          s.status || '',
+          s.usuarios?.nome || '',
+          s.justificativa || '',
+          (s.solicitacao_itens || []).map(i => String(i.produtos?.nome || 'Item') + ' (' + fmt(i.quantidade_solicitada) + ')').join(' | ')
+        ])
+      ]);
     }
 
     function solModal(d){
@@ -1600,6 +1729,7 @@ async function renderDevolucoes(fresh = false) {
 
       const totalPendente = emprestimos.reduce((total, item) => total + Number(item.quantidade_pendente_devolucao || 0), 0);
       const totalAguardando = emprestimos.reduce((total, item) => total + Number(item.quantidade_aguardando_confirmacao || 0), 0);
+      state.devolucoesData = { emprestimos, locais };
 
       $('app').innerHTML = `
         <div class="surface p-3 p-md-4">
@@ -1608,6 +1738,7 @@ async function renderDevolucoes(fresh = false) {
               <h5 class="fw-bold mb-1">Empréstimos e devoluções</h5>
               <p class="small text-secondary mb-0">Controle dos itens emprestados e pendentes de retorno ao estoque.</p>
             </div>
+            <button class="btn btn-light" onclick="exportDevolucoes()"><i class="bi bi-download me-1"></i>Exportar</button>
           </div>
 
           <div class="summary-strip">
@@ -1676,6 +1807,22 @@ async function renderDevolucoes(fresh = false) {
           </table>
         </div>
       `;
+    }
+
+    function exportDevolucoes(){
+      const emprestimos = state.devolucoesData?.emprestimos || [];
+      exportCsv('emprestimos-devolucoes.csv', [
+        ['Produto','Código','Solicitante','Atendido','Devolvido','Pendente','Aguardando confirmação'],
+        ...emprestimos.map(item => [
+          item.produto?.nome || '',
+          item.produto?.codigo_interno || '',
+          item.solicitacao?.usuarios?.nome || '',
+          item.quantidade_atendida ?? '',
+          item.quantidade_devolvida ?? '',
+          item.quantidade_pendente_devolucao ?? '',
+          item.quantidade_aguardando_confirmacao ?? ''
+        ])
+      ]);
     }
 
     function devolucaoModal(locais) {
@@ -1985,9 +2132,20 @@ async function renderDevolucoes(fresh = false) {
     window.navigate = navigate;
     window.showModal = showModal;
     window.openAtender = openAtender;
+    window.openProduto = openProduto;
+    window.toggleProduto = toggleProduto;
+    window.exportProdutos = exportProdutos;
+    window.exportSaldo = exportSaldo;
+    window.exportSolicitacoes = exportSolicitacoes;
+    window.exportDevolucoes = exportDevolucoes;
 
     if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
     else boot();
   </script>
 </body>
 </html>
+
+
+
+
+
