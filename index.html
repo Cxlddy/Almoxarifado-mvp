@@ -856,6 +856,96 @@
     @media(prefers-reduced-motion:reduce){
       *{animation-duration:.001ms!important;transition-duration:.001ms!important;scroll-behavior:auto!important}
     }
+
+    /* Public model visual layer */
+    :root{
+      --model-green:#1f6f5b;
+      --model-green-dark:#185846;
+      --model-bg:#eef2f3;
+      --model-card:#ffffff;
+      --model-text:#1f2933;
+      --model-muted:#64748b;
+      --model-border:#cbd5e1;
+      --bg:var(--model-bg);
+      --surface:var(--model-card);
+      --surface-strong:#f8fafc;
+      --surface-secondary:#f1f5f9;
+      --border:var(--model-border);
+      --border-dark:#94a3b8;
+      --text:var(--model-text);
+      --muted:var(--model-muted);
+      --primary:var(--model-green);
+      --primary-strong:var(--model-green-dark);
+      --accent:var(--model-green);
+      --radius:8px;
+      --radius-sm:6px;
+      --radius-lg:10px;
+      --shadow:0 12px 30px rgba(15,23,42,.10);
+      --shadow-soft:0 2px 12px rgba(15,23,42,.08);
+    }
+    [data-bs-theme="dark"]{
+      --bg:#eef2f3;
+      --surface:#ffffff;
+      --surface-strong:#f8fafc;
+      --surface-secondary:#f1f5f9;
+      --border:#cbd5e1;
+      --border-dark:#94a3b8;
+      --text:#1f2933;
+      --muted:#64748b;
+      --primary:#1f6f5b;
+      --primary-strong:#185846;
+      --accent:#1f6f5b;
+    }
+    body{background:var(--model-bg);color:var(--model-text)}
+    .sidebar{
+      width:260px;
+      padding:28px 18px;
+      background:var(--model-green)!important;
+      color:#fff;
+      border-right:0;
+      box-shadow:4px 0 18px rgba(15,23,42,.14)!important;
+    }
+    .main{margin-left:260px;width:calc(100% - 260px);padding:32px}
+    .brand{display:grid;place-items:center;text-align:center;border-bottom:0;margin-bottom:12px;padding:.2rem .4rem 1rem}
+    .brand-icon{width:58px;height:58px;background:#fff!important;color:var(--model-green)!important;border:1px solid rgba(255,255,255,.36)!important;margin-bottom:8px}
+    .brand strong{color:#fff;font-size:1.1rem;text-transform:none;letter-spacing:0}
+    .brand small{display:none}
+    .nav-label{display:none}
+    .side-link{color:#fff;border:0;border-radius:5px!important;padding:.78rem .9rem;margin-bottom:.25rem;background:transparent}
+    .side-link i{background:transparent;color:#fff;width:22px;height:22px;flex-basis:22px}
+    .side-link:hover,.side-link.active,[data-bs-theme="dark"] .side-link.active{background:rgba(255,255,255,.14);color:#fff;border:0;box-shadow:none!important}
+    .side-link:hover i,.side-link.active i{background:transparent;color:#fff}
+    .topbar{margin:0 0 24px;padding:0;background:transparent!important;border:0!important;box-shadow:none!important}
+    .page-title{font-size:1.65rem;text-transform:none;color:var(--model-text);font-weight:800}
+    .page-sub{color:var(--model-muted)}
+    .surface,.stat,.auth-card,.modal-content{background:#fff;border:1px solid #d8e0e7;border-radius:10px!important;box-shadow:var(--shadow-soft)!important}
+    .stat{padding:1.2rem;border-left:5px solid var(--model-green);min-height:126px}
+    .stat .icon{display:none}
+    .stat small{color:var(--model-muted);font-size:.82rem;font-weight:800;text-transform:uppercase;letter-spacing:.04em}
+    .stat strong{font-size:2rem;color:var(--model-text)}
+    .btn-primary{background:var(--model-green);border-color:var(--model-green)}
+    .btn-primary:hover,.btn-primary:focus{background:var(--model-green-dark);border-color:var(--model-green-dark)}
+    .btn-light{background:#fff;border-color:#cbd5e1;color:#334155}
+    .form-control,.form-select{background:#f8fafc;border-color:#cbd5e1;color:#1f2933}
+    .form-control:focus,.form-select:focus,.phone-field:focus-within{border-color:var(--model-green);box-shadow:0 0 0 3px rgba(31,111,91,.16)!important}
+    .table-responsive{background:#fff;border-color:#d8e0e7;box-shadow:var(--shadow-soft)}
+    .table thead th{background:#f8fafc!important;color:#475569}
+    .cards-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1rem}
+    .page-card{background:#fff;border:1px solid #d8e0e7;border-radius:10px;padding:1rem;box-shadow:var(--shadow-soft)}
+    .page-card h6{font-weight:800;margin:0 0 .35rem;color:#1f2933}
+    .page-card p{margin:0;color:#64748b;font-size:.88rem}
+    .toolbar-model{display:flex;gap:.75rem;flex-wrap:wrap;margin-bottom:1rem}
+    .toolbar-model .form-control,.toolbar-model .form-select{max-width:260px}
+    .panel-title{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:1rem}
+    .panel-title h5{font-weight:800;margin:0;color:#1f2933}
+    .mini-bars{display:grid;gap:.65rem}
+    .mini-bar{display:grid;grid-template-columns:140px 1fr auto;gap:.75rem;align-items:center;font-size:.86rem;color:#334155}
+    .mini-bar-track{height:10px;background:#e2e8f0;border-radius:999px;overflow:hidden}
+    .mini-bar-fill{height:100%;background:var(--model-green)}
+    .profile-box{display:flex;gap:1rem;align-items:center}
+    .profile-avatar{width:62px;height:62px;border-radius:10px;background:#e6f2ef;color:var(--model-green);display:grid;place-items:center;font-weight:900;font-size:1.4rem;border:1px solid rgba(31,111,91,.22)}
+    @media(max-width:991.98px){.main{margin-left:0;width:100%;padding:1rem}.sidebar{width:280px}.topbar{margin-bottom:1rem}.mobile-menu-btn{display:inline-grid}.brand{display:flex;text-align:left}.brand-icon{margin-bottom:0}}
+  
   </style>
 </head>
 <body>
@@ -900,7 +990,8 @@
     }
 
     function visiblePages(){
-      return pages.filter(([id]) => isAdmin() || id !== 'usuarios');
+      const adminOnly = ['usuarios', 'cadastros', 'fornecedores'];
+      return pages.filter(([id]) => isAdmin() ? true : !adminOnly.includes(id));
     }
 
     const esc = (v) => String(v ?? '')
@@ -1021,6 +1112,7 @@
         categorias: ['/categorias','categorias'],
         produtos: ['/produtos','produtos'],
         saldo: ['/saldo-estoque','saldo'],
+        movimentacoes: ['/movimentacoes','movimentacoes'],
         solicitacoes: ['/solicitacoes','solicitacoes'],
         unidades: ['/cadastros/unidades-medida','unidades'],
         locais: ['/cadastros/locais-estoque','locais'],
@@ -1941,6 +2033,62 @@ async function renderDevolucoes(fresh = false) {
       }
     }
 
+    async function renderMovimentacoes(fresh=false){
+      const d = await load(['movimentacoes'], fresh);
+      state.movimentacoesData = d;
+      $('app').innerHTML = `<div class="surface p-3 p-md-4">
+        <div class="panel-title"><div><h5>Movimentações</h5><p class="small text-secondary mb-0">Histórico operacional das entradas, saídas e devoluções.</p></div><button class="btn btn-light" onclick="exportMovimentacoes()"><i class="bi bi-download me-1"></i>Exportar</button></div>
+        <div class="toolbar-model"><input id="movSearch" class="form-control" placeholder="Buscar produto, local ou responsável"><select id="movTipo" class="form-select"><option value="">Todos os tipos</option><option value="entrada">Entradas</option><option value="saida">Saídas</option></select></div>
+        <div id="movTable">${tableMovimentacoes(d.movimentacoes)}</div>
+      </div>`;
+      const apply = () => {
+        const q = $('movSearch').value.toLowerCase();
+        const tipo = $('movTipo').value;
+        const list = d.movimentacoes.filter(m => (!tipo || m.tipo === tipo) && [m.produtos?.nome,m.locais_estoque?.nome,m.usuarios?.nome,m.origem,m.documento].join(' ').toLowerCase().includes(q));
+        $('movTable').innerHTML = tableMovimentacoes(list);
+      };
+      $('movSearch').addEventListener('input', debounce(apply));
+      $('movTipo').addEventListener('change', apply);
+    }
+
+    function tableMovimentacoes(items){
+      if(!items.length) return empty('Nenhuma movimentação encontrada','bi-clock-history');
+      return `<div class="table-responsive"><table class="table table-hover mb-0"><thead><tr><th>Data</th><th>Produto</th><th>Local</th><th>Origem</th><th>Tipo</th><th class="text-end">Qtd.</th><th>Responsável</th></tr></thead><tbody>${items.map(m=>`<tr><td>${dateBR(m.data_movimentacao)}</td><td><div class="fw-bold">${esc(m.produtos?.nome || '-')}</div><span class="table-meta">${esc(m.produtos?.codigo_interno || 'Sem código')}</span></td><td>${esc(m.locais_estoque?.nome || '-')}</td><td>${esc(m.origem || '-')}</td><td>${badge(m.tipo)}</td><td class="table-number">${fmt(m.quantidade)}</td><td>${esc(m.usuarios?.nome || '-')}</td></tr>`).join('')}</tbody></table></div>`;
+    }
+
+    function exportMovimentacoes(){
+      const list = state.movimentacoesData?.movimentacoes || [];
+      exportCsv('movimentacoes.csv', [['Data','Produto','Código','Local','Origem','Tipo','Quantidade','Responsável'], ...list.map(m => [dateBR(m.data_movimentacao),m.produtos?.nome || '',m.produtos?.codigo_interno || '',m.locais_estoque?.nome || '',m.origem || '',m.tipo || '',m.quantidade ?? '',m.usuarios?.nome || ''])]);
+    }
+
+    async function renderRelatorios(fresh=false){
+      const d = await load(['produtos','saldo','solicitacoes','movimentacoes','categorias'], fresh);
+      state.saldoData = d;
+      state.movimentacoesData = d;
+      const total = d.saldo.reduce((s,x)=>s+Number(x.saldo_atual||0),0);
+      const baixo = d.saldo.filter(x=>x.abaixo_estoque_minimo).length;
+      const entradas = d.movimentacoes.filter(m=>m.tipo==='entrada').reduce((s,m)=>s+Number(m.quantidade||0),0);
+      const saidas = d.movimentacoes.filter(m=>m.tipo==='saida').reduce((s,m)=>s+Number(m.quantidade||0),0);
+      const porCategoria = d.saldo.reduce((acc,item)=>{ const k=item.categoria||'Sem categoria'; acc[k]=(acc[k]||0)+Number(item.saldo_atual||0); return acc; },{});
+      const max = Math.max(...Object.values(porCategoria),1);
+      $('app').innerHTML = `<div class="row g-3 mb-3">${card('Produtos cadastrados',d.produtos.length,'bi-box-seam')}${card('Saldo total',fmt(total),'bi-boxes')}${card('Estoque baixo',baixo,'bi-exclamation-triangle')}${card('Solicitações',d.solicitacoes.length,'bi-clipboard2')}</div>
+      <div class="row g-3"><div class="col-lg-7"><div class="surface p-3 p-md-4"><div class="panel-title"><h5>Saldo por categoria</h5><button class="btn btn-light" onclick="exportSaldo()">Exportar saldo</button></div><div class="mini-bars">${Object.entries(porCategoria).map(([nome,valor])=>`<div class="mini-bar"><strong>${esc(nome)}</strong><div class="mini-bar-track"><div class="mini-bar-fill" style="width:${Math.max(4,(valor/max)*100)}%"></div></div><span>${fmt(valor)}</span></div>`).join('') || '<p class="text-secondary small mb-0">Sem dados.</p>'}</div></div></div><div class="col-lg-5"><div class="surface p-3 p-md-4 h-100"><div class="panel-title"><h5>Fluxo operacional</h5></div><div class="summary-strip"><div class="summary-item"><small>Entradas</small><strong>${fmt(entradas)}</strong></div><div class="summary-item"><small>Saídas</small><strong>${fmt(saidas)}</strong></div><div class="summary-item"><small>Movimentos</small><strong>${d.movimentacoes.length}</strong></div></div><button class="btn btn-primary w-100" onclick="exportMovimentacoes()">Exportar movimentações</button></div></div></div>`;
+    }
+
+    async function renderFornecedores(fresh=false){
+      const d = await load(['fornecedores'], fresh);
+      $('app').innerHTML = `<div class="surface p-3 p-md-4"><div class="panel-title"><div><h5>Fornecedores</h5><p class="small text-secondary mb-0">Fornecedores cadastrados para compras e reposições.</p></div><button class="btn btn-primary" onclick="navigate('cadastros')">Gerenciar cadastros</button></div><div class="cards-grid">${d.fornecedores.map(f=>`<article class="page-card"><h6>${esc(f.nome||'-')}</h6><p>${esc(f.email||'Sem email')}</p><p>${esc(f.telefone||'Sem telefone')}</p><span class="soft ${f.ativo===false?'soft-danger':'soft-success'}">${f.ativo===false?'Inativo':'Ativo'}</span></article>`).join('') || empty('Nenhum fornecedor cadastrado','bi-truck')}</div></div>`;
+    }
+
+    async function renderCategoriasPage(fresh=false){
+      const d = await load(['categorias','produtos'], fresh);
+      $('app').innerHTML = `<div class="surface p-3 p-md-4"><div class="panel-title"><div><h5>Categorias</h5><p class="small text-secondary mb-0">Organização dos materiais por grupos.</p></div><button class="btn btn-primary" onclick="navigate('cadastros')">Gerenciar cadastros</button></div><div class="cards-grid">${d.categorias.map(c=>{const total=d.produtos.filter(p=>p.categorias?.id===c.id).length;return `<article class="page-card"><h6>${esc(c.nome||'-')}</h6><p>${total} produto(s) vinculados</p><span class="soft ${c.ativo===false?'soft-danger':'soft-success'}">${c.ativo===false?'Inativa':'Ativa'}</span></article>`}).join('') || empty('Nenhuma categoria cadastrada','bi-tags')}</div></div>`;
+    }
+
+    async function renderPerfil(){
+      const u = auth.usuario || {};
+      $('app').innerHTML = `<div class="surface p-3 p-md-4"><div class="panel-title"><h5>Perfil</h5></div><div class="profile-box"><div class="profile-avatar">${esc((u.nome||'U').slice(0,2).toUpperCase())}</div><div><h4 class="fw-bold mb-1">${esc(u.nome||'Usuário')}</h4><p class="text-secondary mb-1">${esc(u.email||'')}</p><span class="soft soft-primary">${esc(u.perfil||'-')}</span></div></div><hr><div class="row g-3"><div class="col-md-4"><label class="form-label">Telefone<input class="form-control mt-1" disabled value="${esc(formatPhone(u.telefone||''))}"></label></div><div class="col-md-4"><label class="form-label">Cargo<input class="form-control mt-1" disabled value="${esc(u.cargo||'-')}"></label></div><div class="col-md-4"><label class="form-label">Status<input class="form-control mt-1" disabled value="Ativo"></label></div></div></div>`;
+    }
     async function renderCadastros(fresh=false){
       const d = await load(['setores','locais','fornecedores','centros'], fresh);
       $('app').innerHTML = `<div class="row g-3">
@@ -2138,12 +2286,16 @@ async function renderDevolucoes(fresh = false) {
     window.exportSaldo = exportSaldo;
     window.exportSolicitacoes = exportSolicitacoes;
     window.exportDevolucoes = exportDevolucoes;
+    window.exportMovimentacoes = exportMovimentacoes;
 
     if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
     else boot();
   </script>
 </body>
 </html>
+
+
+
 
 
 
