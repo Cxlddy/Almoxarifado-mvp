@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html lang="pt-BR" data-bs-theme="dark">
+<html lang="pt-BR" data-bs-theme="light">
 <head>
   <meta charset="UTF-8" />
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -9,18 +9,6 @@
   <meta name="referrer" content="no-referrer" />
   <title>Almoxarifado</title>
 
-  <script>
-    (() => {
-      const media = window.matchMedia('(prefers-color-scheme: dark)');
-      const applySystemTheme = () => {
-        document.documentElement.setAttribute('data-bs-theme', media.matches ? 'dark' : 'light');
-      };
-      window.applySystemTheme = applySystemTheme;
-      applySystemTheme();
-      if (media.addEventListener) media.addEventListener('change', applySystemTheme);
-      else if (media.addListener) media.addListener(applySystemTheme);
-    })();
-  </script>
 
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
@@ -62,7 +50,7 @@
       --surface-strong:#f9f9fb;
       --surface-secondary:#f2f2f7;
       --border:#d1d1d6;
-      --border-dark:#c7c7cc;
+      --border-strong:#c7c7cc;
       --text:#1c1c1e;
       --muted:#8e8e93;
       --primary:#007aff;
@@ -87,34 +75,8 @@
       --bs-link-hover-color:#0a84ff;
       --font-sf:"San Francisco","SF Pro Text","SF Pro Display",-apple-system,BlinkMacSystemFont,"Segoe UI Variable","Segoe UI","Helvetica Neue",Arial,sans-serif;
     }
-    [data-bs-theme="dark"]{
-      color-scheme:dark;
-      --bg:#000000;
-      --surface:#1c1c1e;
-      --surface-strong:#2c2c2e;
-      --surface-secondary:#2c2c2e;
-      --border:#38383a;
-      --border-dark:#48484a;
-      --text:#ffffff;
-      --muted:rgba(235,235,245,.6);
-      --primary:#0a84ff;
-      --primary-strong:#409cff;
-      --accent:#0a84ff;
-      --danger:#ff453a;
-      --success:#30d158;
-      --warning:#ff9f0a;
-      --shadow:0 1px 2px rgba(0,0,0,.45),0 14px 34px rgba(0,0,0,.34);
-      --shadow-soft:0 1px 2px rgba(0,0,0,.35);
-      --bs-body-bg:#000000;
-      --bs-body-color:#ffffff;
-      --bs-secondary-color:rgba(235,235,245,.6);
-      --bs-tertiary-bg:#2c2c2e;
-      --bs-border-color:#38383a;
-      --bs-link-color:#0a84ff;
-      --bs-link-hover-color:#409cff;
-    }
     *{box-sizing:border-box}
-    html{background:var(--bg);color-scheme:light dark}
+    html{background:var(--bg);color-scheme:light}
     body{
       margin:0;
       min-height:100vh;
@@ -241,7 +203,6 @@
       border-color:rgba(10,132,255,.28);
       box-shadow:none;
     }
-    [data-bs-theme="dark"] .side-link.active{background:rgba(10,132,255,.18);border-color:rgba(10,132,255,.28)}
     .side-link i{width:1.2rem;text-align:center;font-size:1rem}
 
     .main{
@@ -293,7 +254,7 @@
     }
     .btn-light:hover,.btn-light:focus{
       background:var(--border);
-      border-color:var(--border-dark);
+      border-color:var(--border-strong);
       color:var(--text);
     }
     .btn-primary{
@@ -529,7 +490,7 @@
       color:#fff;
       box-shadow:0 8px 18px rgba(10,132,255,.24);
     }
-    .btn-icon i,.mobile-menu-btn i,#themeBtn i{
+    .btn-icon i,.mobile-menu-btn i{
       font-size:1.08rem;
       line-height:1;
     }
@@ -561,14 +522,10 @@
     .side-link{color:var(--text)}
     .side-link:hover{background:var(--surface-strong);color:var(--text)}
     .side-link.active{background:rgba(10,132,255,.14);color:var(--primary);border-color:rgba(10,132,255,.24);box-shadow:none}
-    [data-bs-theme="dark"] .side-link.active{background:rgba(10,132,255,.18);color:#fff;border-color:rgba(10,132,255,.28)}
     .topbar{
       background:rgba(255,255,255,.78);
       -webkit-backdrop-filter:saturate(180%) blur(18px);
       backdrop-filter:saturate(180%) blur(18px);
-    }
-    [data-bs-theme="dark"] .topbar{
-      background:rgba(28,28,30,.78);
     }
     .btn-primary{
       background:var(--primary);
@@ -581,7 +538,7 @@
       border-color:var(--border);
       color:var(--text);
     }
-    .btn-light:hover,.btn-light:focus{background:var(--surface-secondary);border-color:var(--border-dark);color:var(--text)}
+    .btn-light:hover,.btn-light:focus{background:var(--surface-secondary);border-color:var(--border-strong);color:var(--text)}
     .stat .icon,.user-badge{
       border-radius:12px;
       background:rgba(10,132,255,.14);
@@ -606,7 +563,7 @@
       --surface-strong:#ffffff;
       --surface-secondary:#f3f5f7;
       --border:#c7ced6;
-      --border-dark:#9aa6b2;
+      --border-strong:#9aa6b2;
       --text:#141922;
       --muted:#637083;
       --primary:#1f3a5f;
@@ -620,22 +577,6 @@
       --radius:6px;
       --radius-sm:4px;
       --radius-lg:6px;
-    }
-    [data-bs-theme="dark"]{
-      --bg:#11151b;
-      --surface:#181e26;
-      --surface-strong:#1d242d;
-      --surface-secondary:#202833;
-      --border:#343d49;
-      --border-dark:#4a5564;
-      --text:#f4f6f8;
-      --muted:#9ba6b5;
-      --primary:#3f5f87;
-      --primary-strong:#55779f;
-      --accent:#3f5f87;
-      --danger:#e05a50;
-      --success:#42a66d;
-      --warning:#c9902f;
     }
     *,
     *::before,
@@ -688,12 +629,6 @@
     }
     .side-link:hover{background:#202936;color:#fff;border-color:#344153}
     .side-link.active,
-    [data-bs-theme="dark"] .side-link.active{
-      background:#263449;
-      color:#fff;
-      border-color:#4c5f78;
-      box-shadow:inset 3px 0 0 var(--primary)!important;
-    }
     .side-link i{background:#202936;color:#aeb8c5}
     .side-link:hover i,.side-link.active i{background:#344153;color:#fff}
     .page-title{
@@ -860,7 +795,7 @@
     /* Public model visual layer */
     :root{
       --model-green:#1f6f5b;
-      --model-green-dark:#185846;
+      --model-green-strong:#185846;
       --model-bg:#eef2f3;
       --model-card:#ffffff;
       --model-text:#1f2933;
@@ -871,30 +806,17 @@
       --surface-strong:#f8fafc;
       --surface-secondary:#f1f5f9;
       --border:var(--model-border);
-      --border-dark:#94a3b8;
+      --border-strong:#94a3b8;
       --text:var(--model-text);
       --muted:var(--model-muted);
       --primary:var(--model-green);
-      --primary-strong:var(--model-green-dark);
+      --primary-strong:var(--model-green-strong);
       --accent:var(--model-green);
       --radius:8px;
       --radius-sm:6px;
       --radius-lg:10px;
       --shadow:0 12px 30px rgba(15,23,42,.10);
       --shadow-soft:0 2px 12px rgba(15,23,42,.08);
-    }
-    [data-bs-theme="dark"]{
-      --bg:#eef2f3;
-      --surface:#ffffff;
-      --surface-strong:#f8fafc;
-      --surface-secondary:#f1f5f9;
-      --border:#cbd5e1;
-      --border-dark:#94a3b8;
-      --text:#1f2933;
-      --muted:#64748b;
-      --primary:#1f6f5b;
-      --primary-strong:#185846;
-      --accent:#1f6f5b;
     }
     body{background:var(--model-bg);color:var(--model-text)}
     .sidebar{
@@ -913,7 +835,7 @@
     .nav-label{display:none}
     .side-link{color:#fff;border:0;border-radius:5px!important;padding:.78rem .9rem;margin-bottom:.25rem;background:transparent}
     .side-link i{background:transparent;color:#fff;width:22px;height:22px;flex-basis:22px}
-    .side-link:hover,.side-link.active,[data-bs-theme="dark"] .side-link.active{background:rgba(255,255,255,.14);color:#fff;border:0;box-shadow:none!important}
+    .side-link:hover,.side-link.active{background:rgba(255,255,255,.14);color:#fff;border:0;box-shadow:none!important}
     .side-link:hover i,.side-link.active i{background:transparent;color:#fff}
     .topbar{margin:0 0 24px;padding:0;background:transparent!important;border:0!important;box-shadow:none!important}
     .page-title{font-size:1.65rem;text-transform:none;color:var(--model-text);font-weight:800}
@@ -924,7 +846,7 @@
     .stat small{color:var(--model-muted);font-size:.82rem;font-weight:800;text-transform:uppercase;letter-spacing:.04em}
     .stat strong{font-size:2rem;color:var(--model-text)}
     .btn-primary{background:var(--model-green);border-color:var(--model-green)}
-    .btn-primary:hover,.btn-primary:focus{background:var(--model-green-dark);border-color:var(--model-green-dark)}
+    .btn-primary:hover,.btn-primary:focus{background:var(--model-green-strong);border-color:var(--model-green-strong)}
     .btn-light{background:#fff;border-color:#cbd5e1;color:#334155}
     .form-control,.form-select{background:#f8fafc;border-color:#cbd5e1;color:#1f2933}
     .form-control:focus,.form-select:focus,.phone-field:focus-within{border-color:var(--model-green);box-shadow:0 0 0 3px rgba(31,111,91,.16)!important}
@@ -959,13 +881,21 @@
     const CACHE_TTL = 45_000;
 
     const pages = [
-      ['dashboard','Dashboard','bi-speedometer2',''],
-      ['produtos','Produtos','bi-box-seam',''],
-      ['estoque','Estoque','bi-boxes',''],
-      ['solicitacoes','Solicitações','bi-clipboard2-check',''],
-      ['devolucoes','Devoluções','bi-arrow-counterclockwise',''],
-      ['cadastros','Cadastros','bi-folder2-open',''],
-      ['usuarios','Usuários','bi-people','']
+      ['dashboard','Dashboard','bi-speedometer2','Visao geral da operacao'],
+      ['produtos','Produtos','bi-box-seam','Catalogo de materiais'],
+      ['estoque','Estoque','bi-boxes','Saldo por local'],
+      ['solicitacoes','Solicitacoes','bi-clipboard2-check','Pedidos e emprestimos'],
+      ['devolucoes','Devolucoes','bi-arrow-counterclockwise','Retorno de materiais'],
+      ['movimentacoes','Movimentacoes','bi-clock-history','Historico operacional'],
+      ['relatorios','Relatorios','bi-bar-chart','Indicadores e exportacoes'],
+      ['setores-page','Setores','bi-diagram-3','Areas solicitantes'],
+      ['locais-page','Locais','bi-geo-alt','Locais de estoque'],
+      ['centros-page','Centros de custo','bi-cash-coin','Controles financeiros'],
+      ['unidades-page','Unidades','bi-rulers','Unidades de medida'],
+      ['fornecedores','Fornecedores','bi-truck','Fornecedores cadastrados'],
+      ['categorias-page','Categorias','bi-tags','Classificacao dos materiais'],
+      ['usuarios','Usuarios','bi-people','Acessos e permissoes'],
+      ['perfil','Perfil','bi-person-vcard','Dados do usuario logado']
     ];
 
     const root = document.getElementById('root');
@@ -990,7 +920,7 @@
     }
 
     function visiblePages(){
-      const adminOnly = ['usuarios', 'cadastros', 'fornecedores'];
+      const adminOnly = ['usuarios', 'fornecedores', 'setores-page', 'locais-page', 'centros-page', 'unidades-page', 'categorias-page'];
       return pages.filter(([id]) => isAdmin() ? true : !adminOnly.includes(id));
     }
 
@@ -1299,7 +1229,7 @@
     function renderShell(){
       root.innerHTML = `<div class="app">
         <aside class="sidebar">${sidebar()}</aside>
-        <div class="offcanvas offcanvas-start text-bg-dark" id="mobileMenu" tabindex="-1"><div class="offcanvas-body p-3">${sidebar()}</div></div>
+        <div class="offcanvas offcanvas-start bg-white" id="mobileMenu" tabindex="-1"><div class="offcanvas-body p-3">${sidebar()}</div></div>
         <main class="main">
           <header class="topbar">
             <div class="d-flex justify-content-between align-items-center gap-3">
@@ -1308,7 +1238,6 @@
                 <div><h1 id="pageTitle" class="page-title">Dashboard</h1><p id="pageSub" class="page-sub">Visão geral</p></div>
               </div>
               <div class="d-flex align-items-center gap-2">
-                <button id="themeBtn" class="btn btn-light btn-icon" aria-label="Tema"><i class="bi bi-moon-stars"></i></button>
                 <div class="dropdown">
                   <button class="btn btn-light d-flex align-items-center gap-2" data-bs-toggle="dropdown">
                     <span class="user-badge">${esc((auth.usuario?.nome || 'U').slice(0,1).toUpperCase())}</span>
@@ -1336,10 +1265,6 @@
         if(menu) menu.hide();
       }));
       $('logoutBtn').addEventListener('click', () => { clearSession(); location.hash = '#/login'; renderAuth('login'); });
-      $('themeBtn').addEventListener('click', () => {
-        const next = document.documentElement.getAttribute('data-bs-theme') === 'dark' ? 'light' : 'dark';
-        document.documentElement.setAttribute('data-bs-theme', next);
-      });
     }
 
     function setMeta(page){
@@ -1384,7 +1309,15 @@
           estoque: renderEstoque,
           solicitacoes: renderSolicitacoes,
           devolucoes: renderDevolucoes,
-          cadastros: renderCadastros,
+          movimentacoes: renderMovimentacoes,
+          relatorios: renderRelatorios,
+          fornecedores: (fresh) => renderCadastroPage('fornecedores', fresh),
+          'categorias-page': (fresh) => renderCadastroPage('categorias-page', fresh),
+          'setores-page': (fresh) => renderCadastroPage('setores-page', fresh),
+          'locais-page': (fresh) => renderCadastroPage('locais-page', fresh),
+          'centros-page': (fresh) => renderCadastroPage('centros-page', fresh),
+          'unidades-page': (fresh) => renderCadastroPage('unidades-page', fresh),
+          perfil: renderPerfil,
           usuarios: renderUsuarios,
         }[page] || renderDashboard;
         await render(fresh);
@@ -2075,64 +2008,177 @@ async function renderDevolucoes(fresh = false) {
       <div class="row g-3"><div class="col-lg-7"><div class="surface p-3 p-md-4"><div class="panel-title"><h5>Saldo por categoria</h5><button class="btn btn-light" onclick="exportSaldo()">Exportar saldo</button></div><div class="mini-bars">${Object.entries(porCategoria).map(([nome,valor])=>`<div class="mini-bar"><strong>${esc(nome)}</strong><div class="mini-bar-track"><div class="mini-bar-fill" style="width:${Math.max(4,(valor/max)*100)}%"></div></div><span>${fmt(valor)}</span></div>`).join('') || '<p class="text-secondary small mb-0">Sem dados.</p>'}</div></div></div><div class="col-lg-5"><div class="surface p-3 p-md-4 h-100"><div class="panel-title"><h5>Fluxo operacional</h5></div><div class="summary-strip"><div class="summary-item"><small>Entradas</small><strong>${fmt(entradas)}</strong></div><div class="summary-item"><small>Saídas</small><strong>${fmt(saidas)}</strong></div><div class="summary-item"><small>Movimentos</small><strong>${d.movimentacoes.length}</strong></div></div><button class="btn btn-primary w-100" onclick="exportMovimentacoes()">Exportar movimentações</button></div></div></div>`;
     }
 
-    async function renderFornecedores(fresh=false){
-      const d = await load(['fornecedores'], fresh);
-      $('app').innerHTML = `<div class="surface p-3 p-md-4"><div class="panel-title"><div><h5>Fornecedores</h5><p class="small text-secondary mb-0">Fornecedores cadastrados para compras e reposições.</p></div><button class="btn btn-primary" onclick="navigate('cadastros')">Gerenciar cadastros</button></div><div class="cards-grid">${d.fornecedores.map(f=>`<article class="page-card"><h6>${esc(f.nome||'-')}</h6><p>${esc(f.email||'Sem email')}</p><p>${esc(f.telefone||'Sem telefone')}</p><span class="soft ${f.ativo===false?'soft-danger':'soft-success'}">${f.ativo===false?'Inativo':'Ativo'}</span></article>`).join('') || empty('Nenhum fornecedor cadastrado','bi-truck')}</div></div>`;
-    }
-
-    async function renderCategoriasPage(fresh=false){
-      const d = await load(['categorias','produtos'], fresh);
-      $('app').innerHTML = `<div class="surface p-3 p-md-4"><div class="panel-title"><div><h5>Categorias</h5><p class="small text-secondary mb-0">Organização dos materiais por grupos.</p></div><button class="btn btn-primary" onclick="navigate('cadastros')">Gerenciar cadastros</button></div><div class="cards-grid">${d.categorias.map(c=>{const total=d.produtos.filter(p=>p.categorias?.id===c.id).length;return `<article class="page-card"><h6>${esc(c.nome||'-')}</h6><p>${total} produto(s) vinculados</p><span class="soft ${c.ativo===false?'soft-danger':'soft-success'}">${c.ativo===false?'Inativa':'Ativa'}</span></article>`}).join('') || empty('Nenhuma categoria cadastrada','bi-tags')}</div></div>`;
-    }
-
     async function renderPerfil(){
       const u = auth.usuario || {};
       $('app').innerHTML = `<div class="surface p-3 p-md-4"><div class="panel-title"><h5>Perfil</h5></div><div class="profile-box"><div class="profile-avatar">${esc((u.nome||'U').slice(0,2).toUpperCase())}</div><div><h4 class="fw-bold mb-1">${esc(u.nome||'Usuário')}</h4><p class="text-secondary mb-1">${esc(u.email||'')}</p><span class="soft soft-primary">${esc(u.perfil||'-')}</span></div></div><hr><div class="row g-3"><div class="col-md-4"><label class="form-label">Telefone<input class="form-control mt-1" disabled value="${esc(formatPhone(u.telefone||''))}"></label></div><div class="col-md-4"><label class="form-label">Cargo<input class="form-control mt-1" disabled value="${esc(u.cargo||'-')}"></label></div><div class="col-md-4"><label class="form-label">Status<input class="form-control mt-1" disabled value="Ativo"></label></div></div></div>`;
     }
+    const cadastroConfigs = {
+      'setores-page': {
+        title: 'Setores', key: 'setores', endpoint: '/cadastros/setores', icon: 'bi-diagram-3',
+        description: 'Areas solicitantes e departamentos internos.',
+        fields: [
+          { name: 'nome', label: 'Nome', required: true },
+          { name: 'descricao', label: 'Descricao' }
+        ]
+      },
+      'locais-page': {
+        title: 'Locais de estoque', key: 'locais', endpoint: '/cadastros/locais-estoque', icon: 'bi-geo-alt',
+        description: 'Prateleiras, salas, depositos e pontos de armazenamento.',
+        fields: [
+          { name: 'nome', label: 'Nome', required: true },
+          { name: 'descricao', label: 'Descricao' }
+        ]
+      },
+      'centros-page': {
+        title: 'Centros de custo', key: 'centros', endpoint: '/cadastros/centros-custo', icon: 'bi-cash-coin',
+        description: 'Codigos financeiros usados nas solicitacoes.',
+        fields: [
+          { name: 'codigo', label: 'Codigo', required: true, col: 'col-md-4' },
+          { name: 'nome', label: 'Nome', required: true, col: 'col-md-8' },
+          { name: 'descricao', label: 'Descricao', col: 'col-12' }
+        ],
+        columns: [{ label: 'Codigo', value: item => item.codigo || '-' }]
+      },
+      'unidades-page': {
+        title: 'Unidades de medida', key: 'unidades', endpoint: '/cadastros/unidades-medida', icon: 'bi-rulers',
+        description: 'Siglas usadas no cadastro de produtos.',
+        fields: [
+          { name: 'sigla', label: 'Sigla', required: true, maxlength: 2, col: 'col-md-3' },
+          { name: 'nome', label: 'Nome', required: true, col: 'col-md-9' }
+        ],
+        columns: [{ label: 'Sigla', value: item => item.sigla || '-' }]
+      },
+      fornecedores: {
+        title: 'Fornecedores', key: 'fornecedores', endpoint: '/cadastros/fornecedores', icon: 'bi-truck',
+        description: 'Contatos comerciais para compras e reposicoes.',
+        fields: [
+          { name: 'nome', label: 'Nome', required: true, col: 'col-md-6' },
+          { name: 'cnpj', label: 'CNPJ', col: 'col-md-6' },
+          { name: 'telefone', label: 'Telefone', type: 'tel', phone: true, col: 'col-md-6' },
+          { name: 'email', label: 'Email', type: 'email', col: 'col-md-6' }
+        ],
+        columns: [
+          { label: 'Telefone', value: item => formatPhone(item.telefone || '') || '-' },
+          { label: 'Email', value: item => item.email || '-' }
+        ]
+      },
+      'categorias-page': {
+        title: 'Categorias', key: 'categorias', endpoint: '/categorias', icon: 'bi-tags',
+        description: 'Classificacao dos materiais do catalogo.',
+        fields: [
+          { name: 'nome', label: 'Nome', required: true },
+          { name: 'descricao', label: 'Descricao' }
+        ]
+      }
+    };
+
+    async function renderCadastroPage(pageId, fresh=false){
+      if(!isAdmin()){
+        $('app').innerHTML = `<div class="surface p-4"><div class="empty"><i class="bi bi-shield-lock"></i><h5>Acesso restrito</h5><p>Apenas administradores podem gerenciar este cadastro.</p></div></div>`;
+        return;
+      }
+
+      const config = cadastroConfigs[pageId];
+      const d = await load([config.key], fresh);
+      const items = d[config.key] || [];
+      state.cadastroAtual = { pageId, config, items };
+
+      $('app').innerHTML = `<div class="surface p-3 p-md-4">
+        <div class="panel-title">
+          <div><h5>${esc(config.title)}</h5><p class="small text-secondary mb-0">${esc(config.description)}</p></div>
+          <button class="btn btn-primary" onclick="openCadastroModal('${esc(pageId)}')"><i class="bi bi-plus-lg me-1"></i>Novo</button>
+        </div>
+        <div class="toolbar-model"><input id="cadSearch" class="form-control" placeholder="Buscar registro"><select id="cadStatus" class="form-select"><option value="">Todos</option><option value="ativo">Ativos</option><option value="inativo">Inativos</option></select></div>
+        <div id="cadTable">${tableCadastro(config, items)}</div>
+      </div>${cadastroModal(config, pageId)}`;
+
+      const apply = () => {
+        const q = $('cadSearch').value.toLowerCase();
+        const status = $('cadStatus').value;
+        const list = items.filter(item => {
+          const texto = Object.values(item).join(' ').toLowerCase();
+          const ativo = item.ativo !== false;
+          return texto.includes(q) && (!status || (status === 'ativo' ? ativo : !ativo));
+        });
+        $('cadTable').innerHTML = tableCadastro(config, list);
+      };
+      $('cadSearch').addEventListener('input', debounce(apply));
+      $('cadStatus').addEventListener('change', apply);
+      $('cadastroForm').addEventListener('submit', saveCadastroItem);
+      bindPhoneFields($('cadastroModal'));
+    }
+
+    function tableCadastro(config, items){
+      if(!items.length) return empty(`Nenhum registro em ${config.title.toLowerCase()}`, config.icon);
+      const extras = config.columns || [];
+      return `<div class="table-responsive"><table class="table table-hover mb-0"><thead><tr><th>Nome</th>${extras.map(c=>`<th>${esc(c.label)}</th>`).join('')}<th>Status</th><th class="text-end">Acoes</th></tr></thead><tbody>${items.map(item=>`<tr><td><div class="fw-bold">${esc(item.nome || '-')}</div><span class="table-meta">${esc(item.descricao || '')}</span></td>${extras.map(c=>`<td>${esc(c.value(item))}</td>`).join('')}<td>${item.ativo === false ? '<span class="soft soft-danger">Inativo</span>' : '<span class="soft soft-success">Ativo</span>'}</td><td class="text-end"><button class="btn btn-light btn-sm" onclick="openCadastroModal('${esc(state.cadastroAtual.pageId)}','${esc(item.id)}')"><i class="bi bi-pencil-square me-1"></i>Editar</button></td></tr>`).join('')}</tbody></table></div>`;
+    }
+
+    function cadastroModal(config, pageId){
+      return `<div class="modal fade" id="cadastroModal" tabindex="-1"><div class="modal-dialog modal-lg modal-dialog-centered"><div class="modal-content"><form id="cadastroForm">
+        <div class="modal-header"><div><h5 id="cadastroModalTitle" class="modal-title fw-bold">Novo registro</h5><p class="small text-secondary mb-0">${esc(config.title)}</p></div><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+        <div class="modal-body"><input type="hidden" name="id"><input type="hidden" name="pageId" value="${esc(pageId)}"><div class="row g-3">${config.fields.map(fieldCadastro).join('')}<div class="col-12"><label class="form-check form-switch"><input class="form-check-input" type="checkbox" name="ativo" checked><span class="form-check-label">Registro ativo</span></label></div></div></div>
+        <div class="modal-footer"><button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button><button id="cadastroSubmit" class="btn btn-primary">Salvar</button></div>
+      </form></div></div></div>`;
+    }
+
+    function fieldCadastro(field){
+      const col = field.col || 'col-12';
+      if(field.phone){
+        return `<div class="${col}"><label class="form-label">${esc(field.label)}<span class="phone-field mt-1"><span class="phone-prefix">BR +55</span><input class="form-control" name="${esc(field.name)}" type="tel" inputmode="numeric" maxlength="15" data-phone></span></label></div>`;
+      }
+      return `<div class="${col}"><label class="form-label">${esc(field.label)}<input class="form-control mt-1" name="${esc(field.name)}" type="${esc(field.type || 'text')}" ${field.required ? 'required' : ''} ${field.maxlength ? `maxlength="${field.maxlength}"` : ''}></label></div>`;
+    }
+
+    function openCadastroModal(pageId, id=''){
+      const context = state.cadastroAtual?.pageId === pageId ? state.cadastroAtual : null;
+      const config = context?.config || cadastroConfigs[pageId];
+      const item = id ? context?.items.find(x => String(x.id) === String(id)) : null;
+      const form = $('cadastroForm');
+      if(!form || !config) return;
+
+      form.reset();
+      form.elements.id.value = item?.id || '';
+      form.elements.pageId.value = pageId;
+      $('cadastroModalTitle').textContent = item ? `Editar ${config.title}` : `Novo ${config.title}`;
+      $('cadastroSubmit').textContent = item ? 'Salvar alteracoes' : 'Salvar';
+
+      config.fields.forEach(field => {
+        const input = form.elements[field.name];
+        if(input) input.value = field.phone ? formatPhone(item?.[field.name] || '') : (item?.[field.name] || '');
+      });
+      form.elements.ativo.checked = item ? item.ativo !== false : true;
+      showModal('cadastroModal');
+    }
+
+    async function saveCadastroItem(e){
+      e.preventDefault();
+      const form = e.currentTarget;
+      const pageId = form.elements.pageId.value;
+      const config = cadastroConfigs[pageId];
+      const id = form.elements.id.value;
+      const data = Object.fromEntries(new FormData(form));
+      delete data.id;
+      delete data.pageId;
+      data.ativo = form.elements.ativo.checked;
+
+      config.fields.forEach(field => {
+        if(field.phone && data[field.name]) data[field.name] = normalizePhone(data[field.name]);
+        if(field.maxlength && data[field.name]) data[field.name] = String(data[field.name]).toUpperCase().slice(0, field.maxlength);
+      });
+
+      try{
+        await api(id ? `${config.endpoint}/${id}` : config.endpoint, { method: id ? 'PATCH' : 'POST', body: JSON.stringify(data) });
+        invalidate(config.key);
+        await hideModal('cadastroModal');
+        toast(id ? 'Cadastro atualizado.' : 'Cadastro criado.');
+        await navigate(pageId, true);
+      }catch(err){ toast(err.message, 'danger'); }
+    }
+
     async function renderCadastros(fresh=false){
-      const d = await load(['setores','locais','fornecedores','centros'], fresh);
-      $('app').innerHTML = `<div class="row g-3">
-        ${cadCard('Setores','/cadastros/setores',d.setores,'bi-diagram-3')}
-        ${cadCard('Locais de estoque','/cadastros/locais-estoque',d.locais,'bi-geo-alt')}
-        ${cadCard('Fornecedores','/cadastros/fornecedores',d.fornecedores,'bi-truck')}
-        ${centroCard(d.centros)}
-      </div>`;
-      document.querySelectorAll('[data-cad]').forEach(f => f.addEventListener('submit', saveCad));
-      $('centroForm').addEventListener('submit', saveCentro);
+      await renderCadastroPage('setores-page', fresh);
     }
-
-    function cadCard(title, endpoint, items, icon){
-      return `<div class="col-lg-6"><div class="surface p-3 p-md-4 h-100"><h5 class="fw-bold mb-1"><i class="bi ${icon} text-primary me-2"></i>${title}</h5><p class="small text-secondary">${items.length} registros</p>
-        <form data-cad data-endpoint="${endpoint}" class="d-flex gap-2 mb-3"><input class="form-control" name="nome" placeholder="Novo registro" required><button class="btn btn-primary">Salvar</button></form>
-        <div class="vstack gap-2">${items.slice(0,10).map(i=>`<div class="record-row"><strong>${esc(i.nome)}</strong><span class="soft ${i.ativo===false?'soft-danger':'soft-success'}">${i.ativo===false?'Inativo':'Ativo'}</span></div>`).join('') || '<p class="text-secondary small">Nenhum registro.</p>'}</div></div></div>`;
-    }
-
-    function centroCard(items){
-      return `<div class="col-lg-6"><div class="surface p-3 p-md-4 h-100"><h5 class="fw-bold mb-1"><i class="bi bi-cash-coin text-primary me-2"></i>Centros de custo</h5><p class="small text-secondary">${items.length} registros</p>
-        <form id="centroForm" class="row g-2 mb-3"><div class="col-sm-4"><input class="form-control" name="codigo" placeholder="Código" required></div><div class="col-sm-6"><input class="form-control" name="nome" placeholder="Nome" required></div><div class="col-sm-2"><button class="btn btn-primary w-100"><i class="bi bi-check-lg"></i></button></div></form>
-        <div class="vstack gap-2">${items.slice(0,10).map(i=>`<div class="record-row"><strong>${esc(i.codigo||'-')}</strong><span class="text-secondary">${esc(i.nome||'')}</span></div>`).join('') || '<p class="text-secondary small">Nenhum registro.</p>'}</div></div></div>`;
-    }
-
-    async function saveCad(e){
-      e.preventDefault();
-      try{
-        await api(e.currentTarget.dataset.endpoint,{method:'POST',body:JSON.stringify(Object.fromEntries(new FormData(e.currentTarget)))});
-        invalidate('setores','locais','fornecedores');
-        toast('Cadastro salvo.');
-        await navigate('cadastros', true);
-      }catch(err){toast(err.message,'danger')}
-    }
-
-    async function saveCentro(e){
-      e.preventDefault();
-      try{
-        await api('/cadastros/centros-custo',{method:'POST',body:JSON.stringify(Object.fromEntries(new FormData(e.currentTarget)))});
-        invalidate('centros');
-        toast('Centro de custo salvo.');
-        await navigate('cadastros', true);
-      }catch(err){toast(err.message,'danger')}
-    }
-
     async function renderUsuarios(fresh=false){
       if(!isAdmin()){
         $('app').innerHTML = `<div class="surface p-4"><div class="empty"><i class="bi bi-shield-lock"></i><h5>Acesso restrito</h5><p>Apenas administradores podem cadastrar usuários.</p></div></div>`;
@@ -2267,7 +2313,6 @@ async function renderDevolucoes(fresh = false) {
     });
 
     function boot(){
-      if (window.applySystemTheme) window.applySystemTheme();
       const route = routeFromUrl();
       if(['login','esqueci-senha','resetar-senha'].includes(route)) return renderAuth(route);
       if(!auth.token) return renderAuth('login');
@@ -2293,6 +2338,12 @@ async function renderDevolucoes(fresh = false) {
   </script>
 </body>
 </html>
+
+
+
+
+
+
 
 
 
