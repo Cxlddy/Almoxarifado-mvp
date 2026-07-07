@@ -912,6 +912,55 @@
       .main{padding:.85rem!important}
       .topbar{margin-bottom:1rem!important}
     }
+
+    /* Production polish */
+    .sidebar-footer{
+      margin:1rem .65rem 0;
+      padding:.75rem .35rem 0;
+      border-top:1px solid rgba(255,255,255,.18);
+      color:rgba(255,255,255,.72);
+      display:flex;
+      align-items:center;
+      gap:.45rem;
+      font-size:.78rem;
+      font-weight:700;
+    }
+    .sidebar-dot{width:8px;height:8px;border-radius:50%;background:#8ee6bd;box-shadow:0 0 0 4px rgba(142,230,189,.16)}
+    .system-status{
+      min-height:2.55rem;
+      display:inline-flex;
+      align-items:center;
+      gap:.45rem;
+      padding:0 .8rem;
+      border-radius:6px;
+      border:1px solid #cbd5e1;
+      background:#fff;
+      color:#334155;
+      font-size:.82rem;
+      font-weight:800;
+      white-space:nowrap;
+    }
+    .system-status span{width:8px;height:8px;border-radius:50%;background:#16a34a}
+    .system-status.is-loading span{background:#d97706}
+    .system-status.is-offline{border-color:#fecaca;color:#991b1b;background:#fff5f5}
+    .system-status.is-offline span{background:#dc2626}
+    .table-responsive{overflow:auto;max-width:100%}
+    .table{min-width:760px;vertical-align:middle}
+    .table th,.table td{white-space:nowrap}
+    .table td:first-child,.table th:first-child{white-space:normal;min-width:220px}
+    .toolbar-model{align-items:center}
+    .toolbar-model .form-control,.toolbar-model .form-select{min-width:220px}
+    .modal-content{overflow:hidden}
+    .dropdown-menu{border:1px solid #d8e0e7!important;border-radius:8px!important}
+    .topbar-actions{flex-wrap:wrap;justify-content:flex-end}
+    @media(max-width:767.98px){
+      .topbar .justify-content-between{align-items:flex-start!important;flex-direction:column}
+      .topbar-actions{width:100%;justify-content:space-between}
+      .system-status{flex:1;justify-content:center}
+      .panel-title{align-items:flex-start;flex-direction:column}
+      .toolbar-model .form-control,.toolbar-model .form-select{max-width:none;width:100%}
+    }
+
   </style>
 </head>
 <body>
@@ -921,25 +970,25 @@
   <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 
   <script>
-    const API_URL = 'https://almoxarifado-backend-tan.vercel.app';
+    const API_URL = window.ALMOX_API_URL || document.querySelector('meta[name="api-url"]')?.content || 'https://almoxarifado-backend-tan.vercel.app';
     const CACHE_TTL = 45_000;
 
     const pages = [
-      ['dashboard','Dashboard','bi-speedometer2','Visao geral da operacao'],
-      ['produtos','Produtos','bi-box-seam','Catalogo de materiais'],
+      ['dashboard','Dashboard','bi-speedometer2','Visão geral da operação'],
+      ['produtos','Produtos','bi-box-seam','Catálogo de materiais'],
       ['estoque','Estoque','bi-boxes','Saldo por local'],
-      ['solicitacoes','Solicitacoes','bi-clipboard2-check','Pedidos e emprestimos'],
-      ['devolucoes','Devolucoes','bi-arrow-counterclockwise','Retorno de materiais'],
-      ['movimentacoes','Movimentacoes','bi-clock-history','Historico operacional'],
-      ['relatorios','Relatorios','bi-bar-chart','Indicadores e exportacoes'],
-      ['setores-page','Setores','bi-diagram-3','Areas solicitantes'],
+      ['solicitacoes','Solicitações','bi-clipboard2-check','Pedidos e empréstimos'],
+      ['devolucoes','Devoluções','bi-arrow-counterclockwise','Retorno de materiais'],
+      ['movimentacoes','Movimentações','bi-clock-history','Histórico operacional'],
+      ['relatorios','Relatórios','bi-bar-chart','Indicadores e exportações'],
+      ['setores-page','Setores','bi-diagram-3','Áreas solicitantes'],
       ['locais-page','Locais','bi-geo-alt','Locais de estoque'],
       ['centros-page','Centros de custo','bi-cash-coin','Controles financeiros'],
       ['unidades-page','Unidades','bi-rulers','Unidades de medida'],
       ['fornecedores','Fornecedores','bi-truck','Fornecedores cadastrados'],
-      ['categorias-page','Categorias','bi-tags','Classificacao dos materiais'],
-      ['usuarios','Usuarios','bi-people','Acessos e permissoes'],
-      ['perfil','Perfil','bi-person-vcard','Dados do usuario logado']
+      ['categorias-page','Categorias','bi-tags','Classificação dos materiais'],
+      ['usuarios','Usuários','bi-people','Acessos e permissões'],
+      ['perfil','Perfil','bi-person-vcard','Dados do usuário logado']
     ];
 
     const root = document.getElementById('root');
@@ -1021,6 +1070,15 @@
       };
     }
 
+
+
+    function setConnectionStatus(status='online', label='Operacional'){
+      const el = $('connectionStatus');
+      if(!el) return;
+      el.className = 'system-status ' + (status === 'offline' ? 'is-offline' : status === 'loading' ? 'is-loading' : 'is-online');
+      el.innerHTML = '<span></span>' + esc(label);
+    }
+
     function saveSession(data){
       auth.token = data.access_token;
       auth.refreshToken = data.refresh_token;
@@ -1048,11 +1106,13 @@
       const timeout = setTimeout(() => controller.abort(), 18_000);
 
       try{
+        setConnectionStatus('loading', 'Sincronizando');
         const response = await fetch(`${API_URL}${endpoint}`, { ...options, headers, signal: controller.signal });
         const type = response.headers.get('content-type') || '';
         const payload = type.includes('application/json') ? await response.json() : await response.text();
 
         if(!response.ok){
+          setConnectionStatus('online', 'Operacional');
           const msg = typeof payload === 'string' ? payload : payload.erro || payload.mensagem || 'Erro na requisição';
           if(response.status === 401 || response.status === 403){
             clearSession();
@@ -1060,9 +1120,16 @@
           }
           throw new Error(msg);
         }
+        setConnectionStatus('online', 'Operacional');
         return payload;
       }catch(err){
-        if(err.name === 'AbortError') throw new Error('Tempo de resposta excedido. Tente novamente.');
+        if(err.name === 'AbortError'){
+          setConnectionStatus('offline', 'Tempo excedido');
+          throw new Error('Tempo de resposta excedido. Tente novamente.');
+        }
+        if(err instanceof TypeError){
+          setConnectionStatus('offline', 'Sem conexão');
+        }
         throw err;
       }finally{
         clearTimeout(timeout);
@@ -1266,8 +1333,7 @@
         </div>
         <div class="nav-label"></div>
         <nav>${links}</nav>
-        <div class="position-absolute bottom-0 start-0 end-0 p-3 small text-white-50">
-        </div>`;
+        <div class="sidebar-footer"><span class="sidebar-dot"></span>Versão de entrega</div>`;
     }
 
     function renderShell(){
@@ -1281,7 +1347,9 @@
                 <button class="btn btn-light btn-icon mobile-menu-btn" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu" aria-label="Abrir menu"><i class="bi bi-list"></i></button>
                 <div><h1 id="pageTitle" class="page-title">Dashboard</h1><p id="pageSub" class="page-sub">Visão geral</p></div>
               </div>
-              <div class="d-flex align-items-center gap-2">
+              <div class="d-flex align-items-center gap-2 topbar-actions">
+                <div id="connectionStatus" class="system-status is-online"><span></span>Operacional</div>
+                <button id="refreshBtn" class="btn btn-light btn-icon" aria-label="Atualizar página"><i class="bi bi-arrow-clockwise"></i></button>
                 <div class="dropdown">
                   <button class="btn btn-light d-flex align-items-center gap-2" data-bs-toggle="dropdown">
                     <span class="user-badge">${esc((auth.usuario?.nome || 'U').slice(0,1).toUpperCase())}</span>
@@ -1291,6 +1359,7 @@
                     <li><h6 class="dropdown-header">${esc(auth.usuario?.email || '')}</h6></li>
                     <li><span class="dropdown-item-text small text-secondary">Perfil: ${esc(auth.usuario?.perfil || '-')}</span></li>
                     <li><hr class="dropdown-divider"></li>
+                    <li><button id="dropdownRefreshBtn" class="dropdown-item"><i class="bi bi-arrow-clockwise me-2"></i>Atualizar dados</button></li>
                     <li><button id="logoutBtn" class="dropdown-item text-danger"><i class="bi bi-box-arrow-right me-2"></i>Sair</button></li>
                   </ul>
                 </div>
@@ -1308,7 +1377,11 @@
         const menu = bootstrap.Offcanvas.getInstance($('mobileMenu'));
         if(menu) menu.hide();
       }));
+      const refreshCurrent = () => navigate(state.page || routeFromUrl() || 'dashboard', true);
+      $('refreshBtn')?.addEventListener('click', refreshCurrent);
+      $('dropdownRefreshBtn')?.addEventListener('click', refreshCurrent);
       $('logoutBtn').addEventListener('click', () => { clearSession(); location.hash = '#/login'; renderAuth('login'); });
+      setConnectionStatus('online', 'Operacional');
     }
 
     function setMeta(page){
@@ -1351,10 +1424,10 @@
           dashboard: renderDashboard,
           produtos: renderProdutos,
           estoque: renderEstoque,
-          solicitacoes: renderSolicitacoes,
+          solicitacoes: renderSolicitações,
           devolucoes: renderDevolucoes,
-          movimentacoes: renderMovimentacoes,
-          relatorios: renderRelatorios,
+          movimentacoes: renderMovimentações,
+          relatorios: renderRelatórios,
           fornecedores: (fresh) => renderCadastroPage('fornecedores', fresh),
           'categorias-page': (fresh) => renderCadastroPage('categorias-page', fresh),
           'setores-page': (fresh) => renderCadastroPage('setores-page', fresh),
@@ -1425,7 +1498,7 @@
         ${card('Solicitações pendentes', pend.length, 'bi-hourglass-split')}
       </div>
       <div class="row g-3">
-        <div class="col-lg-7"><div class="surface p-3 p-md-4 h-100"><div class="d-flex justify-content-between mb-3"><div><h5 class="fw-bold mb-1">Solicitações recentes</h5><p class="text-secondary small mb-0"></p></div><button class="btn btn-sm btn-primary" onclick="navigate('solicitacoes')">Ver</button></div>${tableSolicitacoes(d.solicitacoes.slice(0,6), true)}</div></div>
+        <div class="col-lg-7"><div class="surface p-3 p-md-4 h-100"><div class="d-flex justify-content-between mb-3"><div><h5 class="fw-bold mb-1">Solicitações recentes</h5><p class="text-secondary small mb-0"></p></div><button class="btn btn-sm btn-primary" onclick="navigate('solicitacoes')">Ver</button></div>${tableSolicitações(d.solicitacoes.slice(0,6), true)}</div></div>
         <div class="col-lg-5"><div class="surface p-3 p-md-4 h-100"><div class="d-flex justify-content-between mb-3"><div><h5 class="fw-bold mb-1">Itens críticos</h5><p class="text-secondary small mb-0">Produtos abaixo do mínimo.</p></div><span class="soft ${baixo.length ? 'soft-danger':'soft-success'}">${baixo.length} itens</span></div>${tableSaldo(baixo.slice(0,6), true)}</div></div>
       </div>`;
     }
@@ -1634,14 +1707,14 @@
       }catch(err){toast(err.message,'danger')}
     }
 
-    async function renderSolicitacoes(fresh=false){
+    async function renderSolicitações(fresh=false){
       const d = await load(['solicitacoes','produtos','setores','centros','locais','admins'], fresh);
       state.solicitacoesData = d;
       $('app').innerHTML = `<div class="surface p-3 p-md-4">
         <div class="d-flex flex-column flex-md-row justify-content-between gap-3 mb-3">
           <div><h5 class="fw-bold mb-1">Solicitações</h5><p class="text-secondary small mb-0">Escolha o admin que receberá a autorização por WhatsApp.</p></div>
-          <div class="d-flex gap-2 flex-wrap"><button class="btn btn-light" onclick="exportSolicitacoes()"><i class="bi bi-download me-1"></i>Exportar</button><button class="btn btn-primary" onclick="showModal('solModal')"><i class="bi bi-plus-lg me-1"></i>Nova solicitação</button></div>
-        </div>${tableSolicitacoes(d.solicitacoes)}
+          <div class="d-flex gap-2 flex-wrap"><button class="btn btn-light" onclick="exportSolicitações()"><i class="bi bi-download me-1"></i>Exportar</button><button class="btn btn-primary" onclick="showModal('solModal')"><i class="bi bi-plus-lg me-1"></i>Nova solicitação</button></div>
+        </div>${tableSolicitações(d.solicitacoes)}
       </div>${solModal(d)}${atenderModal(d)}`;
       $('solForm').addEventListener('submit', saveSol);
       $('addItemBtn').addEventListener('click', () => addItem(d.produtos));
@@ -1649,7 +1722,7 @@
       addItem(d.produtos);
     }
 
-    function tableSolicitacoes(items, compact=false){
+    function tableSolicitações(items, compact=false){
       if(!items.length) return empty('Nenhuma solicitação encontrada','bi-clipboard2');
       return `<div class="table-responsive"><table class="table table-hover mb-0"><thead><tr><th>Data</th><th>Status</th><th>Solicitação</th>${compact?'':'<th>Solicitante</th><th class="text-end">Itens</th><th>Ações</th>'}</tr></thead><tbody>${items.map(s=>`<tr>
         <td><span class="fw-bold">${dateBR(s.data_solicitacao)}</span></td><td>${badge(s.status)}</td><td><div class="fw-bold">${esc(s.justificativa||'-')}</div><span class="table-meta">${esc((s.solicitacao_itens||[]).map(i => `${i.produtos?.nome || 'Item'} (${fmt(i.quantidade_solicitada)})`).join(' · ') || s.observacao || 'Sem itens descritos')}</span></td>
@@ -1657,7 +1730,7 @@
       </tr>`).join('')}</tbody></table></div>`;
     }
 
-    function exportSolicitacoes(){
+    function exportSolicitações(){
       const solicitacoes = state.solicitacoesData?.solicitacoes || [];
       exportCsv('solicitacoes.csv', [
         ['Data','Status','Solicitante','Justificativa','Itens'],
@@ -2010,35 +2083,35 @@ async function renderDevolucoes(fresh = false) {
       }
     }
 
-    async function renderMovimentacoes(fresh=false){
+    async function renderMovimentações(fresh=false){
       const d = await load(['movimentacoes'], fresh);
       state.movimentacoesData = d;
       $('app').innerHTML = `<div class="surface p-3 p-md-4">
-        <div class="panel-title"><div><h5>Movimentações</h5><p class="small text-secondary mb-0">Histórico operacional das entradas, saídas e devoluções.</p></div><button class="btn btn-light" onclick="exportMovimentacoes()"><i class="bi bi-download me-1"></i>Exportar</button></div>
+        <div class="panel-title"><div><h5>Movimentações</h5><p class="small text-secondary mb-0">Histórico operacional das entradas, saídas e devoluções.</p></div><button class="btn btn-light" onclick="exportMovimentações()"><i class="bi bi-download me-1"></i>Exportar</button></div>
         <div class="toolbar-model"><input id="movSearch" class="form-control" placeholder="Buscar produto, local ou responsável"><select id="movTipo" class="form-select"><option value="">Todos os tipos</option><option value="entrada">Entradas</option><option value="saida">Saídas</option></select></div>
-        <div id="movTable">${tableMovimentacoes(d.movimentacoes)}</div>
+        <div id="movTable">${tableMovimentações(d.movimentacoes)}</div>
       </div>`;
       const apply = () => {
         const q = $('movSearch').value.toLowerCase();
         const tipo = $('movTipo').value;
         const list = d.movimentacoes.filter(m => (!tipo || m.tipo === tipo) && [m.produtos?.nome,m.locais_estoque?.nome,m.usuarios?.nome,m.origem,m.documento].join(' ').toLowerCase().includes(q));
-        $('movTable').innerHTML = tableMovimentacoes(list);
+        $('movTable').innerHTML = tableMovimentações(list);
       };
       $('movSearch').addEventListener('input', debounce(apply));
       $('movTipo').addEventListener('change', apply);
     }
 
-    function tableMovimentacoes(items){
+    function tableMovimentações(items){
       if(!items.length) return empty('Nenhuma movimentação encontrada','bi-clock-history');
       return `<div class="table-responsive"><table class="table table-hover mb-0"><thead><tr><th>Data</th><th>Produto</th><th>Local</th><th>Origem</th><th>Tipo</th><th class="text-end">Qtd.</th><th>Responsável</th></tr></thead><tbody>${items.map(m=>`<tr><td>${dateBR(m.data_movimentacao)}</td><td><div class="fw-bold">${esc(m.produtos?.nome || '-')}</div><span class="table-meta">${esc(m.produtos?.codigo_interno || 'Sem código')}</span></td><td>${esc(m.locais_estoque?.nome || '-')}</td><td>${esc(m.origem || '-')}</td><td>${badge(m.tipo)}</td><td class="table-number">${fmt(m.quantidade)}</td><td>${esc(m.usuarios?.nome || '-')}</td></tr>`).join('')}</tbody></table></div>`;
     }
 
-    function exportMovimentacoes(){
+    function exportMovimentações(){
       const list = state.movimentacoesData?.movimentacoes || [];
       exportCsv('movimentacoes.csv', [['Data','Produto','Código','Local','Origem','Tipo','Quantidade','Responsável'], ...list.map(m => [dateBR(m.data_movimentacao),m.produtos?.nome || '',m.produtos?.codigo_interno || '',m.locais_estoque?.nome || '',m.origem || '',m.tipo || '',m.quantidade ?? '',m.usuarios?.nome || ''])]);
     }
 
-    async function renderRelatorios(fresh=false){
+    async function renderRelatórios(fresh=false){
       const d = await load(['produtos','saldo','solicitacoes','movimentacoes','categorias'], fresh);
       state.saldoData = d;
       state.movimentacoesData = d;
@@ -2049,8 +2122,8 @@ async function renderDevolucoes(fresh = false) {
       const saidas = d.movimentacoes.filter(m=>m.tipo==='saida').reduce((s,m)=>s+Number(m.quantidade||0),0);
       const porCategoria = d.saldo.reduce((acc,item)=>{ const k=item.categoria||'Sem categoria'; acc[k]=(acc[k]||0)+Number(item.saldo_atual||0); return acc; },{});
       const max = Math.max(...Object.values(porCategoria),1);
-      $('app').innerHTML = `<div class="surface p-3 p-md-4 mb-3"><div class="panel-title mb-0"><div><h5>Relatorios</h5><p class="small text-secondary mb-0">Resumo consolidado para apresentacao e auditoria.</p></div><button class="btn btn-primary" onclick="exportRelatorioGeral()"><i class="bi bi-download me-1"></i>Exportar relatorio</button></div></div><div class="row g-3 mb-3">${card('Produtos cadastrados',d.produtos.length,'bi-box-seam')}${card('Saldo total',fmt(total),'bi-boxes')}${card('Estoque baixo',baixo,'bi-exclamation-triangle')}${card('Solicitações',d.solicitacoes.length,'bi-clipboard2')}</div>
-      <div class="row g-3"><div class="col-lg-7"><div class="surface p-3 p-md-4"><div class="panel-title"><h5>Saldo por categoria</h5><button class="btn btn-light" onclick="exportSaldo()">Exportar saldo</button></div><div class="mini-bars">${Object.entries(porCategoria).map(([nome,valor])=>`<div class="mini-bar"><strong>${esc(nome)}</strong><div class="mini-bar-track"><div class="mini-bar-fill" style="width:${Math.max(4,(valor/max)*100)}%"></div></div><span>${fmt(valor)}</span></div>`).join('') || '<p class="text-secondary small mb-0">Sem dados.</p>'}</div></div></div><div class="col-lg-5"><div class="surface p-3 p-md-4 h-100"><div class="panel-title"><h5>Fluxo operacional</h5></div><div class="summary-strip"><div class="summary-item"><small>Entradas</small><strong>${fmt(entradas)}</strong></div><div class="summary-item"><small>Saídas</small><strong>${fmt(saidas)}</strong></div><div class="summary-item"><small>Movimentos</small><strong>${d.movimentacoes.length}</strong></div></div><button class="btn btn-primary w-100" onclick="exportMovimentacoes()">Exportar movimentações</button></div></div></div>`;
+      $('app').innerHTML = `<div class="surface p-3 p-md-4 mb-3"><div class="panel-title mb-0"><div><h5>Relatórios</h5><p class="small text-secondary mb-0">Resumo consolidado para apresentação e auditoria.</p></div><button class="btn btn-primary" onclick="exportRelatorioGeral()"><i class="bi bi-download me-1"></i>Exportar relatório</button></div></div><div class="row g-3 mb-3">${card('Produtos cadastrados',d.produtos.length,'bi-box-seam')}${card('Saldo total',fmt(total),'bi-boxes')}${card('Estoque baixo',baixo,'bi-exclamation-triangle')}${card('Solicitações',d.solicitacoes.length,'bi-clipboard2')}</div>
+      <div class="row g-3"><div class="col-lg-7"><div class="surface p-3 p-md-4"><div class="panel-title"><h5>Saldo por categoria</h5><button class="btn btn-light" onclick="exportSaldo()">Exportar saldo</button></div><div class="mini-bars">${Object.entries(porCategoria).map(([nome,valor])=>`<div class="mini-bar"><strong>${esc(nome)}</strong><div class="mini-bar-track"><div class="mini-bar-fill" style="width:${Math.max(4,(valor/max)*100)}%"></div></div><span>${fmt(valor)}</span></div>`).join('') || '<p class="text-secondary small mb-0">Sem dados.</p>'}</div></div></div><div class="col-lg-5"><div class="surface p-3 p-md-4 h-100"><div class="panel-title"><h5>Fluxo operacional</h5></div><div class="summary-strip"><div class="summary-item"><small>Entradas</small><strong>${fmt(entradas)}</strong></div><div class="summary-item"><small>Saídas</small><strong>${fmt(saidas)}</strong></div><div class="summary-item"><small>Movimentos</small><strong>${d.movimentacoes.length}</strong></div></div><button class="btn btn-primary w-100" onclick="exportMovimentações()">Exportar movimentações</button></div></div></div>`;
     }
 
 
@@ -2066,23 +2139,23 @@ async function renderDevolucoes(fresh = false) {
       const saidas = movimentacoes.filter(m=>m.tipo==='saida').reduce((s,m)=>s+Number(m.quantidade||0),0);
       const porCategoria = saldo.reduce((acc,item)=>{ const k=item.categoria||'Sem categoria'; acc[k]=(acc[k]||0)+Number(item.saldo_atual||0); return acc; },{});
       const rows = [
-        ['Relatorio geral do almoxarifado'],
+        ['Relatório geral do almoxarifado'],
         ['Gerado em', new Date().toLocaleString('pt-BR')],
         [],
         ['Resumo'],
         ['Produtos cadastrados', produtos.length],
         ['Saldo total', totalSaldo],
         ['Itens com estoque baixo', estoqueBaixo],
-        ['Solicitacoes', solicitacoes.length],
+        ['Solicitações', solicitacoes.length],
         ['Entradas', entradas],
         ['Saidas', saidas],
-        ['Movimentacoes', movimentacoes.length],
+        ['Movimentações', movimentacoes.length],
         [],
         ['Saldo por categoria'],
         ['Categoria','Saldo']
       ];
       Object.entries(porCategoria).forEach(([categoria,valor]) => rows.push([categoria, valor]));
-      rows.push([], ['Ultimas movimentacoes'], ['Data','Produto','Codigo','Local','Origem','Tipo','Quantidade','Responsavel']);
+      rows.push([], ['Últimas movimentações'], ['Data','Produto','Código','Local','Origem','Tipo','Quantidade','Responsável']);
       movimentacoes.slice(0, 300).forEach(m => rows.push([dateBR(m.data_movimentacao), m.produtos?.nome || '', m.produtos?.codigo_interno || '', m.locais_estoque?.nome || '', m.origem || '', m.tipo || '', m.quantidade ?? '', m.usuarios?.nome || '']));
       exportCsv('relatorio-geral-almoxarifado.csv', rows);
     }
@@ -2094,29 +2167,29 @@ async function renderDevolucoes(fresh = false) {
     const cadastroConfigs = {
       'setores-page': {
         title: 'Setores', key: 'setores', endpoint: '/cadastros/setores', icon: 'bi-diagram-3',
-        description: 'Areas solicitantes e departamentos internos.',
+        description: 'Áreas solicitantes e departamentos internos.',
         fields: [
           { name: 'nome', label: 'Nome', required: true },
-          { name: 'descricao', label: 'Descricao' }
+          { name: 'descricao', label: 'Descrição' }
         ]
       },
       'locais-page': {
         title: 'Locais de estoque', key: 'locais', endpoint: '/cadastros/locais-estoque', icon: 'bi-geo-alt',
-        description: 'Prateleiras, salas, depositos e pontos de armazenamento.',
+        description: 'Prateleiras, salas, depósitos e pontos de armazenamento.',
         fields: [
           { name: 'nome', label: 'Nome', required: true },
-          { name: 'descricao', label: 'Descricao' }
+          { name: 'descricao', label: 'Descrição' }
         ]
       },
       'centros-page': {
         title: 'Centros de custo', key: 'centros', endpoint: '/cadastros/centros-custo', icon: 'bi-cash-coin',
-        description: 'Codigos financeiros usados nas solicitacoes.',
+        description: 'Códigos financeiros usados nas solicitacoes.',
         fields: [
-          { name: 'codigo', label: 'Codigo', required: true, col: 'col-md-4' },
+          { name: 'codigo', label: 'Código', required: true, col: 'col-md-4' },
           { name: 'nome', label: 'Nome', required: true, col: 'col-md-8' },
-          { name: 'descricao', label: 'Descricao', col: 'col-12' }
+          { name: 'descricao', label: 'Descrição', col: 'col-12' }
         ],
-        columns: [{ label: 'Codigo', value: item => item.codigo || '-' }]
+        columns: [{ label: 'Código', value: item => item.codigo || '-' }]
       },
       'unidades-page': {
         title: 'Unidades de medida', key: 'unidades', endpoint: '/cadastros/unidades-medida', icon: 'bi-rulers',
@@ -2146,7 +2219,7 @@ async function renderDevolucoes(fresh = false) {
         description: 'Classificacao dos materiais do catalogo.',
         fields: [
           { name: 'nome', label: 'Nome', required: true },
-          { name: 'descricao', label: 'Descricao' }
+          { name: 'descricao', label: 'Descrição' }
         ]
       }
     };
@@ -2190,7 +2263,7 @@ async function renderDevolucoes(fresh = false) {
     function tableCadastro(config, items){
       if(!items.length) return empty(`Nenhum registro em ${config.title.toLowerCase()}`, config.icon);
       const extras = config.columns || [];
-      return `<div class="table-responsive"><table class="table table-hover mb-0"><thead><tr><th>Nome</th>${extras.map(c=>`<th>${esc(c.label)}</th>`).join('')}<th>Status</th><th class="text-end">Acoes</th></tr></thead><tbody>${items.map(item=>`<tr><td><div class="fw-bold">${esc(item.nome || '-')}</div><span class="table-meta">${esc(item.descricao || '')}</span></td>${extras.map(c=>`<td>${esc(c.value(item))}</td>`).join('')}<td>${item.ativo === false ? '<span class="soft soft-danger">Inativo</span>' : '<span class="soft soft-success">Ativo</span>'}</td><td class="text-end"><button class="btn btn-light btn-sm" onclick="openCadastroModal('${esc(state.cadastroAtual.pageId)}','${esc(item.id)}')"><i class="bi bi-pencil-square me-1"></i>Editar</button></td></tr>`).join('')}</tbody></table></div>`;
+      return `<div class="table-responsive"><table class="table table-hover mb-0"><thead><tr><th>Nome</th>${extras.map(c=>`<th>${esc(c.label)}</th>`).join('')}<th>Status</th><th class="text-end">Ações</th></tr></thead><tbody>${items.map(item=>`<tr><td><div class="fw-bold">${esc(item.nome || '-')}</div><span class="table-meta">${esc(item.descricao || '')}</span></td>${extras.map(c=>`<td>${esc(c.value(item))}</td>`).join('')}<td>${item.ativo === false ? '<span class="soft soft-danger">Inativo</span>' : '<span class="soft soft-success">Ativo</span>'}</td><td class="text-end"><button class="btn btn-light btn-sm" onclick="openCadastroModal('${esc(state.cadastroAtual.pageId)}','${esc(item.id)}')"><i class="bi bi-pencil-square me-1"></i>Editar</button></td></tr>`).join('')}</tbody></table></div>`;
     }
 
     function cadastroModal(config, pageId){
@@ -2408,9 +2481,9 @@ async function renderDevolucoes(fresh = false) {
     window.toggleProduto = toggleProduto;
     window.exportProdutos = exportProdutos;
     window.exportSaldo = exportSaldo;
-    window.exportSolicitacoes = exportSolicitacoes;
+    window.exportSolicitações = exportSolicitações;
     window.exportDevolucoes = exportDevolucoes;
-    window.exportMovimentacoes = exportMovimentacoes;
+    window.exportMovimentações = exportMovimentações;
     window.exportRelatorioGeral = exportRelatorioGeral;
 
     if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
@@ -2418,6 +2491,7 @@ async function renderDevolucoes(fresh = false) {
   </script>
 </body>
 </html>
+
 
 
 
