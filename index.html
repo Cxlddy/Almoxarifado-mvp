@@ -2202,7 +2202,7 @@ async function renderDevolucoes(fresh = false) {
       const saidas = d.movimentacoes.filter(m=>m.tipo==='saida').reduce((s,m)=>s+Number(m.quantidade||0),0);
       const porCategoria = d.saldo.reduce((acc,item)=>{ const k=item.categoria||'Sem categoria'; acc[k]=(acc[k]||0)+Number(item.saldo_atual||0); return acc; },{});
       const max = Math.max(...Object.values(porCategoria),1);
-      $('app').innerHTML = `<div class="surface p-3 p-md-4 mb-3"><div class="panel-title mb-0"><div><h5>Relatórios</h5><p class="small text-secondary mb-0">Resumo consolidado para apresentação e auditoria.</p></div><button class="btn btn-primary" onclick="exportRelatorioGeral()"><i class="bi bi-download me-1"></i>Exportar relatório</button></div></div><div class="row g-3 mb-3">${card('Produtos cadastrados',d.produtos.length,'bi-box-seam')}${card('Saldo total',fmt(total),'bi-boxes')}${card('Estoque baixo',baixo,'bi-exclamation-triangle')}${card('Solicitações',d.solicitacoes.length,'bi-clipboard2')}</div>
+      $('app').innerHTML = `<div class="surface p-3 p-md-4 mb-3"><div class="panel-title mb-0"><div><h5>Relatórios</h5><p class="small text-secondary mb-0">Resumo consolidado para apresentação e auditoria.</p></div><button class="btn btn-primary" onclick="exportRelatorioGeral()"><i class="bi bi-filetype-pdf me-1"></i>Gerar PDF</button></div></div><div class="row g-3 mb-3">${card('Produtos cadastrados',d.produtos.length,'bi-box-seam')}${card('Saldo total',fmt(total),'bi-boxes')}${card('Estoque baixo',baixo,'bi-exclamation-triangle')}${card('Solicitações',d.solicitacoes.length,'bi-clipboard2')}</div>
       <div class="row g-3"><div class="col-lg-7"><div class="surface p-3 p-md-4"><div class="panel-title"><h5>Saldo por categoria</h5><button class="btn btn-light" onclick="exportSaldo()">Exportar saldo</button></div><div class="mini-bars">${Object.entries(porCategoria).map(([nome,valor])=>`<div class="mini-bar"><strong>${esc(nome)}</strong><div class="mini-bar-track"><div class="mini-bar-fill" style="width:${Math.max(4,(valor/max)*100)}%"></div></div><span>${fmt(valor)}</span></div>`).join('') || '<p class="text-secondary small mb-0">Sem dados.</p>'}</div></div></div><div class="col-lg-5"><div class="surface p-3 p-md-4 h-100"><div class="panel-title"><h5>Fluxo operacional</h5></div><div class="summary-strip"><div class="summary-item"><small>Entradas</small><strong>${fmt(entradas)}</strong></div><div class="summary-item"><small>Saídas</small><strong>${fmt(saidas)}</strong></div><div class="summary-item"><small>Movimentos</small><strong>${d.movimentacoes.length}</strong></div></div><button class="btn btn-primary w-100" onclick="exportMovimentações()">Exportar movimentações</button></div></div></div>`;
     }
 
@@ -2218,26 +2218,40 @@ async function renderDevolucoes(fresh = false) {
       const entradas = movimentacoes.filter(m=>m.tipo==='entrada').reduce((s,m)=>s+Number(m.quantidade||0),0);
       const saidas = movimentacoes.filter(m=>m.tipo==='saida').reduce((s,m)=>s+Number(m.quantidade||0),0);
       const porCategoria = saldo.reduce((acc,item)=>{ const k=item.categoria||'Sem categoria'; acc[k]=(acc[k]||0)+Number(item.saldo_atual||0); return acc; },{});
-      const rows = [
-        ['Relatório geral do almoxarifado'],
-        ['Gerado em', new Date().toLocaleString('pt-BR')],
-        [],
-        ['Resumo'],
+      const escPrint = (value) => String(value ?? '').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#039;');
+      const generatedAt = new Date().toLocaleString('pt-BR');
+      const usuario = auth.usuario?.nome || 'Sistema';
+      const resumoRows = [
         ['Produtos cadastrados', produtos.length],
-        ['Saldo total', totalSaldo],
+        ['Saldo total', fmt(totalSaldo)],
         ['Itens com estoque baixo', estoqueBaixo],
         ['Solicitações', solicitacoes.length],
-        ['Entradas', entradas],
-        ['Saidas', saidas],
-        ['Movimentações', movimentacoes.length],
-        [],
-        ['Saldo por categoria'],
-        ['Categoria','Saldo']
-      ];
-      Object.entries(porCategoria).forEach(([categoria,valor]) => rows.push([categoria, valor]));
-      rows.push([], ['Últimas movimentações'], ['Data','Produto','Código','Local','Origem','Tipo','Quantidade','Responsável']);
-      movimentacoes.slice(0, 300).forEach(m => rows.push([dateBR(m.data_movimentacao), m.produtos?.nome || '', m.produtos?.codigo_interno || '', m.locais_estoque?.nome || '', m.origem || '', m.tipo || '', m.quantidade ?? '', m.usuarios?.nome || '']));
-      exportCsv('relatorio-geral-almoxarifado.csv', rows);
+        ['Entradas', fmt(entradas)],
+        ['Saídas', fmt(saidas)],
+        ['Movimentações', movimentacoes.length]
+      ].map(([label,value]) => `<tr><th>${escPrint(label)}</th><td>${escPrint(value)}</td></tr>`).join('');
+      const categoriaRows = Object.entries(porCategoria).map(([categoria,valor]) => `<tr><td>${escPrint(categoria)}</td><td class="num">${escPrint(fmt(valor))}</td></tr>`).join('') || '<tr><td colspan="2">Sem dados.</td></tr>';
+      const movimentoRows = movimentacoes.slice(0, 300).map(m => `<tr><td>${escPrint(dateBR(m.data_movimentacao))}</td><td>${escPrint(m.produtos?.nome || '-')}</td><td>${escPrint(m.produtos?.codigo_interno || '-')}</td><td>${escPrint(m.locais_estoque?.nome || '-')}</td><td>${escPrint(m.tipo || '-')}</td><td class="num">${escPrint(fmt(m.quantidade))}</td><td>${escPrint(m.usuarios?.nome || '-')}</td></tr>`).join('') || '<tr><td colspan="7">Sem movimentações.</td></tr>';
+      const html = `<!doctype html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Relatório Geral do Almoxarifado</title><style>
+        @page{size:A4;margin:14mm}
+        *{box-sizing:border-box;color:#000!important;background:transparent!important}
+        body{font-family:Arial,Helvetica,sans-serif;margin:0;font-size:11px;line-height:1.35;background:#fff!important;color:#000!important}
+        header{border-bottom:2px solid #000;padding-bottom:10px;margin-bottom:14px;display:flex;justify-content:space-between;gap:18px;align-items:flex-start}
+        h1{font-size:20px;margin:0 0 4px;text-transform:uppercase;letter-spacing:.02em}
+        h2{font-size:13px;margin:18px 0 8px;text-transform:uppercase;border-bottom:1px solid #000;padding-bottom:4px}
+        .meta{font-size:10px;text-align:right;white-space:nowrap}.meta div{margin-bottom:3px}
+        .subtitle{font-size:11px;margin:0}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+        table{width:100%;border-collapse:collapse;page-break-inside:auto}tr{page-break-inside:avoid;page-break-after:auto}th,td{border:1px solid #000;padding:5px 6px;vertical-align:top}th{font-weight:700;text-align:left;background:#f2f2f2!important}.num{text-align:right;white-space:nowrap}.muted{font-size:10px;margin-top:6px}.assinatura{margin-top:26px;display:grid;grid-template-columns:1fr 1fr;gap:36px}.linha{border-top:1px solid #000;text-align:center;padding-top:6px;font-size:10px}@media print{button{display:none}body{print-color-adjust:exact;-webkit-print-color-adjust:exact}}
+      </style></head><body><header><div><h1>Relatório Geral do Almoxarifado</h1><p class="subtitle">Resumo operacional para conferência, auditoria e impressão.</p></div><div class="meta"><div><strong>Gerado em:</strong> ${escPrint(generatedAt)}</div><div><strong>Usuário:</strong> ${escPrint(usuario)}</div><div><strong>Origem:</strong> Sistema de Almoxarifado</div></div></header><section class="grid"><div><h2>Resumo executivo</h2><table>${resumoRows}</table></div><div><h2>Saldo por categoria</h2><table><thead><tr><th>Categoria</th><th class="num">Saldo</th></tr></thead><tbody>${categoriaRows}</tbody></table></div></section><section><h2>Movimentações recentes</h2><table><thead><tr><th>Data</th><th>Produto</th><th>Código</th><th>Local</th><th>Tipo</th><th class="num">Qtd.</th><th>Responsável</th></tr></thead><tbody>${movimentoRows}</tbody></table><p class="muted">Relatório limitado às 300 movimentações mais recentes carregadas no sistema.</p></section><section class="assinatura"><div class="linha">Responsável pelo almoxarifado</div><div class="linha">Conferência / Auditoria</div></section><script>window.addEventListener('load',()=>setTimeout(()=>window.print(),250));<\/script></body></html>`;
+      const reportWindow = window.open('', '_blank', 'noopener,noreferrer,width=960,height=720');
+      if(!reportWindow){
+        toast('Permita pop-ups para gerar o PDF do relatório.', 'warning');
+        return;
+      }
+      reportWindow.document.open();
+      reportWindow.document.write(html);
+      reportWindow.document.close();
+      reportWindow.focus();
     }
 
     async function renderPerfil(){
@@ -2571,6 +2585,8 @@ async function renderDevolucoes(fresh = false) {
   </script>
 </body>
 </html>
+
+
 
 
 
