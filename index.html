@@ -867,7 +867,51 @@
     .profile-box{display:flex;gap:1rem;align-items:center}
     .profile-avatar{width:62px;height:62px;border-radius:10px;background:#e6f2ef;color:var(--model-green);display:grid;place-items:center;font-weight:900;font-size:1.4rem;border:1px solid rgba(31,111,91,.22)}
     @media(max-width:991.98px){.main{margin-left:0;width:100%;padding:1rem}.sidebar{width:280px}.topbar{margin-bottom:1rem}.mobile-menu-btn{display:inline-grid}.brand{display:flex;text-align:left}.brand-icon{margin-bottom:0}}
-  
+    /* Sidebar responsive behavior */
+    .sidebar{
+      height:100dvh;
+      max-height:100dvh;
+      overflow-y:auto;
+      overflow-x:hidden;
+      overscroll-behavior:contain;
+      scrollbar-width:thin;
+      scrollbar-color:rgba(255,255,255,.35) transparent;
+    }
+    .sidebar::-webkit-scrollbar{width:8px}
+    .sidebar::-webkit-scrollbar-track{background:transparent}
+    .sidebar::-webkit-scrollbar-thumb{background:rgba(255,255,255,.35);border-radius:999px}
+    .sidebar nav{display:grid;gap:.12rem;padding-bottom:1.25rem}
+    .offcanvas .sidebar{
+      position:static;
+      display:block;
+      width:100%;
+      height:auto;
+      min-height:100%;
+      max-height:none;
+      box-shadow:none!important;
+    }
+    .offcanvas-body{
+      padding:0!important;
+      overflow-y:auto;
+      max-height:100dvh;
+    }
+    @media(max-width:1199.98px) and (min-width:992px){
+      :root{--sidebar:240px}
+      .sidebar{width:240px;padding:22px 14px}
+      .main{margin-left:240px;width:calc(100% - 240px);padding:24px}
+      .side-link{font-size:.92rem;padding:.68rem .72rem}
+    }
+    @media(max-width:991.98px){
+      .sidebar{display:none}
+      .offcanvas .sidebar{display:block;background:var(--model-green)!important;color:#fff}
+      .main{margin-left:0!important;width:100%!important;padding:1rem!important}
+      .mobile-menu-btn{display:inline-grid!important}
+    }
+    @media(max-width:575.98px){
+      .offcanvas{max-width:88vw}
+      .main{padding:.85rem!important}
+      .topbar{margin-bottom:1rem!important}
+    }
   </style>
 </head>
 <body>
@@ -1998,14 +2042,49 @@ async function renderDevolucoes(fresh = false) {
       const d = await load(['produtos','saldo','solicitacoes','movimentacoes','categorias'], fresh);
       state.saldoData = d;
       state.movimentacoesData = d;
+      state.relatorioData = d;
       const total = d.saldo.reduce((s,x)=>s+Number(x.saldo_atual||0),0);
       const baixo = d.saldo.filter(x=>x.abaixo_estoque_minimo).length;
       const entradas = d.movimentacoes.filter(m=>m.tipo==='entrada').reduce((s,m)=>s+Number(m.quantidade||0),0);
       const saidas = d.movimentacoes.filter(m=>m.tipo==='saida').reduce((s,m)=>s+Number(m.quantidade||0),0);
       const porCategoria = d.saldo.reduce((acc,item)=>{ const k=item.categoria||'Sem categoria'; acc[k]=(acc[k]||0)+Number(item.saldo_atual||0); return acc; },{});
       const max = Math.max(...Object.values(porCategoria),1);
-      $('app').innerHTML = `<div class="row g-3 mb-3">${card('Produtos cadastrados',d.produtos.length,'bi-box-seam')}${card('Saldo total',fmt(total),'bi-boxes')}${card('Estoque baixo',baixo,'bi-exclamation-triangle')}${card('Solicitações',d.solicitacoes.length,'bi-clipboard2')}</div>
+      $('app').innerHTML = `<div class="surface p-3 p-md-4 mb-3"><div class="panel-title mb-0"><div><h5>Relatorios</h5><p class="small text-secondary mb-0">Resumo consolidado para apresentacao e auditoria.</p></div><button class="btn btn-primary" onclick="exportRelatorioGeral()"><i class="bi bi-download me-1"></i>Exportar relatorio</button></div></div><div class="row g-3 mb-3">${card('Produtos cadastrados',d.produtos.length,'bi-box-seam')}${card('Saldo total',fmt(total),'bi-boxes')}${card('Estoque baixo',baixo,'bi-exclamation-triangle')}${card('Solicitações',d.solicitacoes.length,'bi-clipboard2')}</div>
       <div class="row g-3"><div class="col-lg-7"><div class="surface p-3 p-md-4"><div class="panel-title"><h5>Saldo por categoria</h5><button class="btn btn-light" onclick="exportSaldo()">Exportar saldo</button></div><div class="mini-bars">${Object.entries(porCategoria).map(([nome,valor])=>`<div class="mini-bar"><strong>${esc(nome)}</strong><div class="mini-bar-track"><div class="mini-bar-fill" style="width:${Math.max(4,(valor/max)*100)}%"></div></div><span>${fmt(valor)}</span></div>`).join('') || '<p class="text-secondary small mb-0">Sem dados.</p>'}</div></div></div><div class="col-lg-5"><div class="surface p-3 p-md-4 h-100"><div class="panel-title"><h5>Fluxo operacional</h5></div><div class="summary-strip"><div class="summary-item"><small>Entradas</small><strong>${fmt(entradas)}</strong></div><div class="summary-item"><small>Saídas</small><strong>${fmt(saidas)}</strong></div><div class="summary-item"><small>Movimentos</small><strong>${d.movimentacoes.length}</strong></div></div><button class="btn btn-primary w-100" onclick="exportMovimentacoes()">Exportar movimentações</button></div></div></div>`;
+    }
+
+
+
+    function exportRelatorioGeral(){
+      const saldo = state.saldoData?.saldo || [];
+      const movimentacoes = state.movimentacoesData?.movimentacoes || [];
+      const produtos = state.relatorioData?.produtos || [];
+      const solicitacoes = state.relatorioData?.solicitacoes || [];
+      const totalSaldo = saldo.reduce((s,item)=>s+Number(item.saldo_atual||0),0);
+      const estoqueBaixo = saldo.filter(item=>item.abaixo_estoque_minimo).length;
+      const entradas = movimentacoes.filter(m=>m.tipo==='entrada').reduce((s,m)=>s+Number(m.quantidade||0),0);
+      const saidas = movimentacoes.filter(m=>m.tipo==='saida').reduce((s,m)=>s+Number(m.quantidade||0),0);
+      const porCategoria = saldo.reduce((acc,item)=>{ const k=item.categoria||'Sem categoria'; acc[k]=(acc[k]||0)+Number(item.saldo_atual||0); return acc; },{});
+      const rows = [
+        ['Relatorio geral do almoxarifado'],
+        ['Gerado em', new Date().toLocaleString('pt-BR')],
+        [],
+        ['Resumo'],
+        ['Produtos cadastrados', produtos.length],
+        ['Saldo total', totalSaldo],
+        ['Itens com estoque baixo', estoqueBaixo],
+        ['Solicitacoes', solicitacoes.length],
+        ['Entradas', entradas],
+        ['Saidas', saidas],
+        ['Movimentacoes', movimentacoes.length],
+        [],
+        ['Saldo por categoria'],
+        ['Categoria','Saldo']
+      ];
+      Object.entries(porCategoria).forEach(([categoria,valor]) => rows.push([categoria, valor]));
+      rows.push([], ['Ultimas movimentacoes'], ['Data','Produto','Codigo','Local','Origem','Tipo','Quantidade','Responsavel']);
+      movimentacoes.slice(0, 300).forEach(m => rows.push([dateBR(m.data_movimentacao), m.produtos?.nome || '', m.produtos?.codigo_interno || '', m.locais_estoque?.nome || '', m.origem || '', m.tipo || '', m.quantidade ?? '', m.usuarios?.nome || '']));
+      exportCsv('relatorio-geral-almoxarifado.csv', rows);
     }
 
     async function renderPerfil(){
@@ -2332,12 +2411,16 @@ async function renderDevolucoes(fresh = false) {
     window.exportSolicitacoes = exportSolicitacoes;
     window.exportDevolucoes = exportDevolucoes;
     window.exportMovimentacoes = exportMovimentacoes;
+    window.exportRelatorioGeral = exportRelatorioGeral;
 
     if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
     else boot();
   </script>
 </body>
 </html>
+
+
+
 
 
 
